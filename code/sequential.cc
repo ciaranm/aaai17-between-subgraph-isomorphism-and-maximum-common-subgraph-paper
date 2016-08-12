@@ -45,6 +45,7 @@ namespace
     struct Assignments
     {
         vector<tuple<unsigned, unsigned, bool> > trail;
+        unsigned wildcard;
 
         auto push_branch(unsigned a, unsigned b) -> void
         {
@@ -71,7 +72,10 @@ namespace
         auto store_to(map<int, int> & m) -> void
         {
             for (auto & t : trail) {
-                m.emplace(get<0>(t), get<1>(t));
+                if (get<1>(t) == wildcard)
+                    m.emplace(get<0>(t), -1);
+                else
+                    m.emplace(get<0>(t), get<1>(t));
             }
         }
     };
@@ -79,6 +83,7 @@ namespace
     struct SIP
     {
         const Params & params;
+        unsigned domain_size;
 
         Result result;
 
@@ -87,11 +92,15 @@ namespace
 
         Domains initial_domains;
 
+        unsigned wildcard;
+
         SIP(const Params & k, const Graph & pattern, const Graph & target) :
             params(k),
+            domain_size(params.except >= 1 ? target.size() + 1 : target.size()),
             pattern_degrees(pattern.size()),
-            target_degrees(target.size()),
-            initial_domains(pattern.size())
+            target_degrees(domain_size),
+            initial_domains(pattern.size()),
+            wildcard(target.size())
         {
             // build up distance 1 adjacency bitsets
             add_adjacency_constraints(pattern, target);
@@ -101,6 +110,9 @@ namespace
 
             for (unsigned t = 0 ; t < target.size() ; ++t)
                 target_degrees[t] = target.degree(t);
+
+            if (params.except >= 1)
+                target_degrees.at(target.size()) = 0;
 
             vector<vector<vector<unsigned> > > p_nds(adjacency_constraints.size());
             vector<vector<vector<unsigned> > > t_nds(adjacency_constraints.size());
@@ -132,21 +144,33 @@ namespace
             // build up initial domains
             for (unsigned p = 0 ; p < pattern.size() ; ++p) {
                 initial_domains[p].v = p;
-                initial_domains[p].values = bitset(target.size());
+                initial_domains[p].values = bitset(domain_size);
                 initial_domains[p].fixed = false;
 
+                // decide initial domain values
                 for (unsigned t = 0 ; t < target.size() ; ++t) {
                     bool ok = true;
                     for (auto & c : adjacency_constraints) {
-                        if (! (c.first[p][p] == c.second[t][t] && c.first[p].count() <= c.second[t].count())) {
+                        // check loops
+                        if (c.first[p][p] != c.second[t][t])
                             ok = false;
+
+                        // check degree
+                        if (ok && 0 == params.except && ! (c.first[p].count() <= c.second[t].count()))
+                            ok = false;
+
+                        // check except-degree
+                        if (ok && params.except >= 1 && ! (c.first[p].count() <= c.second[t].count() + params.except))
+                            ok = false;
+
+                        if (! ok)
                             break;
-                        }
                     }
 
+                    // neighbourhood degree sequences
                     for (unsigned cn = 0 ; cn < adjacency_constraints.size() && ok ; ++cn) {
-                        for (unsigned i = 0 ; i < p_nds[cn][p].size() ; ++i) {
-                            if (t_nds[cn][t][i] < p_nds[cn][p][i]) {
+                        for (unsigned i = params.except ; i < p_nds[cn][p].size() ; ++i) {
+                            if (t_nds[cn][t][i - params.except] < p_nds[cn][p][i]) {
                                 ok = false;
                                 break;
                             }
@@ -156,6 +180,10 @@ namespace
                     if (ok)
                         initial_domains[p].values.set(t);
                 }
+
+                // wildcard in domain?
+                if (params.except >= 1)
+                    initial_domains[p].values.set(wildcard);
             }
         }
 
@@ -183,7 +211,7 @@ namespace
         {
             adj.resize(graph.size());
             for (unsigned t = 0 ; t < graph.size() ; ++t) {
-                adj[t] = bitset(graph.size(), 0);
+                adj[t] = bitset(domain_size, 0);
                 for (unsigned u = 0 ; u < graph.size() ; ++u)
                     if (t != u && graph.adjacent(t, u))
                         adj[t].set(u);
@@ -199,9 +227,9 @@ namespace
             adj2.resize(graph.size());
             adj3.resize(graph.size());
             for (unsigned t = 0 ; t < graph.size() ; ++t) {
-                adj1[t] = bitset(graph.size(), 0);
-                adj2[t] = bitset(graph.size(), 0);
-                adj3[t] = bitset(graph.size(), 0);
+                adj1[t] = bitset(domain_size, 0);
+                adj2[t] = bitset(domain_size, 0);
+                adj3[t] = bitset(domain_size, 0);
                 for (unsigned u = 0 ; u < graph.size() ; ++u)
                     if (t != u && graph.adjacent(t, u))
                         for (unsigned v = 0 ; v < graph.size() ; ++v)
@@ -273,9 +301,10 @@ namespace
                     d.values.reset(unit_domain_value);
 
                     // adjacency
-                    for (auto & c : adjacency_constraints)
-                        if (c.first[unit_domain_v].test(d.v))
-                            d.values &= c.second[unit_domain_value];
+                    if (unit_domain_value != wildcard)
+                        for (auto & c : adjacency_constraints)
+                            if (c.first[unit_domain_v].test(d.v))
+                                d.values &= c.second[unit_domain_value];
 
                     if (d.values.none())
                         return false;
@@ -311,7 +340,7 @@ namespace
                 branch_values.push_back(branch_value);
 
             sort(branch_values.begin(), branch_values.end(), [&] (const auto & a, const auto & b) {
-                    return target_degrees[a] < target_degrees[b] || (target_degrees[a] == target_degrees[b] && a < b);
+                    return target_degrees.at(a) < target_degrees.at(b) || (target_degrees.at(a) == target_degrees.at(b) && a < b);
                     });
 
             for (auto & branch_value : branch_values) {
@@ -346,6 +375,7 @@ namespace
         auto run()
         {
             Assignments assignments;
+            assignments.wildcard = wildcard;
 
             // eliminate isolated vertices?
 

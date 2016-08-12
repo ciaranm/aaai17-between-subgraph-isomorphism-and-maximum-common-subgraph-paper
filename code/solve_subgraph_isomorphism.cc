@@ -93,6 +93,7 @@ auto main(int argc, char * argv[]) -> int
             ("timeout",            po::value<int>(),  "Abort after this many seconds")
             ("format",             po::value<std::string>(), "Specify graph file format (lad or dimacs)")
             ("d2graphs",                              "Use d2 graphs")
+            ("except",             po::value<int>(),  "Allow this many pattern vertices to be excluded")
             ;
 
         po::options_description all_options{ "All options" };
@@ -151,6 +152,8 @@ auto main(int argc, char * argv[]) -> int
         Params params;
 
         params.d2graphs = options_vars.count("d2graphs");
+        if (options_vars.count("except"))
+            params.except = options_vars["except"].as<int>();
 
         auto read_function = read_lad;
 
@@ -210,10 +213,12 @@ auto main(int argc, char * argv[]) -> int
             for (unsigned i = 0 ; i < graphs.first.size() ; ++i) {
                 for (unsigned j = 0 ; j < graphs.first.size() ; ++j) {
                     if (graphs.first.adjacent(i, j)) {
-                        if (! graphs.second.adjacent(result.isomorphism.find(i)->second, result.isomorphism.find(j)->second)) {
-                            std::cerr << "Oops! not an isomorphism: " << i << " -- " << j << " but "
-                               << result.isomorphism.find(i)->second << " -/- " << result.isomorphism.find(j)->second << std::endl;
-                            return EXIT_FAILURE;
+                        if (result.isomorphism.find(i)->second != -1 && result.isomorphism.find(j)->second != -1) {
+                            if (! graphs.second.adjacent(result.isomorphism.find(i)->second, result.isomorphism.find(j)->second)) {
+                                std::cerr << "Oops! not an isomorphism: " << i << " -- " << j << " but "
+                                   << result.isomorphism.find(i)->second << " -/- " << result.isomorphism.find(j)->second << std::endl;
+                                return EXIT_FAILURE;
+                            }
                         }
                     }
                 }

@@ -15,6 +15,8 @@ struct Params
     std::chrono::time_point<std::chrono::steady_clock> start_time;
 
     bool d2graphs = false;
+
+    unsigned except = 0;
 };
 
 #endif
