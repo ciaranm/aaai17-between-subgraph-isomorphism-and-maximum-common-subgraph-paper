@@ -45,7 +45,6 @@ namespace
     struct Assignments
     {
         vector<tuple<unsigned, unsigned, bool> > trail;
-        unsigned wildcard;
 
         auto push_branch(unsigned a, unsigned b) -> void
         {
@@ -69,10 +68,10 @@ namespace
                 trail.pop_back();
         }
 
-        auto store_to(map<int, int> & m) -> void
+        auto store_to(map<int, int> & m, unsigned wildcard_start) -> void
         {
             for (auto & t : trail) {
-                if (get<1>(t) == wildcard)
+                if (get<1>(t) >= wildcard_start)
                     m.emplace(get<0>(t), -1);
                 else
                     m.emplace(get<0>(t), get<1>(t));
@@ -92,15 +91,15 @@ namespace
 
         Domains initial_domains;
 
-        unsigned wildcard;
+        unsigned wildcard_start;
 
         SIP(const Params & k, const Graph & pattern, const Graph & target) :
             params(k),
-            domain_size(params.except >= 1 ? target.size() + 1 : target.size()),
+            domain_size(target.size() + params.except),
             pattern_degrees(pattern.size()),
             target_degrees(domain_size),
             initial_domains(pattern.size()),
-            wildcard(target.size())
+            wildcard_start(target.size())
         {
             // build up distance 1 adjacency bitsets
             add_adjacency_constraints(pattern, target);
@@ -183,7 +182,8 @@ namespace
 
                 // wildcard in domain?
                 if (params.except >= 1)
-                    initial_domains[p].values.set(wildcard);
+                    for (unsigned v = wildcard_start ; v != domain_size ; ++v)
+                        initial_domains[p].values.set(v);
             }
         }
 
@@ -301,7 +301,7 @@ namespace
                     d.values.reset(unit_domain_value);
 
                     // adjacency
-                    if (unit_domain_value != wildcard)
+                    if (unit_domain_value < wildcard_start)
                         for (auto & c : adjacency_constraints)
                             if (c.first[unit_domain_v].test(d.v))
                                 d.values &= c.second[unit_domain_value];
@@ -329,7 +329,7 @@ namespace
             auto branch_domain = select_branch_domain(domains);
 
             if (domains.end() == branch_domain) {
-                assignments.store_to(result.isomorphism);
+                assignments.store_to(result.isomorphism, wildcard_start);
                 return true;
             }
 
@@ -343,7 +343,15 @@ namespace
                     return target_degrees.at(a) < target_degrees.at(b) || (target_degrees.at(a) == target_degrees.at(b) && a < b);
                     });
 
+            bool already_did_a_wildcard = false;
+
             for (auto & branch_value : branch_values) {
+                if (already_did_a_wildcard && branch_value >= wildcard_start)
+                    continue;
+
+                if (branch_value >= wildcard_start)
+                    already_did_a_wildcard = true;
+
                 assignments.push_branch(branch_domain->v, branch_value);
 
                 Domains new_domains;
@@ -375,7 +383,6 @@ namespace
         auto run()
         {
             Assignments assignments;
-            assignments.wildcard = wildcard;
 
             // eliminate isolated vertices?
 
