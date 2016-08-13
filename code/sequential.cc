@@ -312,6 +312,49 @@ namespace
                     if (d.values.none())
                         return false;
                 }
+
+                if (! cheap_all_different(domains))
+                    return false;
+            }
+
+            return true;
+        }
+
+        auto cheap_all_different(Domains & domains) -> bool
+        {
+            // pick domains smallest first, with tiebreaking
+            vector<int> domains_order;
+            domains_order.resize(domains.size());
+            iota(domains_order.begin(), domains_order.begin() + domains.size(), 0);
+
+            sort(domains_order.begin(), domains_order.begin() + domains.size(),
+                    [&] (int a, int b) {
+                        return (domains.at(a).values.count() < domains.at(b).values.count()) || (domains.at(a).values.count() == domains.at(b).values.count() && a < b);
+                        });
+
+            // counting all-different
+            bitset domains_so_far = bitset(domain_size, 0), hall = bitset(domain_size, 0);
+            unsigned neighbours_so_far = 0;
+
+            for (int i = 0, i_end = domains.size() ; i != i_end ; ++i) {
+                auto & d = domains.at(domains_order.at(i));
+
+                d.values &= ~hall;
+
+                if (d.values.none())
+                    return false;
+
+                domains_so_far |= d.values;
+                ++neighbours_so_far;
+
+                unsigned domains_so_far_popcount = domains_so_far.count();
+                if (domains_so_far_popcount < neighbours_so_far)
+                    return false;
+                else if (domains_so_far_popcount == neighbours_so_far) {
+                    neighbours_so_far = 0;
+                    hall |= domains_so_far;
+                    domains_so_far.reset();
+                }
             }
 
             return true;
