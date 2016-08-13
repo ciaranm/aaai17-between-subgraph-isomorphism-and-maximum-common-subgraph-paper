@@ -130,10 +130,11 @@ As well as reasoning about degrees, we can also reason about paths.
 This leads to the following:
 
 \begin{proposition}
-    For a graph $G$, let $G^{n, \ell}$ be the graph with vertex set $\operatorname{V}(G)$. Let $p$ and $q$ be adjacent vertices of $G^{n, \ell}$, if there are at least $n$ simple paths of length
-    exactly $\ell$ between $p$ and $q$ in $G$. Then any subgraph-except-$k$ isomorphism
+    For a graph $G$, let $G^{n, \ell}$ be the graph with vertex set $\operatorname{V}(G)$. The
+    vertices $p$ and $q$ in $G^{n, \ell}$ are adjacent, if there are at least $n$ simple paths of
+    length exactly $\ell$ between $p$ and $q$ in $G$. Then any subgraph-except-$k$ isomorphism
     $P \prescript{}{k}{\rightarrowtail} T$ induces a new subgraph-except-$k$ isomorphism
-    $P{n, 2}\prescript{}{k}{\rightarrowtail} T^{n - k, 2}$.
+    $P^{n, 2}\prescript{}{k}{\rightarrowtail} T^{n - k, 2}$.
 \end{proposition}
 
 \section{An Algorithm}
