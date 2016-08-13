@@ -56,19 +56,35 @@ auto run_this_wrapped(const std::function<Result_ (const Data_ &, const Params_ 
 
         /* Start the clock */
         params.start_time = std::chrono::steady_clock::now();
-        auto result = func(data, params);
 
-        /* Clean up the timeout thread */
-        if (timeout_thread.joinable()) {
-            {
-                std::unique_lock<std::mutex> guard(timeout_mutex);
-                abort.store(true);
-                timeout_cv.notify_all();
+        try {
+            auto result = func(data, params);
+
+            /* Clean up the timeout thread */
+            if (timeout_thread.joinable()) {
+                {
+                    std::unique_lock<std::mutex> guard(timeout_mutex);
+                    abort.store(true);
+                    timeout_cv.notify_all();
+                }
+                timeout_thread.join();
             }
-            timeout_thread.join();
-        }
 
-        return result;
+            return result;
+        }
+        catch (...) {
+            /* Clean up the timeout thread */
+            if (timeout_thread.joinable()) {
+                {
+                    std::unique_lock<std::mutex> guard(timeout_mutex);
+                    abort.store(true);
+                    timeout_cv.notify_all();
+                }
+                timeout_thread.join();
+            }
+
+            throw;
+        }
     };
 }
 
