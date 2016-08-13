@@ -111,7 +111,7 @@ namespace
                 target_degrees[t] = target.degree(t);
 
             if (params.except >= 1)
-                target_degrees.at(target.size()) = 0;
+                target_degrees.at(target.size()) = target.size() + 1;
 
             vector<vector<vector<unsigned> > > p_nds(adjacency_constraints.size());
             vector<vector<vector<unsigned> > > t_nds(adjacency_constraints.size());
@@ -191,8 +191,8 @@ namespace
         {
             auto & d1 = *adjacency_constraints.insert(
                     adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
-            build_d1_adjacency(pattern, d1.first);
-            build_d1_adjacency(target, d1.second);
+            build_d1_adjacency(pattern, false, d1.first);
+            build_d1_adjacency(target, true, d1.second);
 
             if (params.d2graphs) {
                 auto & d21 = *adjacency_constraints.insert(
@@ -202,16 +202,16 @@ namespace
                 auto & d23 = *adjacency_constraints.insert(
                         adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
 
-                build_d2_adjacency(pattern, d21.first, d22.first, d23.first);
-                build_d2_adjacency(target, d21.second, d22.second, d23.second);
+                build_d2_adjacency(pattern, false, d21.first, d22.first, d23.first);
+                build_d2_adjacency(target, true, d21.second, d22.second, d23.second);
             }
         }
 
-        auto build_d1_adjacency(const Graph & graph, vector<bitset> & adj) const -> void
+        auto build_d1_adjacency(const Graph & graph, bool is_target, vector<bitset> & adj) const -> void
         {
             adj.resize(graph.size());
             for (unsigned t = 0 ; t < graph.size() ; ++t) {
-                adj[t] = bitset(domain_size, 0);
+                adj[t] = bitset(is_target ? domain_size : graph.size(), 0);
                 for (unsigned u = 0 ; u < graph.size() ; ++u)
                     if (t != u && graph.adjacent(t, u))
                         adj[t].set(u);
@@ -219,6 +219,7 @@ namespace
         }
 
         auto build_d2_adjacency(const Graph & graph,
+                bool is_target,
                 vector<bitset> & adj1,
                 vector<bitset> & adj2,
                 vector<bitset> & adj3) const -> void
@@ -227,9 +228,9 @@ namespace
             adj2.resize(graph.size());
             adj3.resize(graph.size());
             for (unsigned t = 0 ; t < graph.size() ; ++t) {
-                adj1[t] = bitset(domain_size, 0);
-                adj2[t] = bitset(domain_size, 0);
-                adj3[t] = bitset(domain_size, 0);
+                adj1[t] = bitset(is_target ? domain_size : graph.size(), 0);
+                adj2[t] = bitset(is_target ? domain_size : graph.size(), 0);
+                adj3[t] = bitset(is_target ? domain_size : graph.size(), 0);
                 for (unsigned u = 0 ; u < graph.size() ; ++u)
                     if (t != u && graph.adjacent(t, u))
                         for (unsigned v = 0 ; v < graph.size() ; ++v)
