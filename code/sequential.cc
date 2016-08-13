@@ -111,7 +111,7 @@ namespace
                 target_degrees[t] = target.degree(t);
 
             if (params.except >= 1)
-                target_degrees.at(target.size()) = 0;
+                target_degrees.at(target.size()) = target.size() + 1;
 
             vector<vector<vector<unsigned> > > p_nds(adjacency_constraints.size());
             vector<vector<vector<unsigned> > > t_nds(adjacency_constraints.size());
