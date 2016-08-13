@@ -12,6 +12,7 @@
 \usepackage{amsthm}
 \usepackage{cleveref}
 \usepackage{tikz}
+\usepackage{mathtools}
 
 \usetikzlibrary{decorations, decorations.pathreplacing, calc, backgrounds}
 
@@ -83,8 +84,8 @@ between 1 and 3) is much more scaleable than general maximum common subgraph alg
 
 \section{Some Maths}
 A non-induced subgraph isomorphism from a graph $P$ to a graph $T$ is an injective mapping
-$i: P \rightarrowtail T $ which maps adjacent vertices to adjacent vertices. An induced subgraph
-isomorphism $i: P \hookrightarrow T$, additionally maps non-adjacent vertices to non-adjacent
+$P \rightarrowtail T $ which maps adjacent vertices to adjacent vertices. An induced subgraph
+isomorphism $P \hookrightarrow T$, additionally maps non-adjacent vertices to non-adjacent
  vertices.
 
 A common induced subgraph of graphs $G$ and $H$ is a graph $P$, together with two induced subgraph
@@ -99,42 +100,40 @@ the pattern.
 
 We define a subgraph-except-$k$ isomorphism from $P$ to $T$ to be a subgraph isomorphism from all
 but $k$ vertices of $P$ to $T$; this may be non-induced or induced, written
-$i_{k}: P \rightarrowtail T$ and $i_{k}: P \hookrightarrow T$ respectively.
+$P \prescript{}{k}{\rightarrowtail} T$ and $P \prescript{}{k}{\hookrightarrow} T$ respectively.
 
 A non-induced subgraph-except-$k$ isomorphism from $P$ to $T$ is equivalent to a subgraph
 isomorphism between $P$ and $T$ with $k$ extra universally-adjacent vertices. (However, we can do a
 bit better algorithmically.) For induced subgraph-except-$k$ isomorphisms, such an approach cannot
 work.
 
-
 \todo{Define $\preceq$, deg, nds, paths}
 
 \begin{proposition}
     Let $p$ be a vertex of $P$ and $t$ a vertex in $T$. For both non-induced and induced
-    subgraph-except-$k$ isomorphisms, if $i_{k}(p) = t$ then
+    subgraph-except-$k$ isomorphisms, if $p \prescript{}{k}{\mapsto} t$ then
     $\operatorname{deg}(p) \le \operatorname{deg}(t) + k$.
 \end{proposition}
 
 \begin{proposition}
-    More powerfully, if $i_{k}(p) = t$ then $\operatorname{nds}(p)[k, k+1, \ldots] \preceq
-    \operatorname{nds}(t)$.
+    More powerfully, if $p \prescript{}{k}{\mapsto} t$ then
+    $\operatorname{nds}(p)[k+1, k+2, \ldots] \preceq \operatorname{nds}(t)$.
 \end{proposition}
 
 As well as reasoning about degrees, we can also reason about paths.
 
 \begin{proposition}
-    If $i_{k}(p) = t$ and $i_{k}(q) = u$ then $\operatorname{paths}(p, q, 2) \le
-    \operatorname{paths}(t, u, 2) + k$.
+    If $p \prescript{}{k}{\mapsto} t$ and $q \prescript{}{k}{\mapsto} u$ then
+     $\operatorname{paths}(p, q, 2) \le \operatorname{paths}(t, u, 2) + k$.
 \end{proposition}
 
 This leads to the following:
 
 \begin{proposition}
-    For a graph $G$, let $G^{n, \ell}$ be the graph with vertex set $\operatorname{V}(G)$, and
-    and $p,q\in\operatorname{V}(G)$, with $p$ and $q$ adjacent if there are at least $n$
-    simple paths of length exactly $\ell$ between $p$ and $q$ in $G$. Then any subgraph-except-$k$
-    isomorphism $i_{k}: P \rightarrowtail T$ induces a new subgraph-except-$k$ isomorphism
-    $i^{n, 2}_{k} : P^{n, 2}\rightarrowtail T^{n - k, 2}$.
+    For a graph $G$, let $G^{n, \ell}$ be the graph with vertex set $\operatorname{V}(G)$. Let $p$ and $q$ be adjacent vertices of $G^{n, \ell}$, if there are at least $n$ simple paths of length
+    exactly $\ell$ between $p$ and $q$ in $G$. Then any subgraph-except-$k$ isomorphism
+    $P \prescript{}{k}{\rightarrowtail} T$ induces a new subgraph-except-$k$ isomorphism
+    $P{n, 2}\prescript{}{k}{\rightarrowtail} T^{n - k, 2}$.
 \end{proposition}
 
 \section{An Algorithm}
