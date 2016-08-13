@@ -94,6 +94,7 @@ auto main(int argc, char * argv[]) -> int
             ("format",             po::value<std::string>(), "Specify graph file format (lad or dimacs)")
             ("d2graphs",                              "Use d2 graphs")
             ("except",             po::value<int>(),  "Allow this many pattern vertices to be excluded")
+            ("induced",                               "Induced")
             ;
 
         po::options_description all_options{ "All options" };
@@ -152,6 +153,7 @@ auto main(int argc, char * argv[]) -> int
         Params params;
 
         params.d2graphs = options_vars.count("d2graphs");
+        params.induced = options_vars.count("induced");
         if (options_vars.count("except"))
             params.except = options_vars["except"].as<int>();
 

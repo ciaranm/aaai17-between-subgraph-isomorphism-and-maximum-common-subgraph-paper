@@ -306,6 +306,8 @@ namespace
                         for (auto & c : adjacency_constraints)
                             if (c.first[unit_domain_v].test(d.v))
                                 d.values &= c.second[unit_domain_value];
+                            else if (params.induced)
+                                d.values &= ~c.second[unit_domain_value];
 
                     if (d.values.none())
                         return false;
