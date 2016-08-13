@@ -94,8 +94,8 @@ problems are symmetric in their inputs, but we are allowing extra edges only in 
 the pattern.
 
 We define a subgraph-except-$k$ isomorphism from $P$ to $T$ to be a subgraph isomorphism from all
-but $k$ vertices of $P$ to $T$; this may be non-induced or induced, written $P[-k] \rightarrowtail
-T$ and $P[-k] \hookrightarrow T$ respectively.
+but $k$ vertices of $P$ to $T$; this may be non-induced or induced, written $P[k] \rightarrowtail
+T$ and $P[k] \hookrightarrow T$ respectively.
 
 A non-induced subgraph-except-$k$ isomorphism from $P$ to $T$ is equivalent to a subgraph
 isomorphism between $P$ and $T$ with $k$ extra universally-adjacent vertices. (However, we can do a
@@ -124,8 +124,8 @@ This leads to the following:
 \begin{proposition}
     For a graph $G$, let $G^{n, \ell}$ be the graph with vertex set $\operatorname{V}(G)$, and edges
     between vertices $p$ and $q$ if there are at least $n$ simple paths of length exactly $\ell$
-    between $p$ and $q$ in $G$. Then any subgraph-except-$k$ isomorphism $i : P[-k] \rightarrowtail
-    T$ induces a new subgraph-except-$k$ isomorphism $i^{n, 2} : P^{n, 2}[-k]
+    between $p$ and $q$ in $G$. Then any subgraph-except-$k$ isomorphism $i : P[k] \rightarrowtail
+    T$ induces a new subgraph-except-$k$ isomorphism $i^{n, 2} : P^{n, 2}[k]
     \rightarrowtail T^{n - k, 2}$.
 \end{proposition}
 
