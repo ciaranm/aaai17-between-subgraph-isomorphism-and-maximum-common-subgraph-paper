@@ -223,6 +223,15 @@ auto main(int argc, char * argv[]) -> int
                             }
                         }
                     }
+                    else if (params.induced && ! graphs.first.adjacent(i, j)) {
+                        if (result.isomorphism.find(i)->second != -1 && result.isomorphism.find(j)->second != -1) {
+                            if (graphs.second.adjacent(result.isomorphism.find(i)->second, result.isomorphism.find(j)->second)) {
+                                std::cerr << "Oops! not an induced isomorphism: " << i << " -/- " << j << " but "
+                                   << result.isomorphism.find(i)->second << " -- " << result.isomorphism.find(j)->second << std::endl;
+                                return EXIT_FAILURE;
+                            }
+                        }
+                    }
                 }
             }
         }
