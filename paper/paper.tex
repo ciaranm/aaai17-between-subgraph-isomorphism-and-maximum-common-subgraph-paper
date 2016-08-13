@@ -102,10 +102,31 @@ isomorphism between $P$ and $T$ with $k$ extra universally-adjacent vertices. (H
 bit better algorithmically.) For induced subgraph-except-$k$ isomorphisms, such an approach cannot
 work.
 
-The following propositions hold for both non-induced and induced subgraph-except-$k$ isomorphisms.
+\begin{proposition}
+    For both non-induced and induced subgraph-except-$k$ isomorphisms, if $p \mapsto t$ then
+    $\operatorname{deg}(p) \le \operatorname{deg}(t) + k$.
+\end{proposition}
 
 \begin{proposition}
-    If $p \mapsto t$ then $\operatorname{deg}(p) \le \operatorname{deg}(t) + k$.
+    More powerfully, if $p \mapsto t$ then $\operatorname{nds}(p)[k, k+1, \ldots] \preceq
+    \operatorname{nds}(t)$.
+\end{proposition}
+
+As well as reasoning about degrees, we can also reason about paths.
+
+\begin{proposition}
+    If $p \mapsto t$ and $q \mapsto u$ then $\operatorname{paths}(p, q, 2) \le
+    \operatorname{paths}(t, u, 2) + k$.
+\end{proposition}
+
+This leads to the following:
+
+\begin{proposition}
+    For a graph $G$, let $G^{n, \ell}$ be the graph with vertex set $\operatorname{V}(G)$, and edges
+    between vertices $p$ and $q$ if there are at least $n$ simple paths of length exactly $\ell$
+    between $p$ and $q$ in $G$. Then any subgraph-except-$k$ isomorphism $i : P[-k] \rightarrowtail
+    T$ induces a new subgraph-except-$k$ isomorphism $i^{n, 2} : P^{n, 2}[-k]
+    \rightarrowtail T^{n - k, 2}$.
 \end{proposition}
 
 \section{An Algorithm}
