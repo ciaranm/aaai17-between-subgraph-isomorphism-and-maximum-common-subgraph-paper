@@ -1,43 +1,8 @@
 % vim: set spell spelllang=en tw=100 :
 
 \documentclass[letterpaper]{article}
-\usepackage[pass]{geometry}
 
-\usepackage{ijcai16}
-\usepackage{times}
-\usepackage{complexity}
-\usepackage{microtype}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{amsthm}
-\usepackage{cleveref}
-\usepackage{tikz}
-\usepackage{mathtools}
-
-\usetikzlibrary{decorations, decorations.pathreplacing, calc, backgrounds}
-
-\definecolor{uofgsandstone}{rgb}{0.321569, 0.278431, 0.231373}
-\definecolor{uofglawn}{rgb}{0.517647, 0.741176, 0}
-\definecolor{uofgcobalt}{rgb}{0, 0.615686, 0.92549}
-\definecolor{uofgpumpkin}{rgb}{1.0, 0.72549, 0.282353}
-\definecolor{uofgthistle}{rgb}{0.584314, 0.070588, 0.447059}
-
-\newcommand{\citet}[1]{\citeauthor{#1} \shortcite{#1}}
-\newcommand{\citep}[1]{\cite{#1}}
-
-\theoremstyle{definition}
-\newtheorem{proposition}{Proposition}
-
-% cref style
-\crefname{figure}{Figure}{Figures}
-\Crefname{figure}{Figure}{Figures}
-
-% http://tex.stackexchange.com/questions/22100/the-bar-and-overline-commands
-\newcommand{\shortoverline}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
-
-%to do comments
-\usepackage{color}
-\newcommand{\todo}[1]{{\color{red} {[}{#1}{]}}}
+\include{preamble}
 
 \title{Between Subgraph Isomorphism and Maximum Common Subgraph}
 
@@ -98,33 +63,40 @@ rather than vertices. However, this is not what we are looking for: usually maxi
 problems are symmetric in their inputs, but we are allowing extra edges only in the target, not in
 the pattern.
 
-We define a subgraph-except-$k$ isomorphism from $P$ to $T$ to be a subgraph isomorphism from all
+We define a $k$-less-subgraph isomorphism from $P$ to $T$ to be a subgraph isomorphism from all
 but $k$ vertices of $P$ to $T$; this may be non-induced or induced, written
-$P \prescript{}{k}{\rightarrowtail} T$ and $P \prescript{}{k}{\hookrightarrow} T$ respectively.
+$P \lessnonind{k} T$ and $P \lessind{k} T$ respectively.
 
-A non-induced subgraph-except-$k$ isomorphism from $P$ to $T$ is equivalent to a subgraph
+A non-induced $k$-less-subgraph isomorphism from $P$ to $T$ is equivalent to a subgraph
 isomorphism between $P$ and $T$ with $k$ extra universally-adjacent vertices. (However, we can do a
-bit better algorithmically.) For induced subgraph-except-$k$ isomorphisms, such an approach cannot
+bit better algorithmically.) For induced $k$-less-subgraph isomorphisms, such an approach cannot
 work.
+
+Let $S$ and $T$ be two sequences. We define $S \preceq T$
 
 \todo{Define $\preceq$, deg, nds, paths}
 
 \begin{proposition}
     Let $p$ be a vertex in $P$ and $t$ a vertex in $T$. For both non-induced and induced
-    subgraph-except-$k$ isomorphisms, if $p \prescript{}{k}{\mapsto} t$ then
-    $\operatorname{deg}(p) \le \operatorname{deg}(t) + k$.
+    $k$-less-subgraph isomorphisms, if $p \prescript{}{k}{\mapsto} t$ then
+    $\deg(p) \le \deg(t) + k$.
 \end{proposition}
 \begin{proof}
-Let $p$ be a vertex in $P$, and $t$ a vertex in $T$, with $p\mapsto t$. Then by the definition of subgraph isomorphisms, $\operatorname{deg}(p) \le \operatorname{deg}(t)$. Let $P'$ be $P$ less $k$ vertices and $p$ a vertex in $P'$. Then
+Let $p$ be a vertex in $P$, and $t$ a vertex in $T$, with $p\mapsto t$. Then by the definition of subgraph isomorphisms, $\deg(p) \le \deg(t)$. Let $P'$ be $P$ less $k$ vertices and $p$ a vertex in $P'$. Then
 \[
-\operatorname{deg}_{P}(p)-k \le \operatorname{deg}_{P'}(p) \le \operatorname{deg}_{P}(p) \le \operatorname{deg}(t).
+\deg_{P}(p)-k \le \deg_{P'}(p) \le \deg_{P}(p) \le \deg(t).
 \]
 \end{proof}
 
 \begin{proposition}
     More powerfully, if $p \prescript{}{k}{\mapsto} t$ then
-    $\operatorname{nds}(p)[k+1, k+2, \ldots] \preceq \operatorname{nds}(t)$.
+    $\nds(p)[k+1, k+2, \ldots] \preceq \nds(t)$.
 \end{proposition}
+
+\begin{proof}
+Let
+
+\end{proof}
 
 As well as reasoning about degrees, we can also reason about paths.
 
@@ -138,9 +110,9 @@ This leads to the following:
 \begin{proposition}
     For a graph $G$, let $G^{n, \ell}$ be the graph with vertex set $\operatorname{V}(G)$. The
     vertices $p$ and $q$ in $G^{n, \ell}$ are adjacent, if there are at least $n$ simple paths of
-    length exactly $\ell$ between $p$ and $q$ in $G$. Then any subgraph-except-$k$ isomorphism
-    $P \prescript{}{k}{\rightarrowtail} T$ induces a new subgraph-except-$k$ isomorphism
-    $P^{n, 2}\prescript{}{k}{\rightarrowtail} T^{n - k, 2}$.
+    length exactly $\ell$ between $p$ and $q$ in $G$. Then any $k$-less-subgraph isomorphism
+    $P \lessnonind{k} T$ induces a new $k$-less-subgraph isomorphism
+    $P^{n, 2}\lessnonind{k} T^{n - k, 2}$.
 \end{proposition}
 
 \section{An Algorithm}
