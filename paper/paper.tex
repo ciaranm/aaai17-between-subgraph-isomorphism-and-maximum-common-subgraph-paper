@@ -110,10 +110,16 @@ work.
 \todo{Define $\preceq$, deg, nds, paths}
 
 \begin{proposition}
-    Let $p$ be a vertex of $P$ and $t$ a vertex in $T$. For both non-induced and induced
+    Let $p$ be a vertex in $P$ and $t$ a vertex in $T$. For both non-induced and induced
     subgraph-except-$k$ isomorphisms, if $p \prescript{}{k}{\mapsto} t$ then
     $\operatorname{deg}(p) \le \operatorname{deg}(t) + k$.
 \end{proposition}
+\begin{proof}
+Let $p$ be a vertex in $P$, and $t$ a vertex in $T$, with $p\mapsto t$. Then by the definition of subgraph isomorphisms, $\operatorname{deg}(p) \le \operatorname{deg}(t)$. Let $P'$ be $P$ less $k$ vertices and $p$ a vertex in $P'$. Then
+\[
+\operatorname{deg}_{P}(p)-k \le \operatorname{deg}_{P'}(p) \le \operatorname{deg}_{P}(p) \le \operatorname{deg}(t).
+\]
+\end{proof}
 
 \begin{proposition}
     More powerfully, if $p \prescript{}{k}{\mapsto} t$ then
