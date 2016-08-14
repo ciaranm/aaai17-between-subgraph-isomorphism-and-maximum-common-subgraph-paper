@@ -109,6 +109,8 @@ auto main(int argc, char * argv[]) -> int
             ("timeout",            po::value<int>(),  "Abort after this many seconds")
             ("format",             po::value<std::string>(), "Specify graph file format (lad or dimacs)")
             ("d2graphs",                              "Use d2 graphs")
+            ("degree",                                "Use degree filtering")
+            ("nds",                                   "Use NDS filtering")
             ("except",             po::value<int>(),  "Allow this many pattern vertices to be excluded")
             ("induced",                               "Induced")
             ;
@@ -170,6 +172,8 @@ auto main(int argc, char * argv[]) -> int
 
         params.d2graphs = options_vars.count("d2graphs");
         params.induced = options_vars.count("induced");
+        params.degree = options_vars.count("degree");
+        params.nds = options_vars.count("nds");
         if (options_vars.count("except"))
             params.except = options_vars["except"].as<int>();
 

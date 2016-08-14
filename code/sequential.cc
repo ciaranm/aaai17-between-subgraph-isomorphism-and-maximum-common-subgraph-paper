@@ -118,27 +118,29 @@ namespace
             vector<vector<vector<unsigned> > > p_nds(adjacency_constraints.size());
             vector<vector<vector<unsigned> > > t_nds(adjacency_constraints.size());
 
-            for (unsigned p = 0 ; p < pattern.size() ; ++p) {
-                unsigned cn = 0;
-                for (auto & c : adjacency_constraints) {
-                    p_nds[cn].resize(pattern.size());
-                    for (unsigned q = 0 ; q < pattern.size() ; ++q)
-                        if (c.first[p][q])
-                            p_nds[cn][p].push_back(c.first[q].count());
-                    sort(p_nds[cn][p].begin(), p_nds[cn][p].end(), greater<unsigned>());
-                    ++cn;
+            if (params.nds) {
+                for (unsigned p = 0 ; p < pattern.size() ; ++p) {
+                    unsigned cn = 0;
+                    for (auto & c : adjacency_constraints) {
+                        p_nds[cn].resize(pattern.size());
+                        for (unsigned q = 0 ; q < pattern.size() ; ++q)
+                            if (c.first[p][q])
+                                p_nds[cn][p].push_back(c.first[q].count());
+                        sort(p_nds[cn][p].begin(), p_nds[cn][p].end(), greater<unsigned>());
+                        ++cn;
+                    }
                 }
-            }
 
-            for (unsigned t = 0 ; t < target.size() ; ++t) {
-                unsigned cn = 0;
-                for (auto & c : adjacency_constraints) {
-                    t_nds[cn].resize(target.size());
-                    for (unsigned q = 0 ; q < target.size() ; ++q)
-                        if (c.second[t][q])
-                            t_nds[cn][t].push_back(c.second[q].count());
-                    sort(t_nds[cn][t].begin(), t_nds[cn][t].end(), greater<unsigned>());
-                    ++cn;
+                for (unsigned t = 0 ; t < target.size() ; ++t) {
+                    unsigned cn = 0;
+                    for (auto & c : adjacency_constraints) {
+                        t_nds[cn].resize(target.size());
+                        for (unsigned q = 0 ; q < target.size() ; ++q)
+                            if (c.second[t][q])
+                                t_nds[cn][t].push_back(c.second[q].count());
+                        sort(t_nds[cn][t].begin(), t_nds[cn][t].end(), greater<unsigned>());
+                        ++cn;
+                    }
                 }
             }
 
@@ -164,11 +166,11 @@ namespace
                         }
 
                         // check degree
-                        if (ok && 0 == params.except && ! (c.first[p].count() <= c.second[t].count()))
+                        if (ok && params.degree && 0 == params.except && ! (c.first[p].count() <= c.second[t].count()))
                             ok = false;
 
                         // check except-degree
-                        if (ok && params.except >= 1 && ! (c.first[p].count() <= c.second[t].count() + params.except))
+                        if (ok && params.degree && params.except >= 1 && ! (c.first[p].count() <= c.second[t].count() + params.except))
                             ok = false;
 
                         if (! ok)
@@ -176,11 +178,13 @@ namespace
                     }
 
                     // neighbourhood degree sequences
-                    for (unsigned cn = 0 ; cn < adjacency_constraints.size() && ok ; ++cn) {
-                        for (unsigned i = params.except ; i < p_nds[cn][p].size() ; ++i) {
-                            if (t_nds[cn][t][i - params.except] < p_nds[cn][p][i]) {
-                                ok = false;
-                                break;
+                    if (params.nds) {
+                        for (unsigned cn = 0 ; cn < adjacency_constraints.size() && ok ; ++cn) {
+                            for (unsigned i = params.except ; i < p_nds[cn][p].size() ; ++i) {
+                                if (t_nds[cn][t][i - params.except] < p_nds[cn][p][i]) {
+                                    ok = false;
+                                    break;
+                                }
                             }
                         }
                     }

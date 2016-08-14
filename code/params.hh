@@ -16,6 +16,8 @@ struct Params
 
     bool d2graphs = false;
     bool induced = false;
+    bool nds = false;
+    bool degree = false;
 
     unsigned except = 0;
 };
