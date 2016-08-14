@@ -6,6 +6,7 @@
 #include <functional>
 #include <list>
 #include <map>
+#include <numeric>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -142,18 +143,24 @@ namespace
             }
 
             // build up initial domains
+            vector<pair<unsigned, unsigned> > initial_domain_sizes;
             for (unsigned p = 0 ; p < pattern.size() ; ++p) {
                 initial_domains[p].v = p;
                 initial_domains[p].values = bitset(domain_size);
                 initial_domains[p].fixed = false;
 
+                initial_domain_sizes.emplace_back(0, 0);
+
                 // decide initial domain values
                 for (unsigned t = 0 ; t < target.size() ; ++t) {
-                    bool ok = true;
+                    bool ok = true, count_towards_domain_stats = true;
+
                     for (auto & c : adjacency_constraints) {
                         // check loops
-                        if (c.first[p][p] != c.second[t][t])
+                        if (c.first[p][p] != c.second[t][t]) {
                             ok = false;
+                            count_towards_domain_stats = false;
+                        }
 
                         // check degree
                         if (ok && 0 == params.except && ! (c.first[p].count() <= c.second[t].count()))
@@ -177,14 +184,23 @@ namespace
                         }
                     }
 
-                    if (ok)
+                    if (ok) {
+                        ++initial_domain_sizes.back().first;
                         initial_domains[p].values.set(t);
+                    }
+
+                    if (count_towards_domain_stats)
+                        ++initial_domain_sizes.back().second;
                 }
 
                 // wildcard in domain?
                 if (params.except >= 1)
                     for (unsigned v = wildcard_start ; v != domain_size ; ++v)
                         initial_domains[p].values.set(v);
+
+                // record stats
+                for (auto & d : initial_domain_sizes)
+                    result.stats.emplace("d" + to_string(p), to_string(d.first) + "/" + to_string(d.second));
             }
         }
 
