@@ -152,18 +152,14 @@ namespace
 
                 // decide initial domain values
                 for (unsigned t = 0 ; t < target.size() ; ++t) {
-                    bool ok = true, count_towards_domain_stats = true;
+                    bool ok = true;
 
                     for (auto & c : adjacency_constraints) {
                         // check loops
-                        if (c.first[p][p] && ! c.second[t][t]) {
+                        if (c.first[p][p] && ! c.second[t][t])
                             ok = false;
-                            count_towards_domain_stats = false;
-                        }
-                        else if (params.induced && ! c.first[p][p] && c.second[t][t]) {
+                        else if (params.induced && ! c.first[p][p] && c.second[t][t])
                             ok = false;
-                            count_towards_domain_stats = false;
-                        }
 
                         // check degree
                         if (ok && params.degree && 0 == params.except && ! (c.first[p].count() <= c.second[t].count()))
