@@ -143,13 +143,10 @@ namespace
             }
 
             // build up initial domains
-            vector<pair<unsigned, unsigned> > initial_domain_sizes;
             for (unsigned p = 0 ; p < pattern.size() ; ++p) {
                 initial_domains[p].v = p;
                 initial_domains[p].values = bitset(domain_size);
                 initial_domains[p].fixed = false;
-
-                initial_domain_sizes.emplace_back(0, 0);
 
                 // decide initial domain values
                 for (unsigned t = 0 ; t < target.size() ; ++t) {
@@ -188,23 +185,14 @@ namespace
                         }
                     }
 
-                    if (ok) {
-                        ++initial_domain_sizes.back().first;
+                    if (ok)
                         initial_domains[p].values.set(t);
-                    }
-
-                    if (count_towards_domain_stats)
-                        ++initial_domain_sizes.back().second;
                 }
 
                 // wildcard in domain?
                 if (params.except >= 1)
                     for (unsigned v = wildcard_start ; v != domain_size ; ++v)
                         initial_domains[p].values.set(v);
-
-                // record stats
-                for (auto & d : initial_domain_sizes)
-                    result.stats.emplace("d" + to_string(p), to_string(d.first) + "/" + to_string(d.second));
             }
         }
 
@@ -306,8 +294,13 @@ namespace
             while (! domains.empty()) {
                 auto unit_domain_iter = select_unit_domain(domains);
 
-                if (unit_domain_iter == domains.end())
-                    break;
+                if (unit_domain_iter == domains.end()) {
+                    if (! cheap_all_different(domains))
+                        return false;
+                    unit_domain_iter = select_unit_domain(domains);
+                    if (unit_domain_iter == domains.end())
+                        break;
+                }
 
                 auto unit_domain_v = unit_domain_iter->v;
                 auto unit_domain_value = unit_domain_iter->values.find_first();
@@ -333,9 +326,6 @@ namespace
                     if (d.values.none())
                         return false;
                 }
-
-                if (! cheap_all_different(domains))
-                    return false;
             }
 
             return true;
@@ -390,9 +380,6 @@ namespace
 
             ++result.nodes;
 
-            if (! unit_propagate(domains, assignments))
-                return false;
-
             auto branch_domain = select_branch_domain(domains);
 
             if (domains.end() == branch_domain) {
@@ -437,8 +424,9 @@ namespace
                         new_domains.emplace_back(Domain{ unsigned(d.v), false, d.values });
                 }
 
-                if (solve(new_domains, assignments))
-                    return true;
+                if (unit_propagate(domains, assignments))
+                    if (solve(new_domains, assignments))
+                        return true;
 
                 // restore assignments
                 assignments.pop();
@@ -447,13 +435,24 @@ namespace
             return false;
         }
 
+        auto record_domain_sizes_in_stats(const Domains & domains)
+        {
+            for (auto & d : domains)
+                result.stats.emplace("IDS" + to_string(d.v), to_string(d.values.count()));
+        }
+
         auto run()
         {
             Assignments assignments;
 
             // eliminate isolated vertices?
 
-            solve(initial_domains, assignments);
+            if (unit_propagate(initial_domains, assignments)) {
+                record_domain_sizes_in_stats(initial_domains);
+                solve(initial_domains, assignments);
+            }
+            else
+                record_domain_sizes_in_stats(initial_domains);
         }
     };
 }
