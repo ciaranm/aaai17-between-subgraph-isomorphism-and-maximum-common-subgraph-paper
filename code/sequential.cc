@@ -424,7 +424,7 @@ namespace
                         new_domains.emplace_back(Domain{ unsigned(d.v), false, d.values });
                 }
 
-                if (unit_propagate(domains, assignments))
+                if (unit_propagate(new_domains, assignments))
                     if (solve(new_domains, assignments))
                         return true;
 
