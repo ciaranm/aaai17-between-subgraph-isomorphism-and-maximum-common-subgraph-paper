@@ -157,7 +157,11 @@ namespace
 
                     for (auto & c : adjacency_constraints) {
                         // check loops
-                        if (c.first[p][p] != c.second[t][t]) {
+                        if (c.first[p][p] && ! c.second[t][t]) {
+                            ok = false;
+                            count_towards_domain_stats = false;
+                        }
+                        else if (params.induced && ! c.first[p][p] && c.second[t][t]) {
                             ok = false;
                             count_towards_domain_stats = false;
                         }
@@ -230,7 +234,7 @@ namespace
             for (unsigned t = 0 ; t < graph.size() ; ++t) {
                 adj[t] = bitset(is_target ? domain_size : graph.size(), 0);
                 for (unsigned u = 0 ; u < graph.size() ; ++u)
-                    if (t != u && graph.adjacent(t, u))
+                    if (graph.adjacent(t, u))
                         adj[t].set(u);
             }
         }
