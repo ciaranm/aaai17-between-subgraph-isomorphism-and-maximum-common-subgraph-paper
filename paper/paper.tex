@@ -40,12 +40,15 @@ recent subgraph isomorphism algorithms are comfortable working with graphs with 
 vertices, the state of the art for the maximum common subgraph problem becomes computationally
 infeasible at only 35 vertices when working with unlabelled graphs \citep{CP2016MCSPaper}. This is
 largely because strong inference, based upon the degrees of vertices
-\citep{DBLP:journals/ai/Solnon10} and the distances between them
+\citep{DBLP:journals/ai/Solnon10} and the distances or paths between them
 \citep{DBLP:conf/cp/AudemardLMGP14,DBLP:conf/cp/McCreeshP15}, is possible with subgraph isomorphism,
 but not maximum common subgraph, and so the state space in the former is much more restricted. In
 this work we discuss an intermediate problem, where we must map all but $k$ vertices of the pattern
-graph into the target. We then present and evaluate an algorithm which, when $k$ is small (say,
-between 1 and 3) is much more scaleable than general maximum common subgraph algorithms.
+graph into the target. We show that if $k$ is reasonably small (say, between 1 and 5), then weakened
+forms of degree and path based filterings are still effective in pruning the search space and
+providing additional constraints respectively. We then show that combining these techniques does
+lead to a practical algorithm which can scale to work with the families of graphs commonly used to
+benchmark subgraph isomorphism algorithms.
 
 \subsection{Definitions and Notations}
 
