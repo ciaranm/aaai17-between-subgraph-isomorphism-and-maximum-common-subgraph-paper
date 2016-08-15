@@ -437,8 +437,12 @@ namespace
 
         auto record_domain_sizes_in_stats(const Domains & domains)
         {
+            auto wildcards = bitset(domain_size);
+            for (unsigned v = wildcard_start ; v != domain_size ; ++v)
+                wildcards.set(v);
+
             for (auto & d : domains)
-                result.stats.emplace("IDS" + to_string(d.v), to_string(d.values.count()));
+                result.stats.emplace("IDS" + to_string(d.v), to_string((d.values & ~wildcards).count()));
         }
 
         auto run()
