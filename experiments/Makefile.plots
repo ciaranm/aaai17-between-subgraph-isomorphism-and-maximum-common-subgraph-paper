@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-FILTERING_ALGORITHMS := sequential sequential-induced
+FILTERING_ALGORITHMS := sequential
 EXCEPTS := $(shell seq 0 3 )
 RESULTS := results
 
@@ -9,6 +9,6 @@ $(RESULTS)/ids.data :
 	{ \
 	    echo instance family $$(for a in $(FILTERING_ALGORITHMS) ; do for x in $(EXCEPTS) ; do echo $$a-except-$$x ; done ; done ) ; \
 	    cat instances.txt | while read i p t f ; do \
-	    echo $$i $$f $$(for a in $(FILTERING_ALGORITHMS) ; do for x in $(EXCEPTS) ; do { echo scale=10 \; ; for f in '' '-nofilter' ; do while read v ; do [[ $$v == $${v/IDS} ]] && continue ; eval $${f/-}$$v ; done < <(sed -n -e '4p' < $(RESULTS)/$$a$$f/except-$$x/$$i.out | xargs -n1 ) ; done ; while read v ; do t=$${v/=*} ; u=nofilter$${v/=*} ; if [[ $${!u} == 0 ]] ; then echo 0 @ ; else echo '(' $${!t} / $${!u} ')' @ ; fi ; done < <(sed -n -e '4p' < $(RESULTS)/$$a$$f/except-$$x/$$i.out | xargs -n1 ) ; echo 1 ; } | xargs | tr '@' '*' | env BC_LINE_LENGTH=0 bc ; done ; done ; ) ; \
+	    echo $$i $$f $$(for a in $(FILTERING_ALGORITHMS) ; do for x in $(EXCEPTS) ; do { echo scale=1000 \; ; for f in '' '-nofilter' ; do while read v ; do [[ $$v == $${v/IDS} ]] && continue ; eval $${f/-}$$v ; done < <(sed -n -e '4p' < $(RESULTS)/$$a$$f/except-$$x/$$i.out | xargs -n1 ) ; done ; while read v ; do t=$${v/=*} ; u=nofilter$${v/=*} ; if [[ $${!u} == 0 ]] ; then echo 0 @ ; else echo '(' $${!t} / $${!u} ')' @ ; fi ; done < <(sed -n -e '4p' < $(RESULTS)/$$a$$f/except-$$x/$$i.out | xargs -n1 ) ; echo 1 ; } | xargs | tr '@' '*' | env BC_LINE_LENGTH=0 bc ; done ; done ; ) ; \
 	    done ; \
 	} | tee $@
