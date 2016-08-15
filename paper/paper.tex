@@ -84,7 +84,7 @@ Let $S$ and $T$ be two sequences. We define $S \preceq T$
 \begin{proposition}
     Let $p$ be a vertex in $P$ and $t$ a vertex in $T$. For both non-induced and induced
     $k$-less-subgraph isomorphisms, if $p \prescript{}{k}{\mapsto} t$ then
-    $\deg(p) \le \deg(t) + k$.
+    $\deg(p) - k \le \deg(t)$.
 \end{proposition}
 \begin{proof}
 Let $p$ be a vertex in $P$, and $t$ a vertex in $T$, with $p\mapsto t$. Then by the definition of subgraph isomorphisms, $\deg(p) \le \deg(t)$. Let $P'$ be $P$ less $k$ vertices and $p$ a vertex in $P'$. Then
@@ -95,7 +95,7 @@ Let $p$ be a vertex in $P$, and $t$ a vertex in $T$, with $p\mapsto t$. Then by 
 
 \begin{proposition}
     More powerfully, if $p \prescript{}{k}{\mapsto} t$ then
-    $\nds(p)[k+1, k+2, \ldots] \preceq \nds(t)$.
+    $(\nds(p)[k+1] - k, \nds(p)[k+2] - k, \ldots) \preceq \nds(t)$.
 \end{proposition}
 
 \begin{proof}
