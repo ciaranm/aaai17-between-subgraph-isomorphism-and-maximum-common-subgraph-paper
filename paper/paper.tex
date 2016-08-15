@@ -47,7 +47,8 @@ this work we discuss an intermediate problem, where we must map all but $k$ vert
 graph into the target. We then present and evaluate an algorithm which, when $k$ is small (say,
 between 1 and 3) is much more scaleable than general maximum common subgraph algorithms.
 
-\section{Some Maths}
+\subsection{Definitions and Notations}
+
 A non-induced subgraph isomorphism from a graph $P$ to a graph $T$ is an injective mapping
 $P \rightarrowtail T $ which maps adjacent vertices to adjacent vertices. An induced subgraph
 isomorphism $P \hookrightarrow T$, additionally maps non-adjacent vertices to non-adjacent
@@ -67,6 +68,10 @@ We define a $k$-less-subgraph isomorphism from $P$ to $T$ to be a subgraph isomo
 but $k$ vertices of $P$ to $T$; this may be non-induced or induced, written
 $P \lessnonind{k} T$ and $P \lessind{k} T$ respectively.
 
+\subsection{Models and Algorithms}
+
+\section{Domain Filtering}
+
 A non-induced $k$-less-subgraph isomorphism from $P$ to $T$ is equivalent to a subgraph
 isomorphism between $P$ and $T$ with $k$ extra universally-adjacent vertices. (However, we can do a
 bit better algorithmically.) For induced $k$-less-subgraph isomorphisms, such an approach cannot
@@ -74,7 +79,7 @@ work.
 
 Let $S$ and $T$ be two sequences. We define $S \preceq T$
 
-\todo{Define $\preceq$, deg, nds, paths}
+\todo{Define $\preceq$, deg, nds}
 
 \begin{proposition}
     Let $p$ be a vertex in $P$ and $t$ a vertex in $T$. For both non-induced and induced
@@ -98,7 +103,11 @@ Let
 
 \end{proof}
 
+\section{Filtering During Search}
+
 As well as reasoning about degrees, we can also reason about paths.
+
+\todo{Define paths}
 
 \begin{proposition}
     If $p \prescript{}{k}{\mapsto} t$ and $q \prescript{}{k}{\mapsto} u$ then
@@ -115,7 +124,7 @@ This leads to the following:
     $P^{n, 2}\lessnonind{k} T^{n - k, 2}$.
 \end{proposition}
 
-\section{An Algorithm}
+\section{A New Algorithm}
 
 \section{Empirical Evaluation}
 
@@ -128,14 +137,6 @@ Comparison with the clique and CP models, as well as ``drop k vertices and try e
 Just results and ``drop k vertices and try each in turn''.
 
 \subsection{Parallel Search}
-
-\subsection{Filtering and Propagation}
-
-\subsubsection{Initial Domain Sizes}
-
-Remember loops can make this overly optimistic if we just take the products!
-
-\subsubsection{Is Path Filtering Useful?}
 
 \section{Conclusion}
 
