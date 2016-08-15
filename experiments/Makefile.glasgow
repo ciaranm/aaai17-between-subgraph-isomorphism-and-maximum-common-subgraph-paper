@@ -4,7 +4,7 @@ MODULUS := 1
 INSTANCES := $(shell cut -d' ' -f1 instances.txt | if [[ $(FILTER) == -1 ]] ; then cat ; else awk "(NR % $(MODULUS)) == ($(FILTER) % $(MODULUS))" ; fi)
 TIMEOUT := 1000
 ALGORITHMS := sequential sequential-nofilter
-EXCEPTS := $(shell seq 0 10 ) 20 50 100
+EXCEPTS := $(shell seq 0 10 ) 20 50 100 1000
 STACK_SPACE := 10485760
 RESULTS := results
 
