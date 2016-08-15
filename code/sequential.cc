@@ -400,6 +400,9 @@ namespace
             bool already_did_a_wildcard = false;
 
             for (auto & branch_value : branch_values) {
+                if (*params.abort)
+                    return false;
+
                 if (already_did_a_wildcard && branch_value >= wildcard_start)
                     continue;
 
