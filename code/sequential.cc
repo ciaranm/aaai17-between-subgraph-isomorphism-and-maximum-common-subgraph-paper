@@ -105,6 +105,9 @@ namespace
             // build up distance 1 adjacency bitsets
             add_adjacency_constraints(pattern, target);
 
+            if (params.induced)
+                add_complement_constraints(pattern, target);
+
             for (unsigned p = 0 ; p < pattern.size() ; ++p)
                 pattern_degrees[p] = pattern.degree(p);
 
@@ -158,8 +161,6 @@ namespace
                         // check loops
                         if (c.first[p][p] && ! c.second[t][t])
                             ok = false;
-                        else if (params.induced && ! c.first[p][p] && c.second[t][t])
-                            ok = false;
 
                         // check degree
                         if (ok && params.degree && 0 == params.except && ! (c.first[p].count() <= c.second[t].count()))
@@ -200,8 +201,8 @@ namespace
         {
             auto & d1 = *adjacency_constraints.insert(
                     adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
-            build_d1_adjacency(pattern, false, d1.first);
-            build_d1_adjacency(target, true, d1.second);
+            build_d1_adjacency(pattern, false, d1.first, false);
+            build_d1_adjacency(target, true, d1.second, false);
 
             if (params.d2graphs) {
                 auto & d21 = *adjacency_constraints.insert(
@@ -216,13 +217,21 @@ namespace
             }
         }
 
-        auto build_d1_adjacency(const Graph & graph, bool is_target, vector<bitset> & adj) const -> void
+        auto add_complement_constraints(const Graph & pattern, const Graph & target) -> void
+        {
+            auto & d1 = *adjacency_constraints.insert(
+                    adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
+            build_d1_adjacency(pattern, false, d1.first, true);
+            build_d1_adjacency(target, true, d1.second, true);
+        }
+
+        auto build_d1_adjacency(const Graph & graph, bool is_target, vector<bitset> & adj, bool complement) const -> void
         {
             adj.resize(graph.size());
             for (unsigned t = 0 ; t < graph.size() ; ++t) {
                 adj[t] = bitset(is_target ? domain_size : graph.size(), 0);
                 for (unsigned u = 0 ; u < graph.size() ; ++u)
-                    if (graph.adjacent(t, u))
+                    if (graph.adjacent(t, u) != complement)
                         adj[t].set(u);
             }
         }
@@ -320,8 +329,6 @@ namespace
                         for (auto & c : adjacency_constraints)
                             if (c.first[unit_domain_v].test(d.v))
                                 d.values &= c.second[unit_domain_value];
-                            else if (params.induced)
-                                d.values &= ~c.second[unit_domain_value];
 
                     if (d.values.none())
                         return false;
