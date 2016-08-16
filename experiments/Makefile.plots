@@ -1,10 +1,10 @@
 SHELL := /bin/bash
-FILTERING_ALGORITHMS := sequential
+FILTERING_ALGORITHMS := sequential sequential-induced
 EXCEPTS := $(shell seq 0 10 ) 20 50 100 1000
 RESULTS := results
 INSTANCES := $(shell cut -d' ' -f1 instances.txt )
 
-all : $(RESULTS)/ids.data
+all : $(foreach f, $(FILTERING_ALGORITHMS), $(RESULTS)/ids-$(f).data )
 
 ids : $(foreach i, $(INSTANCES), $(foreach a, $(FILTERING_ALGORITHMS), $(foreach x, $(EXCEPTS), $(RESULTS)/$(a)/except-$(x)/$i.ids )))
 
@@ -13,11 +13,11 @@ $(RESULTS)/$(1)/except-$(2)/%.ids : $(RESULTS)/$(1)/except-$(2)/%.out $(RESULTS)
 	{ echo scale=1000 \; ; for f in '' '-nofilter' ; do while read v ; do [[ $$$$v == $$$${v/IDS} ]] && continue ; eval $$$${f/-}$$$$v ; done < <(sed -n -e '4p' < $(RESULTS)/$(1)$$$$f/except-$(2)/$$*.out | xargs -n1 ) ; done ; while read v ; do t=$$$${v/=*} ; u=nofilter$$$${v/=*} ; if [[ $$$${!u} == 0 ]] ; then echo 0 @ ; else echo '(' $$$${!t} / $$$${!u} ')' @ ; fi ; done < <(sed -n -e '4p' < $(RESULTS)/$(1)$$$$f/except-$(2)/$$*.out | xargs -n1 ) ; echo 1 ; } | xargs | tr '@' '*' | env BC_LINE_LENGTH=0 bc | tee $$@
 endef
 
-$(RESULTS)/ids.data : ids
+$(RESULTS)/ids-%.data : ids
 	{ \
-	    echo instance family $$(for a in $(FILTERING_ALGORITHMS) ; do for x in $(EXCEPTS) ; do echo $$a-except-$$x ; done ; done ) ; \
+	    echo instance family $$(for x in $(EXCEPTS) ; do echo $*-except-$$x ; done ; ) ; \
 	    cat instances.txt | while read i p t f ; do \
-	    echo $$i $$f $$(for a in $(FILTERING_ALGORITHMS) ; do for x in $(EXCEPTS) ; do cat $(RESULTS)/$$a/except-$$x/$$i.ids ; done ; done ; ) ; \
+	    echo $$i $$f $$(for x in $(EXCEPTS) ; do cat $(RESULTS)/$*/except-$$x/$$i.ids ; done ; ) ; \
 	    done ; \
 	} | tee $@
 
