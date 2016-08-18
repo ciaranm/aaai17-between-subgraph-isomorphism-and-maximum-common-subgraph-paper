@@ -113,6 +113,7 @@ auto main(int argc, char * argv[]) -> int
             ("nds",                                   "Use NDS filtering")
             ("except",             po::value<int>(),  "Allow this many pattern vertices to be excluded")
             ("induced",                               "Induced")
+            ("expensive-stats",                       "Calculate expensive stats")
             ;
 
         po::options_description all_options{ "All options" };
@@ -174,6 +175,7 @@ auto main(int argc, char * argv[]) -> int
         params.induced = options_vars.count("induced");
         params.degree = options_vars.count("degree");
         params.nds = options_vars.count("nds");
+        params.expensive_stats = options_vars.count("expensive-stats");
         if (options_vars.count("except"))
             params.except = options_vars["except"].as<int>();
 

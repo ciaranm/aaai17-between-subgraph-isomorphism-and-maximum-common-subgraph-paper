@@ -18,6 +18,7 @@ struct Params
     bool induced = false;
     bool nds = false;
     bool degree = false;
+    bool expensive_stats = false;
 
     unsigned except = 0;
 };
