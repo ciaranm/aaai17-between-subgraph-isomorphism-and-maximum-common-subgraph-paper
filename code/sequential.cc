@@ -212,8 +212,8 @@ namespace
                 auto & d23 = *adjacency_constraints.insert(
                         adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
 
-                build_d2_adjacency(pattern, false, d21.first, d22.first, d23.first);
-                build_d2_adjacency(target, true, d21.second, d22.second, d23.second);
+                build_d2_adjacency(pattern, d1.first, false, d21.first, d22.first, d23.first);
+                build_d2_adjacency(target, d1.second, true, d21.second, d22.second, d23.second);
             }
         }
 
@@ -236,7 +236,9 @@ namespace
             }
         }
 
-        auto build_d2_adjacency(const Graph & graph,
+        auto build_d2_adjacency(
+                const Graph & graph,
+                const vector<bitset> & d1_adj,
                 bool is_target,
                 vector<bitset> & adj1,
                 vector<bitset> & adj2,
@@ -249,10 +251,10 @@ namespace
                 adj1[t] = bitset(is_target ? domain_size : graph.size(), 0);
                 adj2[t] = bitset(is_target ? domain_size : graph.size(), 0);
                 adj3[t] = bitset(is_target ? domain_size : graph.size(), 0);
-                for (unsigned u = 0 ; u < graph.size() ; ++u)
-                    if (t != u && graph.adjacent(t, u))
-                        for (unsigned v = 0 ; v < graph.size() ; ++v)
-                            if (u != v && t != v && graph.adjacent(u, v)) {
+                for (auto u = d1_adj[t].find_first() ; u != bitset::npos ; u = d1_adj[t].find_next(u))
+                    if (t != u)
+                        for (auto v = d1_adj[u].find_first() ; v != bitset::npos ; v = d1_adj[u].find_next(v))
+                            if (u != v && t != v) {
                                 if (adj2[t].test(v))
                                     adj3[t].set(v);
                                 else if (adj1[t].test(v))
