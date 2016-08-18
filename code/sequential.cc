@@ -203,10 +203,12 @@ namespace
                         if (d.v != e.v)
                             for (auto v = d.values.find_first() ; v != bitset::npos && v < wildcard_start ; v = d.values.find_next(v))
                                 for (auto w = e.values.find_first() ; w != bitset::npos && w < wildcard_start ; w = e.values.find_next(w)) {
-                                    ++pairs_seen;
-                                    for (auto & c : adjacency_constraints)
-                                        if (c.first[d.v].test(e.v) && ! c.second[v].test(w))
-                                            ++pairs_disallowed;
+                                    if (v != w) {
+                                        ++pairs_seen;
+                                        for (auto & c : adjacency_constraints)
+                                            if (c.first[d.v].test(e.v) && ! c.second[v].test(w))
+                                                ++pairs_disallowed;
+                                    }
                                 }
 
                 result.stats.emplace("PS", to_string(pairs_seen));
