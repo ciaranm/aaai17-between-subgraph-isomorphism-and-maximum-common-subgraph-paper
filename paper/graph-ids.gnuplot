@@ -1,6 +1,7 @@
 # vim: set et ft=gnuplot sw=4 :
 
-set terminal tikz standalone color size 3.3in,5.6in font '\scriptsize' preamble '\usepackage{times,microtype}'
+set terminal tikz standalone color size 8cm,14cm font '\scriptsize' preamble '\usepackage{times,microtype}'
+#set terminal tikz standalone color size 3.3in,5.6in font '\scriptsize' preamble '\usepackage{times,microtype}'
 set output "gen-graph-ids.tex"
 
 set multiplot layout 2,1
@@ -45,4 +46,3 @@ plot \
     "../experiments/results/ids-sequential-induced.data" u 13:(1) smooth cumulative w steps axes x1y2 ti "$k=10$" at beginning, \
     "../experiments/results/ids-sequential-induced.data" u 14:(1) smooth cumulative w steps axes x1y2 ti "$k=20$~~~~" at beginning, \
     "../experiments/results/ids-sequential-induced.data" u 16:(1) smooth cumulative w steps axes x1y2 ti "$k=100$" at beginning
-
