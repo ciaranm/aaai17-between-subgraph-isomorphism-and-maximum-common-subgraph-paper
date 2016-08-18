@@ -247,6 +247,9 @@ namespace
             adj1.resize(graph.size());
             adj2.resize(graph.size());
             adj3.resize(graph.size());
+
+            vector<vector<unsigned> > counts(graph.size(), vector<unsigned>(graph.size(), 0));
+
             for (unsigned t = 0 ; t < graph.size() ; ++t) {
                 adj1[t] = bitset(is_target ? domain_size : graph.size(), 0);
                 adj2[t] = bitset(is_target ? domain_size : graph.size(), 0);
@@ -254,15 +257,19 @@ namespace
                 for (auto u = d1_adj[t].find_first() ; u != bitset::npos ; u = d1_adj[t].find_next(u))
                     if (t != u)
                         for (auto v = d1_adj[u].find_first() ; v != bitset::npos ; v = d1_adj[u].find_next(v))
-                            if (u != v && t != v) {
-                                if (adj2[t].test(v))
-                                    adj3[t].set(v);
-                                else if (adj1[t].test(v))
-                                    adj2[t].set(v);
-                                else
-                                    adj1[t].set(v);
-                            }
+                            if (u != v && t != v)
+                                ++counts[t][v];
             }
+
+            for (unsigned t = 0 ; t < graph.size() ; ++t)
+                for (unsigned u = 0 ; u < graph.size() ; ++u) {
+                    if (counts[t][u] >= 3)
+                        adj3[t].set(u);
+                    if (counts[t][u] >= 2)
+                        adj2[t].set(u);
+                    if (counts[t][u] >= 1)
+                        adj1[t].set(u);
+                }
         }
 
         auto select_branch_domain(Domains & domains) -> Domains::iterator
