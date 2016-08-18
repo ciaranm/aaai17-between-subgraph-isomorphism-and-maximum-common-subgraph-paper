@@ -205,9 +205,13 @@ namespace
                                 for (auto w = e.values.find_first() ; w != bitset::npos && w < wildcard_start ; w = e.values.find_next(w)) {
                                     if (v != w) {
                                         ++pairs_seen;
+                                        bool disallowed = false;
                                         for (auto & c : adjacency_constraints)
                                             if (c.first[d.v].test(e.v) && ! c.second[v].test(w))
-                                                ++pairs_disallowed;
+                                                disallowed = true;
+
+                                        if (disallowed)
+                                            ++pairs_disallowed;
                                     }
                                 }
 
