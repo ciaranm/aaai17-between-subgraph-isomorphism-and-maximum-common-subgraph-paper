@@ -195,6 +195,23 @@ namespace
                     for (unsigned v = wildcard_start ; v != domain_size ; ++v)
                         initial_domains[p].values.set(v);
             }
+
+            if (params.expensive_stats) {
+                unsigned long long pairs_seen = 0, pairs_disallowed = 0;
+                for (auto & d : initial_domains)
+                    for (auto & e : initial_domains)
+                        if (d.v != e.v)
+                            for (auto v = d.values.find_first() ; v != bitset::npos && v < wildcard_start ; v = d.values.find_next(v))
+                                for (auto w = e.values.find_first() ; w != bitset::npos && w < wildcard_start ; w = e.values.find_next(w)) {
+                                    ++pairs_seen;
+                                    for (auto & c : adjacency_constraints)
+                                        if (c.first[d.v].test(e.v) && ! c.second[v].test(w))
+                                            ++pairs_disallowed;
+                                }
+
+                result.stats.emplace("PS", to_string(pairs_seen));
+                result.stats.emplace("PD", to_string(pairs_disallowed));
+            }
         }
 
         auto add_adjacency_constraints(const Graph & pattern, const Graph & target) -> void
@@ -263,11 +280,11 @@ namespace
 
             for (unsigned t = 0 ; t < graph.size() ; ++t)
                 for (unsigned u = 0 ; u < graph.size() ; ++u) {
-                    if (counts[t][u] >= 3)
+                    if (counts[t][u] >= 3 + (is_target ? 0 : params.except))
                         adj3[t].set(u);
-                    if (counts[t][u] >= 2)
+                    if (counts[t][u] >= 2 + (is_target ? 0 : params.except))
                         adj2[t].set(u);
-                    if (counts[t][u] >= 1)
+                    if (counts[t][u] >= 1 + (is_target ? 0 : params.except))
                         adj1[t].set(u);
                 }
         }
@@ -471,10 +488,11 @@ namespace
             // eliminate isolated vertices?
 
             if (unit_propagate(initial_domains, assignments)) {
-                record_domain_sizes_in_stats(initial_domains);
+                if (params.expensive_stats)
+                    record_domain_sizes_in_stats(initial_domains);
                 solve(initial_domains, assignments);
             }
-            else
+            else if (params.expensive_stats)
                 record_domain_sizes_in_stats(initial_domains);
         }
     };
