@@ -1,0 +1,20 @@
+SHELL := /bin/bash
+FILTER := -1
+MODULUS := 1
+INSTANCES := $(shell cut -d' ' -f1 instances.txt | if [[ $(FILTER) == -1 ]] ; then cat ; else awk "(NR % $(MODULUS)) == ($(FILTER) % $(MODULUS))" ; fi)
+TIMEOUT := 1
+ALGORITHMS := sequential sequential-d2 sequential-induced sequential-d2-induced
+EXCEPTS := $(shell seq 0 3 )
+STACK_SPACE := 10485760
+RESULTS := results
+
+all : $(foreach i, $(INSTANCES), $(foreach a, $(ALGORITHMS), $(foreach x, $(EXCEPTS), $(RESULTS)/$(a)/except-$(x)/$i.stats-out )))
+
+define ALGORITHM_template
+$(RESULTS)/$(1)/except-$(2)/%.stats-out :
+	mkdir -p $(RESULTS)/$(1)/except-$(2)
+	ulimit -s $$(STACK_SPACE) ; ../code/solve_subgraph_isomorphism --expensive-stats $$$$(echo $(1) | sed -e 's.-induced..' -e 's.-nofilter..' -e 's.-d2..' ) --except $(2) --timeout $$(TIMEOUT) $$$$(echo $(1) | grep -q induced && echo --induced ) $$$$(echo $(1) | grep -q nofilter || echo --degree --nds ) $$$$(echo $(1) | grep -q d2 && echo --d2graphs ) $$(shell grep "^`basename $$*` " < instances.txt | cut -d' ' -f2-3 ) > >(tee $$@ )
+endef
+
+$(foreach a,$(ALGORITHMS),$(foreach x,$(EXCEPTS),$(eval $(call ALGORITHM_template,$(a),$(x)))))
+
