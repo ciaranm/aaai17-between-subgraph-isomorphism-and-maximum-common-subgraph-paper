@@ -16,6 +16,23 @@
 \usepackage{mathtools}
 \usepackage{graphicx}
 
+\usepackage{showframe}
+
+\makeatletter\@ifpackageloaded{showframe}{
+    % show lines down the middle columns too
+    % http://tex.stackexchange.com/questions/16199/test-if-a-package-or-package-option-is-loaded
+\newlength\Fcolumnseprule\setlength\Fcolumnseprule{0.4pt}\def\@outputdblcol{%
+  \if@firstcolumn\global \@firstcolumnfalse \global \setbox\@leftcolumn \box\@outputbox
+  \else
+    \global \@firstcolumntrue
+    \setbox\@outputbox \vbox{\hb@xt@\textwidth{\hb@xt@\columnwidth{\box\@leftcolumn \hss}%
+    \vrule \@width\Fcolumnseprule\hfil{\normalcolor\vrule \@width\columnseprule}
+    \hfil\vrule \@width\Fcolumnseprule\hb@xt@\columnwidth {\box\@outputbox \hss}}}\@combinedblfloats\@outputpage
+    \begingroup\@dblfloatplacement\@startdblcolumn\@whilesw\if@fcolmade \fi{\@outputpage\@startdblcolumn}\endgroup
+  \fi
+}}{}
+\makeatother
+
 \usetikzlibrary{decorations, decorations.pathreplacing, calc, backgrounds}
 
 \definecolor{uofgsandstone}{rgb}{0.321569, 0.278431, 0.231373}
