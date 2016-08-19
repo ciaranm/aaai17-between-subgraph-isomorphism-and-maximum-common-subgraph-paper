@@ -3,7 +3,7 @@ all : tables graphs
 
 TABLES =
 
-GRAPHS = gen-graph-ids.pdf gen-graph-constraints.pdf
+GRAPHS = gen-graph-ids.pdf gen-graph-constraints.pdf gen-graph-constraints-induced.pdf
 
 tables : $(TABLES)
 
