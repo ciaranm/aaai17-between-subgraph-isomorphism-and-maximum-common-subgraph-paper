@@ -27,7 +27,10 @@ plot \
     "../experiments/gpgnode-results/ids-sequential.data" u 3:(1) smooth cumulative w steps axes x1y2 ti "$k=0$" at beginning, \
     "../experiments/gpgnode-results/ids-sequential.data" u 4:(1) smooth cumulative w steps axes x1y2 ti "$k=1$" at beginning, \
     "../experiments/gpgnode-results/ids-sequential.data" u 5:(1) smooth cumulative w steps axes x1y2 ti "$k=2$" at beginning, \
-    "../experiments/gpgnode-results/ids-sequential.data" u 6:(1) smooth cumulative w steps axes x1y2 ti "$k=3$" at beginning
+    "../experiments/gpgnode-results/ids-sequential.data" u 6:(1) smooth cumulative w steps axes x1y2 ti "$k=3$" at beginning, \
+    "../experiments/gpgnode-results/ids-sequential.data" u 7:(1) smooth cumulative w steps axes x1y2 ti "$k=4$" at beginning, \
+    "../experiments/gpgnode-results/ids-sequential.data" u 8:(1) smooth cumulative w steps axes x1y2 ti "$k=5$" at beginning, \
+    "../experiments/gpgnode-results/ids-sequential.data" u 9:(1) smooth cumulative w steps axes x1y2 ti "$k=10$" at beginning
 
 set title "Induced"
 
@@ -35,4 +38,7 @@ plot \
     "../experiments/gpgnode-results/ids-sequential-induced.data" u 3:(1) smooth cumulative w steps axes x1y2 ti "$k=0$" at beginning, \
     "../experiments/gpgnode-results/ids-sequential-induced.data" u 4:(1) smooth cumulative w steps axes x1y2 ti "$k=1$" at beginning, \
     "../experiments/gpgnode-results/ids-sequential-induced.data" u 5:(1) smooth cumulative w steps axes x1y2 ti "$k=2$" at beginning, \
-    "../experiments/gpgnode-results/ids-sequential-induced.data" u 6:(1) smooth cumulative w steps axes x1y2 ti "$k=3$" at beginning
+    "../experiments/gpgnode-results/ids-sequential-induced.data" u 6:(1) smooth cumulative w steps axes x1y2 ti "$k=3$" at beginning, \
+    "../experiments/gpgnode-results/ids-sequential-induced.data" u 7:(1) smooth cumulative w steps axes x1y2 ti "$k=4$" at beginning, \
+    "../experiments/gpgnode-results/ids-sequential-induced.data" u 8:(1) smooth cumulative w steps axes x1y2 ti "$k=5$" at beginning, \
+    "../experiments/gpgnode-results/ids-sequential-induced.data" u 9:(1) smooth cumulative w steps axes x1y2 ti "$k=10$" at beginning
