@@ -1,0 +1,26 @@
+SHELL := /bin/bash
+D2_ALGORITHMS := sequential-d2 sequential-d2-induced
+ALL_ALGORITHMS := $(D2_ALGORITHMS) sequential sequential-induced
+EXCEPTS := $(shell seq 0 3 )
+RESULTS := results
+INSTANCES := $(shell cut -d' ' -f1 instances.txt )
+
+all : $(foreach f, $(D2_ALGORITHMS), $(RESULTS)/constraints-$(f).data )
+
+constraints : $(foreach i, $(INSTANCES), $(foreach a, $(ALL_ALGORITHMS), $(foreach x, $(EXCEPTS), $(RESULTS)/$(a)/except-$(x)/$i.constraints )))
+
+define ALGORITHM_template
+$(RESULTS)/$(1)/except-$(2)/%.constraints : $(RESULTS)/$(1)/except-$(2)/%.out
+	{ sed -n -e 4p $(RESULTS)/$(1)/except-$(2)/$$*.stats-out | xargs -n1 | sed -n -e '/^PS=/s/.*=//p' ; \
+	    sed -n -e 4p $(RESULTS)/$(1)/except-$(2)/$$*.stats-out | xargs -n1 | sed -n -e '/^PD=/s/.*=//p' ; } | xargs | tee $$@
+endef
+
+$(RESULTS)/constraints-%.data : constraints
+	{ \
+	    echo instance family $$(for x in $(EXCEPTS) ; do echo $$(echo $*-except-$$x | sed -e s.-d2.. )-pf $$(echo $*-except-$$x | sed -e s.-d2.. )-pd $*-except-$$x-pf $*-except-$$x-pd ; done ; ) ; \
+	    cat instances.txt | while read i p t f ; do \
+	    echo $$i $$f $$(for x in $(EXCEPTS) ; do cat $(RESULTS)/$$(echo $* | sed -e s.-d2.. )/except-$$x/$$i.constraints $(RESULTS)/$*/except-$$x/$$i.constraints ; done ; ) ; \
+	    done ; \
+	} | tee $@
+
+$(foreach a,$(ALL_ALGORITHMS),$(foreach x,$(EXCEPTS),$(eval $(call ALGORITHM_template,$(a),$(x)))))
