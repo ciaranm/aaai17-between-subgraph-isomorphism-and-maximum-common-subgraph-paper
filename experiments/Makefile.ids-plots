@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 FILTERING_ALGORITHMS := sequential sequential-induced
-EXCEPTS := $(shell seq 0 3 )
+EXCEPTS := 0 1 2 3 4 5 10 20
 RESULTS := results
 INSTANCES := $(shell cut -d' ' -f1 instances.txt )
 

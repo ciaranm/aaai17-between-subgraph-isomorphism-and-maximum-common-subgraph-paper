@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 D2_ALGORITHMS := sequential-d2 sequential-d2-induced
 ALL_ALGORITHMS := $(D2_ALGORITHMS) sequential sequential-induced
-EXCEPTS := $(shell seq 0 3 )
+EXCEPTS := 0 1 2 3 4 5 10 20
 RESULTS := results
 INSTANCES := $(shell cut -d' ' -f1 instances.txt )
 
@@ -10,7 +10,7 @@ all : $(foreach f, $(D2_ALGORITHMS), $(RESULTS)/constraints-$(f).data )
 constraints : $(foreach i, $(INSTANCES), $(foreach a, $(ALL_ALGORITHMS), $(foreach x, $(EXCEPTS), $(RESULTS)/$(a)/except-$(x)/$i.constraints )))
 
 define ALGORITHM_template
-$(RESULTS)/$(1)/except-$(2)/%.constraints : $(RESULTS)/$(1)/except-$(2)/%.out
+$(RESULTS)/$(1)/except-$(2)/%.constraints : $(RESULTS)/$(1)/except-$(2)/%.stats-out
 	{ sed -n -e 4p $(RESULTS)/$(1)/except-$(2)/$$*.stats-out | xargs -n1 | sed -n -e '/^PS=/s/.*=//p' ; \
 	    sed -n -e 4p $(RESULTS)/$(1)/except-$(2)/$$*.stats-out | xargs -n1 | sed -n -e '/^PD=/s/.*=//p' ; } | xargs | tee $$@
 endef
