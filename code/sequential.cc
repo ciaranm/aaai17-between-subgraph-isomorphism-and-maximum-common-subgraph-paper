@@ -7,6 +7,7 @@
 #include <list>
 #include <map>
 #include <numeric>
+#include <random>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -21,9 +22,11 @@ using std::greater;
 using std::list;
 using std::make_pair;
 using std::map;
+using std::mt19937;
 using std::pair;
 using std::to_string;
 using std::tuple;
+using std::uniform_int_distribution;
 using std::unique;
 using std::vector;
 
@@ -197,23 +200,32 @@ namespace
             }
 
             if (params.expensive_stats) {
-                unsigned long long pairs_seen = 0, pairs_disallowed = 0;
-                for (auto & d : initial_domains)
-                    for (auto & e : initial_domains)
-                        if (d.v != e.v)
-                            for (auto v = d.values.find_first() ; v != bitset::npos && v < wildcard_start ; v = d.values.find_next(v))
-                                for (auto w = e.values.find_first() ; w != bitset::npos && w < wildcard_start ; w = e.values.find_next(w)) {
-                                    if (v != w) {
-                                        ++pairs_seen;
-                                        bool disallowed = false;
-                                        for (auto & c : adjacency_constraints)
-                                            if (c.first[d.v].test(e.v) && ! c.second[v].test(w))
-                                                disallowed = true;
+                vector<pair<Domain *, unsigned> > assignments;
 
-                                        if (disallowed)
-                                            ++pairs_disallowed;
-                                    }
-                                }
+                for (auto & d : initial_domains)
+                    for (auto v = d.values.find_first() ; v != bitset::npos && v < wildcard_start ; v = d.values.find_next(v))
+                        assignments.emplace_back(&d, v);
+
+                unsigned long long pairs_seen = 0, pairs_disallowed = 0;
+                if (assignments.size() >= 2) {
+                    uniform_int_distribution<decltype(assignments)::size_type> all_dist(0, assignments.size() - 1), all_but_first_dist(1, assignments.size() - 1);
+                    mt19937 rand(666);
+                    for (unsigned n = 0 ; n < 1000000 ; ++n) {
+                        swap(assignments[0], assignments[all_dist(rand)]);
+                        swap(assignments[1], assignments[all_but_first_dist(rand)]);
+                        auto & a = assignments[0], & b = assignments[1];
+                        if (a.first->v != b.first->v && a.second != b.second) {
+                            ++pairs_seen;
+                            bool disallowed = false;
+                            for (auto & c : adjacency_constraints)
+                                if (c.first[a.first->v].test(b.first->v) && ! c.second[a.second].test(b.second))
+                                    disallowed = true;
+
+                            if (disallowed)
+                                ++pairs_disallowed;
+                        }
+                    }
+                }
 
                 result.stats.emplace("PS", to_string(pairs_seen));
                 result.stats.emplace("PD", to_string(pairs_disallowed));
