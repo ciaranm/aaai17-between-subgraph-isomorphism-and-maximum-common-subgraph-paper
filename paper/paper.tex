@@ -180,6 +180,28 @@ This leads to the following:
     $P^{n, 2}\lessnonind{k} T^{n - k, 2}$.
 \end{proposition}
 
+To allow for fast propagation, we create supplemental graphs for paths of length 2, looking at
+counts of 1, 2, and 3 in the target graph (and so counts of $1 + k$ up to $3 + k$ in the pattern).
+We then investigate whether this leads to new constraints being generated. By an assignment, we mean
+considering mapping a pattern vertex $p$ to a target vertex $t$ (and not $\bot$) which does not
+violate any loop constraints. An assignment pair is two assignments with distinct $p$ and distinct
+$t$, which we say is permitted if it does not violate any adjacency constraint. We define the
+permitted assignment pair ratio to be the proportion of assignment pairs which are permitted.
+Finally, we scatter plot the permitted assignment pair ratio with and without supplemental
+graphs\footnote{Because of the large sizes of the domains, we randomly sample one million pairs
+rather than considering every pair. In some cases, we have nearly a thousand domains, each with nearly
+ten thousand values---a complete quadratic calculation involving even a trivial arithmetic operation
+on this would take many hours.}. For $k = 0$, we see many points above the $x-y$ diagonal, which
+shows that for many instances, we are able to create a substantial number of new constraints at the
+top of search; on the other hand, there are also points on the diagonal, which shows that sometimes
+this technique provides no benefit. (Occasionally, points fall below the $x-y$ diagonal. This is
+because the use of neighbourhood degree sequence reasoning on supplemental graphs can also lead to
+increased domain filtering, which could in turn eliminate a higher proportion of forbidden than
+permitted assignment pairs.) For $k = 1$ and $k = 2$, the proportion of points above the diagonal
+diminishes, but we are still able to create new constraints for many instances. By the time $k = 3$,
+most of the benefit is disappearing---although sometimes we are still able to make a difference, and
+bear in mind that sometimes adding just one new constrained pair can vastly reduce the search space.
+
 \section{A New Algorithm}
 
 \section{Empirical Evaluation}
