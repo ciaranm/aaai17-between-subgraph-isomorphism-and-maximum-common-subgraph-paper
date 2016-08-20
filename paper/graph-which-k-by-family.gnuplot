@@ -1,0 +1,24 @@
+# vim: set et ft=gnuplot sw=4 :
+
+set terminal tikz standalone color size 9cm,15cm font '\scriptsize' preamble '\usepackage{times,microtype}'
+set output "gen-graph-which-k-by-family.tex"
+
+set multiplot layout 2,1
+
+set ylabel "Proportion of Instances Satisfiable"
+set border 3
+set grid nox y
+set xtics nomirror scale 0 rotate by 270 offset character 0, character 0.5
+set ytics nomirror scale 0
+set key outside right top
+
+set boxwidth 0.8 absolute
+set style data histogram
+set style histogram rowstacked
+set style fill solid border
+
+set title "Non-Induced"
+plot for [COL=3:7] "../experiments/gpgnode-results/which-k-by-family-sequential-d2.data" u (column(COL)/$2):xticlabels(1) ti columnheader
+
+set title "Induced"
+plot for [COL=3:7] "../experiments/gpgnode-results/which-k-by-family-sequential-d2-induced.data" u (column(COL)/$2):xticlabels(1) ti columnheader
