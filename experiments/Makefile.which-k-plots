@@ -1,10 +1,12 @@
 SHELL := /bin/bash
 FILTERING_ALGORITHMS := sequential-d2 sequential-d2-induced
-EXCEPTS := 0 1 2 3 4
+EXCEPTS := 0 1 2 3 4 5
 RESULTS := results
 INSTANCES := $(shell cut -d' ' -f1 instances.txt )
 
-all : $(foreach f, $(FILTERING_ALGORITHMS), $(RESULTS)/which-k-$(f).data $(RESULTS)/which-k-by-family-$(f).data )
+all : $(foreach f, $(FILTERING_ALGORITHMS), $(RESULTS)/which-k-$(f).data $(RESULTS)/family-which-k-$(f).data )
+
+whiches : $(foreach i, $(INSTANCES), $(foreach a, $(FILTERING_ALGORITHMS), $(RESULTS)/$(a)/$i.which-k ))
 
 define ALGORITHM_template
 $(RESULTS)/$(1)/%.which-k : $(foreach x,$(EXCEPTS), $(RESULTS)/$(1)/except-$(x)/%.out )
@@ -24,9 +26,9 @@ $(RESULTS)/which-k-%.data : $(foreach i, $(INSTANCES), $(foreach a, $(FILTERING_
 	    done ; \
 	} | tee $@
 
-$(RESULTS)/which-k-by-family-%.data : $(RESULTS)/which-k-%.data
+$(RESULTS)/family-which-k-%.data : $(RESULTS)/which-k-%.data
 	{ \
-	    echo family total k=0 k=1 k=2 k=3 k=4 larger unknown ; \
+	    echo family total k=0 k=1 k=2 k=3 k=4 k=5 larger unknown ; \
 	    cat unsat-families.txt | while read f ; do \
 		{ sed -n -e $${f}p < families.txt ; \
 		grep --count '^\S\+ '$$f' ' < $^ ; \
@@ -35,7 +37,8 @@ $(RESULTS)/which-k-by-family-%.data : $(RESULTS)/which-k-%.data
 		grep --count '^\S\+ '$$f' 0 0 1' < $^ ; \
 		grep --count '^\S\+ '$$f' 0 0 0 1' < $^ ; \
 		grep --count '^\S\+ '$$f' 0 0 0 0 1' < $^ ; \
-		grep --count '^\S\+ '$$f' 0 0 0 0 0' < $^ ; \
+		grep --count '^\S\+ '$$f' 0 0 0 0 0 1' < $^ ; \
+		grep --count '^\S\+ '$$f' 0 0 0 0 0 0' < $^ ; \
 		grep --count '^\S\+ '$$f' [^1]*x' < $^ ; \
 		} | xargs ; \
 	    done ; \
