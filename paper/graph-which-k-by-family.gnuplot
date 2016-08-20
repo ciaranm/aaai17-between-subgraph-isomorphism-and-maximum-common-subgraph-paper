@@ -20,7 +20,7 @@ set style fill solid border
 set yrange [0:1]
 
 set title "Non-Induced"
-plot for [COL=3:9] "../experiments/gpgnode-results/family-which-k-sequential-d2.data" u (column(COL)/$2):xticlabels(1) ti columnheader
+plot for [COL=3:11] "../experiments/gpgnode-results/family-which-k-sequential-d2.data" u (column(COL)/$2):xticlabels(1) ti columnheader
 
 set title "Induced"
-plot for [COL=3:9] "../experiments/gpgnode-results/family-which-k-sequential-d2-induced.data" u (column(COL)/$2):xticlabels(1) ti columnheader
+plot for [COL=3:11] "../experiments/gpgnode-results/family-which-k-sequential-d2-induced.data" u (column(COL)/$2):xticlabels(1) ti columnheader
