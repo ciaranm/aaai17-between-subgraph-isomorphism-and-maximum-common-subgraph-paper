@@ -28,7 +28,7 @@ $(RESULTS)/which-k-%.data : $(foreach i, $(INSTANCES), $(foreach a, $(FILTERING_
 
 $(RESULTS)/family-which-k-%.data : $(RESULTS)/which-k-%.data
 	{ \
-	    echo family total k=0 k=1 k=2 k=3 k=4 k=5 k\\le10 k\\le20 larger unknown ; \
+	    echo family total '$$k=0$$' '$$k=1$$' '$$k=2$$' '$$k=3$$' '$$k=4$$' '$$k=5$$' '$$k\\\\le10$$' '$$k\\\\le20$$' larger unknown ; \
 	    cat unsat-families.txt | while read f ; do \
 		{ sed -n -e $${f}p < families.txt ; \
 		grep --count '^\S\+ '$$f' ' < $^ ; \
