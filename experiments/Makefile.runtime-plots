@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-ALGORITHMS := sequential-d2 sequential-d2-induced sequential sequential-induced
+ALGORITHMS := sequential-d2 sequential-d2-induced sequential sequential-induced sequential-nofilter sequential-induced-nofilter
 EXCEPTS := $(shell seq 0 3 )
 RESULTS := results
 INSTANCES := $(shell cut -d' ' -f1 instances.txt )
