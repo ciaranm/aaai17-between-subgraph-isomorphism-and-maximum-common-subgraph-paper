@@ -17,6 +17,8 @@ set style data histogram
 set style histogram rowstacked
 set style fill solid border
 
+set yrange [0:1]
+
 set title "Non-Induced"
 plot for [COL=3:9] "../experiments/gpgnode-results/family-which-k-sequential-d2.data" u (column(COL)/$2):xticlabels(1) ti columnheader
 
