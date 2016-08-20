@@ -3,6 +3,8 @@
 set terminal tikz standalone color size 9cm,15cm font '\scriptsize' preamble '\usepackage{times,microtype}'
 set output "gen-graph-which-k-by-family.tex"
 
+load "chromajs.pal"
+
 set multiplot layout 2,1
 
 set ylabel "Proportion of Instances Satisfiable"
@@ -17,10 +19,12 @@ set style data histogram
 set style histogram rowstacked
 set style fill solid border
 
+set nocolorbox
+
 set yrange [0:1]
 
 set title "Non-Induced"
-plot for [COL=3:11] "../experiments/gpgnode-results/family-which-k-sequential-d2.data" u (column(COL)/$2):xticlabels(1) ti columnheader
+plot for [COL=3:11] "../experiments/gpgnode-results/family-which-k-sequential-d2.data" u (column(COL)/$2):xticlabels(1) ti columnheader lt palette frac ((COL-3)/8.0)
 
 set title "Induced"
-plot for [COL=3:11] "../experiments/gpgnode-results/family-which-k-sequential-d2-induced.data" u (column(COL)/$2):xticlabels(1) ti columnheader
+plot for [COL=3:11] "../experiments/gpgnode-results/family-which-k-sequential-d2-induced.data" u (column(COL)/$2):xticlabels(1) ti columnheader lt palette frac ((COL-3)/8.0)
