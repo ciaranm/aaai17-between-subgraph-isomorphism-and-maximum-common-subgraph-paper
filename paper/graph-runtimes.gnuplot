@@ -51,7 +51,8 @@ plot \
     "../experiments/gpgnode-results/runtime-sequential-d2-induced.data" u 7:($7>=1e6?1e-10:1) smooth cumulative w steps ti "$k=4$" at end lc 5, \
     "../experiments/gpgnode-results/runtime-sequential-d2-induced.data" u 8:($8>=1e6?1e-10:1) smooth cumulative w steps ti "$k=5$" at end lc 6, \
     "../experiments/gpgnode-results/runtime-sequential-d2-induced.data" u 9:($9>=1e6?1e-10:1) smooth cumulative w steps ti "$k=10$" at end lc 7, \
-    "../experiments/gpgnode-results/runtime-sequential-d2-induced.data" u 10:($10>=1e6?1e-10:1) smooth cumulative w steps ti "$k=20$" at end lc 8
+    "../experiments/gpgnode-results/runtime-sequential-d2-induced.data" u 10:($10>=1e6?1e-10:1) smooth cumulative w steps ti "$k=20$" at end lc 8, \
+    "../experiments/gpgnode-results/runtime-mcis-fc-induced.data" u ($3*1000):($3>=1e3?1e-10:1) smooth cumulative w steps ti "CP" at end lc 0
 
 #    "../experiments/gpgnode-results/runtime-sequential-induced.data" u 3:($3>=1e6?1e-10:1) smooth cumulative w steps ti "$k=0 np$" at end lc 1 dt "-", \
 #    "../experiments/gpgnode-results/runtime-sequential-induced.data" u 4:($4>=1e6?1e-10:1) smooth cumulative w steps ti "$k=1 np$" at end lc 2 dt "-", \
