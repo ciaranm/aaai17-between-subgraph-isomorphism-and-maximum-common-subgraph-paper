@@ -9,12 +9,12 @@ runtimes : $(foreach i, $(INSTANCES), $(foreach a, $(ALGORITHMS), $(RESULTS)/$(a
 
 define ALGORITHM_template
 $(RESULTS)/$(1)/%.runtime : $(RESULTS)/$(1)/%.out
-	sed -n -e 3p $(RESULTS)/$(1)/$$*.out | tee $$@
+	sed -n -e 3p $(RESULTS)/$(1)/$$*.out | cut -d' ' -f1 | tee $$@
 endef
 
 $(RESULTS)/runtime-%.data : runtimes
 	{ \
-	    echo instance family $*-except-$$x ; \
+	    echo instance family $$* ; \
 	    cat instances.txt | while read i p t f ; do \
 	    echo $$i $$f $$(cat $(RESULTS)/$*/$$i.runtime ) ; \
 	    done ; \
