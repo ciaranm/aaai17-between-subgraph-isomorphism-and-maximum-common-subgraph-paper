@@ -1,0 +1,16 @@
+SHELL := /bin/bash
+FILTER := -1
+MODULUS := 1
+INSTANCES := $(shell cut -d' ' -f1 instances.txt | if [[ $(FILTER) == -1 ]] ; then cat ; else awk "(NR % $(MODULUS)) == ($(FILTER) % $(MODULUS))" ; fi)
+TIMEOUT := 1000
+ALGORITHMS := mcis-fc-induced
+RESULTS := results
+
+all : $(foreach i, $(INSTANCES), $(foreach a, $(ALGORITHMS), $(RESULTS)/$(a)/$i.out ))
+
+$(RESULTS)/mcis-fc-induced/%.out :
+	mkdir -p $(RESULTS)/mcis-fc-induced
+	ulimit -v 16777216 ; ../mcis_fc/executable.out -d 0 -v 0 -l 0 \
+	    -p $(shell grep "^`basename $*` " < instances.txt | cut -d' ' -f2 ) \
+	    -t $(shell grep "^`basename $*` " < instances.txt | cut -d' ' -f3 ) > >(tee $@ ) || { rm $@ ; false ; }
+
