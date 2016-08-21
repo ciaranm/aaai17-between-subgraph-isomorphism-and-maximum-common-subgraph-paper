@@ -1,0 +1,23 @@
+SHELL := /bin/bash
+ALGORITHMS := sequentialix-d2 sequentialix-d2-induced
+RESULTS := results
+INSTANCES := $(shell cut -d' ' -f1 instances.txt )
+
+all : $(foreach f, $(ALGORITHMS), $(RESULTS)/runtime-$(f).data )
+
+runtimes : $(foreach i, $(INSTANCES), $(foreach a, $(ALGORITHMS), $(RESULTS)/$(a)/$i.runtime ))
+
+define ALGORITHM_template
+$(RESULTS)/$(1)/%.runtime : $(RESULTS)/$(1)/%.out
+	sed -n -e 3p $(RESULTS)/$(1)/$$*.out | tee $$@
+endef
+
+$(RESULTS)/runtime-%.data : runtimes
+	{ \
+	    echo instance family $*-except-$$x ; \
+	    cat instances.txt | while read i p t f ; do \
+	    echo $$i $$f $$(cat $(RESULTS)/$*/$$i.runtime ) ; \
+	    done ; \
+	} | tee $@
+
+$(foreach a,$(ALGORITHMS),$(eval $(call ALGORITHM_template,$(a))))
