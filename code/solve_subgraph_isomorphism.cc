@@ -99,7 +99,8 @@ auto run_this(Result_ func(const Data_ &, const Params_ &)) -> std::function<Res
 auto main(int argc, char * argv[]) -> int
 {
     auto subgraph_isomorphism_algorithms = {
-        std::make_pair( std::string{ "sequential" },         sequential_subgraph_isomorphism )
+        std::make_pair( std::string{ "sequential" },         sequential_subgraph_isomorphism ),
+        std::make_pair( std::string{ "sequentialix" },       sequential_ix_subgraph_isomorphism )
     };
 
     try {

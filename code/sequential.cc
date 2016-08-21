@@ -3,6 +3,7 @@
 #include "sequential.hh"
 
 #include <algorithm>
+#include <chrono>
 #include <functional>
 #include <list>
 #include <map>
@@ -29,6 +30,10 @@ using std::tuple;
 using std::uniform_int_distribution;
 using std::unique;
 using std::vector;
+
+using std::chrono::duration_cast;
+using std::chrono::milliseconds;
+using std::chrono::steady_clock;
 
 using std::cerr;
 using std::endl;
@@ -523,5 +528,35 @@ auto sequential_subgraph_isomorphism(const pair<Graph, Graph> & graphs, const Pa
     sip.run();
 
     return sip.result;
+}
+
+auto sequential_ix_subgraph_isomorphism(const pair<Graph, Graph> & graphs, const Params & params) -> Result
+{
+    auto modified_params = params;
+    Result modified_result;
+
+    while (! *modified_params.abort) {
+        auto start_time = steady_clock::now();
+
+        SIP sip(modified_params, graphs.first, graphs.second);
+
+        sip.run();
+
+        auto pass_time = duration_cast<milliseconds>(steady_clock::now() - start_time);
+        modified_result.times.push_back(pass_time);
+
+        modified_result.nodes += sip.result.nodes;
+        if (! sip.result.isomorphism.empty()) {
+            modified_result.isomorphism = sip.result.isomorphism;
+            return modified_result;
+        }
+        else
+            modified_result.stats.emplace("FAIL" + to_string(modified_params.except), to_string(pass_time.count()));
+
+        if (++modified_params.except >= graphs.first.size())
+            break;
+    }
+
+    return modified_result;
 }
 

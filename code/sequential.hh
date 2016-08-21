@@ -9,4 +9,6 @@
 
 auto sequential_subgraph_isomorphism(const std::pair<Graph, Graph> & graphs, const Params & params) -> Result;
 
+auto sequential_ix_subgraph_isomorphism(const std::pair<Graph, Graph> & graphs, const Params & params) -> Result;
+
 #endif
