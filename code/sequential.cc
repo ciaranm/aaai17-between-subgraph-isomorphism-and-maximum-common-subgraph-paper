@@ -101,6 +101,7 @@ namespace
         Domains initial_domains;
 
         unsigned wildcard_start;
+        bitset all_wildcards;
 
         SIP(const Params & k, const Graph & pattern, const Graph & target) :
             params(k),
@@ -110,6 +111,10 @@ namespace
             initial_domains(pattern.size()),
             wildcard_start(target.size())
         {
+            all_wildcards = bitset(domain_size);
+            for (unsigned v = wildcard_start ; v != domain_size ; ++v)
+                all_wildcards.set(v);
+
             // build up distance 1 adjacency bitsets
             add_adjacency_constraints(pattern, target);
 
@@ -132,26 +137,28 @@ namespace
             if (params.nds) {
                 for (unsigned p = 0 ; p < pattern.size() ; ++p) {
                     unsigned cn = 0;
-                    for (auto & c : adjacency_constraints) {
+                    auto & c = *adjacency_constraints.begin();
+                    // for (auto & c : adjacency_constraints) {
                         p_nds[cn].resize(pattern.size());
                         for (unsigned q = 0 ; q < pattern.size() ; ++q)
                             if (c.first[p][q])
                                 p_nds[cn][p].push_back(c.first[q].count());
                         sort(p_nds[cn][p].begin(), p_nds[cn][p].end(), greater<unsigned>());
                         ++cn;
-                    }
+                    // }
                 }
 
                 for (unsigned t = 0 ; t < target.size() ; ++t) {
                     unsigned cn = 0;
-                    for (auto & c : adjacency_constraints) {
+                    auto & c = *adjacency_constraints.begin();
+                    //for (auto & c : adjacency_constraints) {
                         t_nds[cn].resize(target.size());
                         for (unsigned q = 0 ; q < target.size() ; ++q)
                             if (c.second[t][q])
                                 t_nds[cn][t].push_back(c.second[q].count());
                         sort(t_nds[cn][t].begin(), t_nds[cn][t].end(), greater<unsigned>());
                         ++cn;
-                    }
+                    //}
                 }
             }
 
@@ -184,7 +191,7 @@ namespace
 
                     // neighbourhood degree sequences
                     if (params.nds) {
-                        for (unsigned cn = 0 ; cn < adjacency_constraints.size() && ok ; ++cn) {
+                        for (unsigned cn = 0 ; cn < 1 && ok ; ++cn) {
                             for (unsigned i = params.except ; i < p_nds[cn][p].size() ; ++i) {
                                 if (t_nds[cn][t][i - params.except] < p_nds[cn][p][i]) {
                                     ok = false;
@@ -377,7 +384,7 @@ namespace
                     if (unit_domain_value < wildcard_start)
                         for (auto & c : adjacency_constraints)
                             if (c.first[unit_domain_v].test(d.v))
-                                d.values &= c.second[unit_domain_value];
+                                d.values &= (c.second[unit_domain_value] | all_wildcards);
 
                     if (d.values.none())
                         return false;
@@ -548,6 +555,8 @@ auto sequential_ix_subgraph_isomorphism(const pair<Graph, Graph> & graphs, const
         modified_result.nodes += sip.result.nodes;
         if (! sip.result.isomorphism.empty()) {
             modified_result.isomorphism = sip.result.isomorphism;
+            modified_result.stats.emplace("EXCEPT", to_string(modified_params.except));
+            modified_result.stats.emplace("SIZE", to_string(graphs.first.size() - modified_params.except));
             return modified_result;
         }
         else
