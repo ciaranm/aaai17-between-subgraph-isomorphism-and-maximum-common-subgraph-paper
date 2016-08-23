@@ -1,7 +1,8 @@
 SHELL := /bin/bash
 FILTER := -1
 MODULUS := 1
-INSTANCES := $(shell cut -d' ' -f1 instances.txt | if [[ $(FILTER) == -1 ]] ; then cat ; else awk "(NR % $(MODULUS)) == ($(FILTER) % $(MODULUS))" ; fi)
+CATTER := cat
+INSTANCES := $(shell cut -d' ' -f1 instances.txt | if [[ $(FILTER) == -1 ]] ; then cat ; else awk "(NR % $(MODULUS)) == ($(FILTER) % $(MODULUS))" ; fi | $(CATTER) )
 TIMEOUT := 1000
 ALGORITHMS := sequentialix-d2 sequentialix-d2-induced
 STACK_SPACE := 10485760
