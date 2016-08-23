@@ -1,7 +1,0 @@
-family total $k=0$ $k=1$ $k=2$ $k=3$ $k=4$ $k=5$ $k\\le{}10$ $k\\le{}20$ larger unknown
-scalefree 100 80 0 0 0 0 0 0 0 0 20
-LV 793 279 26 21 22 6 16 73 44 61 245
-images-CVIU11 200 2 3 2 8 0 8 11 12 11 143
-meshes-CVIU11 200 1 0 0 0 0 0 0 0 156 43
-largerLV 3038 255 74 16 35 23 20 198 235 1285 897
-phase 200 22 0 0 0 0 0 0 0 0 178
