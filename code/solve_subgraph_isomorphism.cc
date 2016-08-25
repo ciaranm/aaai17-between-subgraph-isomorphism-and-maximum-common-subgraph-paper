@@ -115,6 +115,7 @@ auto main(int argc, char * argv[]) -> int
             ("nds",                                   "Use NDS filtering")
             ("cnds",                                  "Use Combined NDS filtering")
             ("except",             po::value<int>(),  "Allow this many pattern vertices to be excluded")
+            ("high-wildcards",                        "Treat wildcard vertices as having high degree")
             ("induced",                               "Induced")
             ("expensive-stats",                       "Calculate expensive stats")
             ;
@@ -181,6 +182,7 @@ auto main(int argc, char * argv[]) -> int
         params.nds = options_vars.count("nds");
         params.cnds = options_vars.count("cnds");
         params.expensive_stats = options_vars.count("expensive-stats");
+        params.high_wildcards = options_vars.count("high-wildcards");
         if (options_vars.count("except"))
             params.except = options_vars["except"].as<int>();
 

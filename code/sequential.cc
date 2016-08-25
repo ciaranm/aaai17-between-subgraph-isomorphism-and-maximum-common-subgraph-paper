@@ -307,7 +307,7 @@ namespace
 
             if (params.except >= 1)
                 for (unsigned v = 0 ; v < params.except ; ++v)
-                    target_degrees.at(wildcard_start + v) = 0;
+                    target_degrees.at(wildcard_start + v) = params.high_wildcards ? target.size() + 1 : 0;
 
             vector<vector<vector<unsigned> > > p_nds(params.cnds ? adjacency_constraints.size() * adjacency_constraints.size() : adjacency_constraints.size());
             vector<vector<vector<unsigned> > > t_nds(params.cnds ? adjacency_constraints.size() * adjacency_constraints.size() : adjacency_constraints.size());
