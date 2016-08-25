@@ -110,8 +110,10 @@ auto main(int argc, char * argv[]) -> int
             ("timeout",            po::value<int>(),  "Abort after this many seconds")
             ("format",             po::value<std::string>(), "Specify graph file format (lad or dimacs)")
             ("d2graphs",                              "Use d2 graphs")
+            ("d2cgraphs",                             "Use d2 complement graphs")
             ("degree",                                "Use degree filtering")
             ("nds",                                   "Use NDS filtering")
+            ("cnds",                                  "Use Combined NDS filtering")
             ("except",             po::value<int>(),  "Allow this many pattern vertices to be excluded")
             ("induced",                               "Induced")
             ("expensive-stats",                       "Calculate expensive stats")
@@ -173,9 +175,11 @@ auto main(int argc, char * argv[]) -> int
         Params params;
 
         params.d2graphs = options_vars.count("d2graphs");
+        params.d2cgraphs = options_vars.count("d2cgraphs");
         params.induced = options_vars.count("induced");
         params.degree = options_vars.count("degree");
         params.nds = options_vars.count("nds");
+        params.cnds = options_vars.count("cnds");
         params.expensive_stats = options_vars.count("expensive-stats");
         if (options_vars.count("except"))
             params.except = options_vars["except"].as<int>();

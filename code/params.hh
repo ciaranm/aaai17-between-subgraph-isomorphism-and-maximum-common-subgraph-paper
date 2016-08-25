@@ -15,8 +15,10 @@ struct Params
     std::chrono::time_point<std::chrono::steady_clock> start_time;
 
     bool d2graphs = false;
+    bool d2cgraphs = false;
     bool induced = false;
     bool nds = false;
+    bool cnds = false;
     bool degree = false;
     bool expensive_stats = false;
 

@@ -115,11 +115,8 @@ namespace
             for (unsigned v = wildcard_start ; v != domain_size ; ++v)
                 all_wildcards.set(v);
 
-            // build up distance 1 adjacency bitsets
+            // build up adjacency bitsets
             add_adjacency_constraints(pattern, target);
-
-            if (params.induced)
-                add_complement_constraints(pattern, target);
 
             for (unsigned p = 0 ; p < pattern.size() ; ++p)
                 pattern_degrees[p] = pattern.degree(p);
@@ -131,10 +128,39 @@ namespace
                 for (unsigned v = 0 ; v < params.except ; ++v)
                     target_degrees.at(wildcard_start + v) = 0;
 
-            vector<vector<vector<unsigned> > > p_nds(adjacency_constraints.size());
-            vector<vector<vector<unsigned> > > t_nds(adjacency_constraints.size());
+            vector<vector<vector<unsigned> > > p_nds(params.cnds ? adjacency_constraints.size() * adjacency_constraints.size() : adjacency_constraints.size());
+            vector<vector<vector<unsigned> > > t_nds(params.cnds ? adjacency_constraints.size() * adjacency_constraints.size() : adjacency_constraints.size());
 
-            if (params.nds) {
+            if (params.cnds) {
+                for (unsigned p = 0 ; p < pattern.size() ; ++p) {
+                    unsigned cn = 0;
+                    for (auto & c : adjacency_constraints) {
+                        for (auto & d : adjacency_constraints) {
+                            p_nds[cn].resize(pattern.size());
+                            for (unsigned q = 0 ; q < pattern.size() ; ++q)
+                                if (c.first[p][q])
+                                    p_nds[cn][p].push_back(d.first[q].count());
+                            sort(p_nds[cn][p].begin(), p_nds[cn][p].end(), greater<unsigned>());
+                            ++cn;
+                        }
+                    }
+                }
+
+                for (unsigned t = 0 ; t < target.size() ; ++t) {
+                    unsigned cn = 0;
+                    for (auto & c : adjacency_constraints) {
+                        for (auto & d : adjacency_constraints) {
+                            t_nds[cn].resize(target.size());
+                            for (unsigned q = 0 ; q < target.size() ; ++q)
+                                if (c.second[t][q])
+                                    t_nds[cn][t].push_back(d.second[q].count());
+                            sort(t_nds[cn][t].begin(), t_nds[cn][t].end(), greater<unsigned>());
+                            ++cn;
+                        }
+                    }
+                }
+            }
+            else if (params.nds) {
                 for (unsigned p = 0 ; p < pattern.size() ; ++p) {
                     unsigned cn = 0;
                     for (auto & c : adjacency_constraints) {
@@ -242,6 +268,16 @@ namespace
             }
         }
 
+        auto add_complement_constraints(const Graph & pattern, const Graph & target) -> auto
+        {
+            auto & d1 = *adjacency_constraints.insert(
+                    adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
+            build_d1_adjacency(pattern, false, d1.first, true);
+            build_d1_adjacency(target, true, d1.second, true);
+
+            return d1;
+        }
+
         auto add_adjacency_constraints(const Graph & pattern, const Graph & target) -> void
         {
             auto & d1 = *adjacency_constraints.insert(
@@ -257,17 +293,25 @@ namespace
                 auto & d23 = *adjacency_constraints.insert(
                         adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
 
-                build_d2_adjacency(pattern, d1.first, false, d21.first, d22.first, d23.first);
-                build_d2_adjacency(target, d1.second, true, d21.second, d22.second, d23.second);
+                build_d2_adjacency(pattern.size(), d1.first, false, d21.first, d22.first, d23.first);
+                build_d2_adjacency(target.size(), d1.second, true, d21.second, d22.second, d23.second);
             }
-        }
 
-        auto add_complement_constraints(const Graph & pattern, const Graph & target) -> void
-        {
-            auto & d1 = *adjacency_constraints.insert(
-                    adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
-            build_d1_adjacency(pattern, false, d1.first, true);
-            build_d1_adjacency(target, true, d1.second, true);
+            if (params.induced) {
+                auto d1c = add_complement_constraints(pattern, target);
+
+                if (params.d2cgraphs) {
+                    auto & d21c = *adjacency_constraints.insert(
+                            adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
+                    auto & d22c = *adjacency_constraints.insert(
+                            adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
+                    auto & d23c = *adjacency_constraints.insert(
+                            adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
+
+                    build_d2_adjacency(pattern.size(), d1c.first, false, d21c.first, d22c.first, d23c.first);
+                    build_d2_adjacency(target.size(), d1c.second, true, d21c.second, d22c.second, d23c.second);
+                }
+            }
         }
 
         auto build_d1_adjacency(const Graph & graph, bool is_target, vector<bitset> & adj, bool complement) const -> void
@@ -282,23 +326,23 @@ namespace
         }
 
         auto build_d2_adjacency(
-                const Graph & graph,
+                const unsigned graph_size,
                 const vector<bitset> & d1_adj,
                 bool is_target,
                 vector<bitset> & adj1,
                 vector<bitset> & adj2,
                 vector<bitset> & adj3) const -> void
         {
-            adj1.resize(graph.size());
-            adj2.resize(graph.size());
-            adj3.resize(graph.size());
+            adj1.resize(graph_size);
+            adj2.resize(graph_size);
+            adj3.resize(graph_size);
 
-            vector<vector<unsigned> > counts(graph.size(), vector<unsigned>(graph.size(), 0));
+            vector<vector<unsigned> > counts(graph_size, vector<unsigned>(graph_size, 0));
 
-            for (unsigned t = 0 ; t < graph.size() ; ++t) {
-                adj1[t] = bitset(is_target ? domain_size : graph.size(), 0);
-                adj2[t] = bitset(is_target ? domain_size : graph.size(), 0);
-                adj3[t] = bitset(is_target ? domain_size : graph.size(), 0);
+            for (unsigned t = 0 ; t < graph_size ; ++t) {
+                adj1[t] = bitset(is_target ? domain_size : graph_size, 0);
+                adj2[t] = bitset(is_target ? domain_size : graph_size, 0);
+                adj3[t] = bitset(is_target ? domain_size : graph_size, 0);
                 for (auto u = d1_adj[t].find_first() ; u != bitset::npos ; u = d1_adj[t].find_next(u))
                     if (t != u)
                         for (auto v = d1_adj[u].find_first() ; v != bitset::npos ; v = d1_adj[u].find_next(v))
@@ -306,8 +350,8 @@ namespace
                                 ++counts[t][v];
             }
 
-            for (unsigned t = 0 ; t < graph.size() ; ++t)
-                for (unsigned u = 0 ; u < graph.size() ; ++u) {
+            for (unsigned t = 0 ; t < graph_size ; ++t)
+                for (unsigned u = 0 ; u < graph_size ; ++u) {
                     if (counts[t][u] >= 3 + (is_target ? 0 : params.except))
                         adj3[t].set(u);
                     if (counts[t][u] >= 2 + (is_target ? 0 : params.except))
