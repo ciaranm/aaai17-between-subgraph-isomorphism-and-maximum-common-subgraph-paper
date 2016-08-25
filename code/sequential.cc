@@ -621,21 +621,24 @@ namespace
         auto cheap_all_different(Domains & domains) -> bool
         {
             // pick domains smallest first, with tiebreaking
-            vector<int> domains_order;
+            vector<pair<int, int> > domains_order;
             domains_order.resize(domains.size());
-            iota(domains_order.begin(), domains_order.begin() + domains.size(), 0);
+            for (unsigned d = 0 ; d < domains.size() ; ++d) {
+                domains_order[d].first = d;
+                domains_order[d].second = domains[d].values.count();
+            }
 
             sort(domains_order.begin(), domains_order.begin() + domains.size(),
-                    [&] (int a, int b) {
-                        return (domains.at(a).values.count() < domains.at(b).values.count()) || (domains.at(a).values.count() == domains.at(b).values.count() && a < b);
-                        });
+                    [&] (const pair<int, int> & a, const pair<int, int> & b) {
+                        return a.second < b.second || (a.second == b.second && a.first < b.first);
+                    });
 
             // counting all-different
             Bitset_ domains_so_far = Bitset_(domain_size), hall = Bitset_(domain_size);
             unsigned neighbours_so_far = 0;
 
             for (int i = 0, i_end = domains.size() ; i != i_end ; ++i) {
-                auto & d = domains.at(domains_order.at(i));
+                auto & d = domains.at(domains_order.at(i).first);
 
                 d.values &= ~hall;
 
