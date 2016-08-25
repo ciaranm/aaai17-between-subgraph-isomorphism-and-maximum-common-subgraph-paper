@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <chrono>
 #include <functional>
+#include <limits>
 #include <list>
 #include <map>
 #include <numeric>
@@ -24,6 +25,7 @@ using std::list;
 using std::make_pair;
 using std::map;
 using std::mt19937;
+using std::numeric_limits;
 using std::pair;
 using std::to_string;
 using std::tuple;
@@ -38,70 +40,249 @@ using std::chrono::steady_clock;
 using std::cerr;
 using std::endl;
 
-using bitset = boost::dynamic_bitset<>;
-
 namespace
 {
-    struct Domain
+    /// We'll use an array of unsigned long longs to represent our bits.
+    using BitWord = unsigned long long;
+
+    /// Number of bits per word.
+    static const constexpr int bits_per_word = sizeof(BitWord) * 8;
+
+    /**
+     * A bitset with a fixed maximum size. This only provides the operations
+     * we actually use in the bitset algorithms: it's more readable this way
+     * than doing all the bit voodoo inline.
+     *
+     * Indices start at 0.
+     */
+    template <unsigned words_>
+    class FixedBitSet
     {
-        unsigned v;
-        bool fixed;
-        bitset values;
-    };
+        private:
+            using Bits = std::array<BitWord, words_>;
 
-    using Domains = vector<Domain>;
+            Bits _bits = {{ }};
 
-    struct Assignments
-    {
-        vector<tuple<unsigned, unsigned, bool> > trail;
+        public:
+            FixedBitSet() = default;
 
-        auto push_branch(unsigned a, unsigned b) -> void
-        {
-            trail.emplace_back(a, b, true);
-        }
-
-        auto push_implication(unsigned a, unsigned b) -> void
-        {
-            if (trail.end() == find_if(trail.begin(), trail.end(), [&] (const auto & x) {
-                        return get<0>(x) == a && get<1>(x) == b;
-                        }))
-                trail.emplace_back(a, b, false);
-        }
-
-        auto pop() -> void
-        {
-            while ((! trail.empty()) && (! get<2>(trail.back())))
-                trail.pop_back();
-
-            if (! trail.empty())
-                trail.pop_back();
-        }
-
-        auto store_to(map<int, int> & m, unsigned wildcard_start) -> void
-        {
-            for (auto & t : trail) {
-                if (get<1>(t) >= wildcard_start)
-                    m.emplace(get<0>(t), -1);
-                else
-                    m.emplace(get<0>(t), get<1>(t));
+            FixedBitSet(unsigned size)
+            {
+                assert(size <= words_ * bits_per_word);
             }
-        }
+
+            FixedBitSet(const FixedBitSet &) = default;
+
+            FixedBitSet & operator= (const FixedBitSet &) = default;
+
+            /**
+             * Set a given bit 'on'.
+             */
+            auto set(int a) -> void
+            {
+                // The 1 does have to be of type BitWord. If we just specify a
+                // literal, it ends up being an int, and it isn't converted
+                // upwards until after the shift is done.
+                _bits[a / bits_per_word] |= (BitWord{ 1 } << (a % bits_per_word));
+            }
+
+            /**
+             * Set a given bit 'off'.
+             */
+            auto reset(int a) -> void
+            {
+                _bits[a / bits_per_word] &= ~(BitWord{ 1 } << (a % bits_per_word));
+            }
+
+            auto reset() -> void
+            {
+                for (auto & p : _bits)
+                    p = 0;
+            }
+
+            /**
+             * Is a given bit on?
+             */
+            auto operator[] (int a) const -> bool
+            {
+                return _bits[a / bits_per_word] & (BitWord{ 1 } << (a % bits_per_word));
+            }
+
+            /**
+             * How many bits are on?
+             */
+            auto count() const -> unsigned
+            {
+                unsigned result = 0;
+                for (auto & p : _bits)
+                    result += __builtin_popcountll(p);
+                return result;
+            }
+
+            /**
+             * Are any bits on?
+             */
+            auto none() const -> bool
+            {
+                for (auto & p : _bits)
+                    if (0 != p)
+                        return false;
+                return true;
+            }
+
+            /**
+             * Intersect (bitwise-and) with another set.
+             */
+            auto operator&= (const FixedBitSet<words_> & other) -> FixedBitSet &
+            {
+                for (typename Bits::size_type i = 0 ; i < words_ ; ++i)
+                    _bits[i] = _bits[i] & other._bits[i];
+                return *this;
+            }
+
+            auto operator& (const FixedBitSet & other) const -> FixedBitSet
+            {
+                FixedBitSet result;
+                for (typename Bits::size_type i = 0 ; i < words_ ; ++i)
+                    result._bits[i] = _bits[i] & other._bits[i];
+                return result;
+            }
+
+            /**
+             * Union (bitwise-or) with another set.
+             */
+            auto operator|= (const FixedBitSet<words_> & other) -> FixedBitSet &
+            {
+                for (typename Bits::size_type i = 0 ; i < words_ ; ++i)
+                    _bits[i] = _bits[i] | other._bits[i];
+                return *this;
+            }
+
+            auto operator| (const FixedBitSet & other) const -> FixedBitSet
+            {
+                FixedBitSet result;
+                for (typename Bits::size_type i = 0 ; i < words_ ; ++i)
+                    result._bits[i] = _bits[i] | other._bits[i];
+                return result;
+            }
+
+            static const constexpr unsigned npos = numeric_limits<unsigned>::max();
+
+            /**
+             * Return the index of the first set ('on') bit, or -1 if we are
+             * empty.
+             */
+            auto find_first() const -> unsigned
+            {
+                for (typename Bits::size_type i = 0 ; i < _bits.size() ; ++i) {
+                    int b = __builtin_ffsll(_bits[i]);
+                    if (0 != b)
+                        return i * bits_per_word + b - 1;
+                }
+                return npos;
+            }
+
+            auto find_next(unsigned start_after) const -> unsigned
+            {
+                unsigned start = start_after + 1;
+
+                auto word = _bits[start / bits_per_word];
+                word &= ~((BitWord(1) << (start % bits_per_word)) - 1);
+                int b = __builtin_ffsll(word);
+                if (0 != b)
+                    return start / bits_per_word * bits_per_word + b - 1;
+
+                for (typename Bits::size_type i = start / bits_per_word + 1; i < _bits.size() ; ++i) {
+                    int b = __builtin_ffsll(_bits[i]);
+                    if (0 != b)
+                        return i * bits_per_word + b - 1;
+                }
+
+                return npos;
+            }
+
+            auto operator== (const FixedBitSet<words_> & other) const -> bool
+            {
+                if (_bits.size() != other._bits.size())
+                    return false;
+
+                for (typename Bits::size_type i = 0 ; i < _bits.size() ; ++i)
+                    if (_bits[i] != other._bits[i])
+                        return false;
+
+                return true;
+            }
+
+            auto operator~ () const -> FixedBitSet
+            {
+                FixedBitSet result = *this;
+                for (auto & p : result._bits)
+                    p = ~p;
+                return result;
+            }
     };
 
+    template <typename Bitset_>
     struct SIP
     {
+        struct Domain
+        {
+            unsigned v;
+            bool fixed;
+            Bitset_ values;
+        };
+
+        using Domains = vector<Domain>;
+
+        struct Assignments
+        {
+            vector<tuple<unsigned, unsigned, bool> > trail;
+
+            auto push_branch(unsigned a, unsigned b) -> void
+            {
+                trail.emplace_back(a, b, true);
+            }
+
+            auto push_implication(unsigned a, unsigned b) -> void
+            {
+                if (trail.end() == find_if(trail.begin(), trail.end(), [&] (const auto & x) {
+                            return get<0>(x) == a && get<1>(x) == b;
+                            }))
+                    trail.emplace_back(a, b, false);
+            }
+
+            auto pop() -> void
+            {
+                while ((! trail.empty()) && (! get<2>(trail.back())))
+                    trail.pop_back();
+
+                if (! trail.empty())
+                    trail.pop_back();
+            }
+
+            auto store_to(map<int, int> & m, unsigned wildcard_start) -> void
+            {
+                for (auto & t : trail) {
+                    if (get<1>(t) >= wildcard_start)
+                        m.emplace(get<0>(t), -1);
+                    else
+                        m.emplace(get<0>(t), get<1>(t));
+                }
+            }
+        };
+
         const Params & params;
         unsigned domain_size;
 
         Result result;
 
-        list<pair<vector<bitset>, vector<bitset> > > adjacency_constraints;
+        list<pair<vector<Bitset_>, vector<Bitset_> > > adjacency_constraints;
         vector<unsigned> pattern_degrees, target_degrees;
 
         Domains initial_domains;
 
         unsigned wildcard_start;
-        bitset all_wildcards;
+        Bitset_ all_wildcards;
 
         SIP(const Params & k, const Graph & pattern, const Graph & target) :
             params(k),
@@ -109,9 +290,9 @@ namespace
             pattern_degrees(pattern.size()),
             target_degrees(domain_size),
             initial_domains(pattern.size()),
-            wildcard_start(target.size())
+            wildcard_start(target.size()),
+            all_wildcards(domain_size)
         {
-            all_wildcards = bitset(domain_size);
             for (unsigned v = wildcard_start ; v != domain_size ; ++v)
                 all_wildcards.set(v);
 
@@ -189,7 +370,7 @@ namespace
             // build up initial domains
             for (unsigned p = 0 ; p < pattern.size() ; ++p) {
                 initial_domains[p].v = p;
-                initial_domains[p].values = bitset(domain_size);
+                initial_domains[p].values = Bitset_(domain_size);
                 initial_domains[p].fixed = false;
 
                 // decide initial domain values
@@ -239,12 +420,13 @@ namespace
                 vector<pair<Domain *, unsigned> > assignments;
 
                 for (auto & d : initial_domains)
-                    for (auto v = d.values.find_first() ; v != bitset::npos && v < wildcard_start ; v = d.values.find_next(v))
+                    for (auto v = d.values.find_first() ; v != Bitset_::npos && v < wildcard_start ; v = d.values.find_next(v))
                         assignments.emplace_back(&d, v);
 
                 unsigned long long pairs_seen = 0, pairs_disallowed = 0;
                 if (assignments.size() >= 2) {
-                    uniform_int_distribution<decltype(assignments)::size_type> all_dist(0, assignments.size() - 1), all_but_first_dist(1, assignments.size() - 1);
+                    uniform_int_distribution<typename decltype(assignments)::size_type>
+                        all_dist(0, assignments.size() - 1), all_but_first_dist(1, assignments.size() - 1);
                     mt19937 rand(666);
                     for (unsigned n = 0 ; n < 1000000 ; ++n) {
                         swap(assignments[0], assignments[all_dist(rand)]);
@@ -254,7 +436,7 @@ namespace
                             ++pairs_seen;
                             bool disallowed = false;
                             for (auto & c : adjacency_constraints)
-                                if (c.first[a.first->v].test(b.first->v) && ! c.second[a.second].test(b.second))
+                                if (c.first[a.first->v][b.first->v] && ! c.second[a.second][b.second])
                                     disallowed = true;
 
                             if (disallowed)
@@ -271,7 +453,7 @@ namespace
         auto add_complement_constraints(const Graph & pattern, const Graph & target) -> auto
         {
             auto & d1 = *adjacency_constraints.insert(
-                    adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
+                    adjacency_constraints.end(), make_pair(vector<Bitset_>(), vector<Bitset_>()));
             build_d1_adjacency(pattern, false, d1.first, true);
             build_d1_adjacency(target, true, d1.second, true);
 
@@ -281,17 +463,17 @@ namespace
         auto add_adjacency_constraints(const Graph & pattern, const Graph & target) -> void
         {
             auto & d1 = *adjacency_constraints.insert(
-                    adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
+                    adjacency_constraints.end(), make_pair(vector<Bitset_>(), vector<Bitset_>()));
             build_d1_adjacency(pattern, false, d1.first, false);
             build_d1_adjacency(target, true, d1.second, false);
 
             if (params.d2graphs) {
                 auto & d21 = *adjacency_constraints.insert(
-                        adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
+                        adjacency_constraints.end(), make_pair(vector<Bitset_>(), vector<Bitset_>()));
                 auto & d22 = *adjacency_constraints.insert(
-                        adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
+                        adjacency_constraints.end(), make_pair(vector<Bitset_>(), vector<Bitset_>()));
                 auto & d23 = *adjacency_constraints.insert(
-                        adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
+                        adjacency_constraints.end(), make_pair(vector<Bitset_>(), vector<Bitset_>()));
 
                 build_d2_adjacency(pattern.size(), d1.first, false, d21.first, d22.first, d23.first);
                 build_d2_adjacency(target.size(), d1.second, true, d21.second, d22.second, d23.second);
@@ -302,11 +484,11 @@ namespace
 
                 if (params.d2cgraphs) {
                     auto & d21c = *adjacency_constraints.insert(
-                            adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
+                            adjacency_constraints.end(), make_pair(vector<Bitset_>(), vector<Bitset_>()));
                     auto & d22c = *adjacency_constraints.insert(
-                            adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
+                            adjacency_constraints.end(), make_pair(vector<Bitset_>(), vector<Bitset_>()));
                     auto & d23c = *adjacency_constraints.insert(
-                            adjacency_constraints.end(), make_pair(vector<bitset>(), vector<bitset>()));
+                            adjacency_constraints.end(), make_pair(vector<Bitset_>(), vector<Bitset_>()));
 
                     build_d2_adjacency(pattern.size(), d1c.first, false, d21c.first, d22c.first, d23c.first);
                     build_d2_adjacency(target.size(), d1c.second, true, d21c.second, d22c.second, d23c.second);
@@ -314,11 +496,11 @@ namespace
             }
         }
 
-        auto build_d1_adjacency(const Graph & graph, bool is_target, vector<bitset> & adj, bool complement) const -> void
+        auto build_d1_adjacency(const Graph & graph, bool is_target, vector<Bitset_> & adj, bool complement) const -> void
         {
             adj.resize(graph.size());
             for (unsigned t = 0 ; t < graph.size() ; ++t) {
-                adj[t] = bitset(is_target ? domain_size : graph.size(), 0);
+                adj[t] = Bitset_(is_target ? domain_size : graph.size());
                 for (unsigned u = 0 ; u < graph.size() ; ++u)
                     if (graph.adjacent(t, u) != complement)
                         adj[t].set(u);
@@ -327,11 +509,11 @@ namespace
 
         auto build_d2_adjacency(
                 const unsigned graph_size,
-                const vector<bitset> & d1_adj,
+                const vector<Bitset_> & d1_adj,
                 bool is_target,
-                vector<bitset> & adj1,
-                vector<bitset> & adj2,
-                vector<bitset> & adj3) const -> void
+                vector<Bitset_> & adj1,
+                vector<Bitset_> & adj2,
+                vector<Bitset_> & adj3) const -> void
         {
             adj1.resize(graph_size);
             adj2.resize(graph_size);
@@ -340,12 +522,12 @@ namespace
             vector<vector<unsigned> > counts(graph_size, vector<unsigned>(graph_size, 0));
 
             for (unsigned t = 0 ; t < graph_size ; ++t) {
-                adj1[t] = bitset(is_target ? domain_size : graph_size, 0);
-                adj2[t] = bitset(is_target ? domain_size : graph_size, 0);
-                adj3[t] = bitset(is_target ? domain_size : graph_size, 0);
-                for (auto u = d1_adj[t].find_first() ; u != bitset::npos ; u = d1_adj[t].find_next(u))
+                adj1[t] = Bitset_(is_target ? domain_size : graph_size);
+                adj2[t] = Bitset_(is_target ? domain_size : graph_size);
+                adj3[t] = Bitset_(is_target ? domain_size : graph_size);
+                for (auto u = d1_adj[t].find_first() ; u != Bitset_::npos ; u = d1_adj[t].find_next(u))
                     if (t != u)
-                        for (auto v = d1_adj[u].find_first() ; v != bitset::npos ; v = d1_adj[u].find_next(v))
+                        for (auto v = d1_adj[u].find_first() ; v != Bitset_::npos ; v = d1_adj[u].find_next(v))
                             if (u != v && t != v)
                                 ++counts[t][v];
             }
@@ -361,7 +543,7 @@ namespace
                 }
         }
 
-        auto select_branch_domain(Domains & domains) -> Domains::iterator
+        auto select_branch_domain(Domains & domains) -> typename Domains::iterator
         {
             auto best = domains.end();
 
@@ -389,7 +571,7 @@ namespace
             return best;
         }
 
-        auto select_unit_domain(Domains & domains) -> Domains::iterator
+        auto select_unit_domain(Domains & domains) -> typename Domains::iterator
         {
             return find_if(domains.begin(), domains.end(), [] (const auto & a) {
                     return (! a.fixed) && 1 == a.values.count();
@@ -425,7 +607,7 @@ namespace
                     // adjacency
                     if (unit_domain_value < wildcard_start)
                         for (auto & c : adjacency_constraints)
-                            if (c.first[unit_domain_v].test(d.v))
+                            if (c.first[unit_domain_v][d.v])
                                 d.values &= (c.second[unit_domain_value] | all_wildcards);
 
                     if (d.values.none())
@@ -449,7 +631,7 @@ namespace
                         });
 
             // counting all-different
-            bitset domains_so_far = bitset(domain_size, 0), hall = bitset(domain_size, 0);
+            Bitset_ domains_so_far = Bitset_(domain_size), hall = Bitset_(domain_size);
             unsigned neighbours_so_far = 0;
 
             for (int i = 0, i_end = domains.size() ; i != i_end ; ++i) {
@@ -494,7 +676,7 @@ namespace
 
             vector<unsigned> branch_values;
             for (auto branch_value = branch_domain->values.find_first() ;
-                    branch_value != bitset::npos ;
+                    branch_value != Bitset_::npos ;
                     branch_value = branch_domain->values.find_next(branch_value))
                 branch_values.push_back(branch_value);
 
@@ -523,7 +705,7 @@ namespace
                         continue;
 
                     if (d.v == branch_domain->v) {
-                        bitset just_branch_value = d.values;
+                        Bitset_ just_branch_value = d.values;
                         just_branch_value.reset();
                         just_branch_value.set(branch_value);
                         new_domains.emplace_back(Domain{ unsigned(d.v), false, just_branch_value });
@@ -545,7 +727,7 @@ namespace
 
         auto record_domain_sizes_in_stats(const Domains & domains)
         {
-            auto wildcards = bitset(domain_size);
+            auto wildcards = Bitset_(domain_size);
             for (unsigned v = wildcard_start ; v != domain_size ; ++v)
                 wildcards.set(v);
 
@@ -572,11 +754,36 @@ namespace
 
 auto sequential_subgraph_isomorphism(const pair<Graph, Graph> & graphs, const Params & params) -> Result
 {
-    SIP sip(params, graphs.first, graphs.second);
-
-    sip.run();
-
-    return sip.result;
+    if (graphs.second.size() + params.except <= 63) {
+        SIP<FixedBitSet<64 / sizeof(unsigned long long)> > sip(params, graphs.first, graphs.second);
+        sip.run();
+        return sip.result;
+    }
+    else if (graphs.second.size() + params.except <= 127) {
+        SIP<FixedBitSet<128 / sizeof(unsigned long long)> > sip(params, graphs.first, graphs.second);
+        sip.run();
+        return sip.result;
+    }
+    else if (graphs.second.size() + params.except <= 255) {
+        SIP<FixedBitSet<256 / sizeof(unsigned long long)> > sip(params, graphs.first, graphs.second);
+        sip.run();
+        return sip.result;
+    }
+    else if (graphs.second.size() + params.except <= 447) {
+        SIP<FixedBitSet<448 / sizeof(unsigned long long)> > sip(params, graphs.first, graphs.second);
+        sip.run();
+        return sip.result;
+    }
+    else if (graphs.second.size() + params.except <= 511) {
+        SIP<FixedBitSet<512 / sizeof(unsigned long long)> > sip(params, graphs.first, graphs.second);
+        sip.run();
+        return sip.result;
+    }
+    else {
+        SIP<boost::dynamic_bitset<> > sip(params, graphs.first, graphs.second);
+        sip.run();
+        return sip.result;
+    }
 }
 
 auto sequential_ix_subgraph_isomorphism(const pair<Graph, Graph> & graphs, const Params & params) -> Result
@@ -587,7 +794,7 @@ auto sequential_ix_subgraph_isomorphism(const pair<Graph, Graph> & graphs, const
     while (! *modified_params.abort) {
         auto start_time = steady_clock::now();
 
-        SIP sip(modified_params, graphs.first, graphs.second);
+        SIP<boost::dynamic_bitset<> > sip(modified_params, graphs.first, graphs.second);
 
         sip.run();
 
