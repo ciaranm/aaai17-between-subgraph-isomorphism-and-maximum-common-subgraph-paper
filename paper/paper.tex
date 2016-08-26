@@ -109,30 +109,34 @@ graph into the target. We show that if $k$ is reasonably small (say, between 1 a
 forms of degree and path based filterings are still effective in pruning the search space and
 providing additional constraints respectively. We then show that combining these techniques does
 lead to a practical algorithm which can scale to work with the families of graphs commonly used to
-benchmark subgraph isomorphism algorithms.
+benchmark subgraph isomorphism algorithms: depending upon the benchmark family, in a substantial
+portion of ; in many more cases, we can at least obtain an upper bound.
 
 \subsection{Definitions and Notations}
 
-A non-induced subgraph isomorphism from a graph $P$ to a graph $T$ is an injective mapping
-$P \rightarrowtail T $ which maps adjacent vertices to adjacent vertices. An induced subgraph
-isomorphism $P \hookrightarrow T$, additionally maps non-adjacent vertices to non-adjacent
- vertices.
+A non-induced subgraph isomorphism from a graph $P$ to a graph $T$ is an injective mapping $P
+\rightarrowtail T $ which maps adjacent vertices to adjacent vertices. An induced subgraph
+isomorphism $P \hookrightarrow T$ additionally maps non-adjacent vertices to non-adjacent vertices.
+We define a $k$-less-subgraph isomorphism from $P$ to $T$ to be a subgraph isomorphism from all but
+$k$ vertices of $P$ to $T$; this may be non-induced or induced, written $P \lessnonind{k} T$ and $P
+\lessind{k} T$ respectively.
 
 A common induced subgraph of graphs $G$ and $H$ is a graph $P$, together with two induced subgraph
 isomorphisms to $G$ and $H$; a maximum common induced subgraph is a common induced subgraph with as
-many vertices as possible.
+many vertices as possible. An induced $k$-less subgraph isomorphism $P \lessind{k} T$ is equivalent
+to a common induced subgraph of $P$ and $T$ with $|\operatorname{V}(P)| - k$ vertices.
 
-A maximum common partial (i.e.\ non-induced) subgraph would allow us to select every vertex in the
-pattern, and none of the edges. The objective is therefore changed to maximise the number of edges,
-rather than vertices. However, this is not what we are looking for: usually maximum common subgraph
-problems are symmetric in their inputs, but we are allowing extra edges only in the target, not in
-the pattern.
+If defined similarly, a maximum common non-induced subgraph would allow us to select every vertex in
+the smaller of the two graphs, and none of the edges. It is therefore traditional to change the
+objective to maximise the number of edges selected, rather than vertices, when a non-induced common
+subgraph is sought---this problem is usually called the maximum common \emph{partial} subgraph
+problem instead. However, this is not what we will be discussing in this paper: maximum common
+subgraph problems are symmetric in their inputs, but when discussing the non-induced case we are
+allowing extra edges only in the target graph, not in the pattern.
 
-We define a $k$-less-subgraph isomorphism from $P$ to $T$ to be a subgraph isomorphism from all
-but $k$ vertices of $P$ to $T$; this may be non-induced or induced, written
-$P \lessnonind{k} T$ and $P \lessind{k} T$ respectively.
+?? Draw an example.
 
-\subsection{Models and Algorithms}
+\subsection{Constraint Models and Algorithms}
 
 \subsection{Experimental Setup}
 
