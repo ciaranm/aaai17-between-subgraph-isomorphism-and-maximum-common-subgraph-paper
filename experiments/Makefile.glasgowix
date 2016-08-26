@@ -4,7 +4,7 @@ MODULUS := 1
 CATTER := cat
 INSTANCES := $(shell cut -d' ' -f1 instances.txt | if [[ $(FILTER) == -1 ]] ; then cat ; else awk "(NR % $(MODULUS)) == ($(FILTER) % $(MODULUS))" ; fi | $(CATTER) )
 TIMEOUT := 1000
-ALGORITHMS := sequentialix-d2 sequentialix-d2-induced
+ALGORITHMS := sequentialix-d2 sequentialix-d2-induced sequentialix-d2-hw sequentialix-d2-hw-induced
 STACK_SPACE := 10485760
 RESULTS := results
 
@@ -13,7 +13,7 @@ all : $(foreach i, $(INSTANCES), $(foreach a, $(ALGORITHMS), $(RESULTS)/$(a)/$i.
 define ALGORITHM_template
 $(RESULTS)/$(1)/%.out :
 	mkdir -p $(RESULTS)/$(1)
-	ulimit -s $$(STACK_SPACE) ; ../code/solve_subgraph_isomorphism $$$$(echo $(1) | sed -e 's.-induced..' -e 's.-nofilter..' -e 's.-d2..' ) --timeout $$(TIMEOUT) $$$$(echo $(1) | grep -q induced && echo --induced ) $$$$(echo $(1) | grep -q nofilter || echo --degree --nds ) $$$$(echo $(1) | grep -q d2 && echo --d2graphs ) $$(shell grep "^`basename $$*` " < instances.txt | cut -d' ' -f2-3 ) > >(tee $$@ )
+	ulimit -s $$(STACK_SPACE) ; ../code/solve_subgraph_isomorphism $$$$(echo $(1) | sed -e 's.-induced..' -e 's.-nofilter..' -e 's.-d2..' -e 's.-hw..' ) --timeout $$(TIMEOUT) $$$$(echo $(1) | grep -q induced && echo --induced ) $$$$(echo $(1) | grep -q nofilter || echo --degree --nds ) $$$$(echo $(1) | grep -q d2 && echo --d2graphs ) $$$$(echo $(1) | grep -q hw && echo --high-wildcards ) $$(shell grep "^`basename $$*` " < instances.txt | cut -d' ' -f2-3 ) > >(tee $$@ )
 endef
 
 $(foreach a,$(ALGORITHMS),$(eval $(call ALGORITHM_template,$(a))))
