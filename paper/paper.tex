@@ -154,6 +154,7 @@ Let $S$ and $T$ be two sequences. We define $S \preceq T$
 \todo{Define $\preceq$, deg, nds}
 
 \begin{proposition}
+    \label{prop:deg}
     Let $p$ be a vertex in $P$ and $t$ a vertex in $T$. For both non-induced and induced
     $k$-less-subgraph isomorphisms, if $p \lessmap t$ then
     $\deg(p) - k \le \deg(t)$.
@@ -174,6 +175,21 @@ Let $p$ be a vertex in $P$, and $t$ a vertex in $T$, with $p\mapsto t$. Then by 
 Let
 
 \end{proof}
+\begin{figure}
+    \begin{center}
+        \begin{tikzpicture}{every node/.style={circle, inner sep=1mm}}
+            \node[fill=black] (p)  {};
+            \node[fill=red] (n1) [above left of = p] {};
+            \node[fill=blue] (n2) [above of = p] {};
+            \node[fill=blue] (n3) [above right of = p] {};
+            \node[fill=green] (q) [above of = n2] {};
+            %\path[]
+        \end{tikzpicture}
+        \caption{Graph that Craig wanted}
+        \label{fig:nds}
+    \end{center}
+\end{figure}
+
 
 In \cref{figure:ids} we show that this is useful in practice.
 
@@ -191,8 +207,30 @@ A \emph{path} between two vertices $p$ and $q$ is a sequence of edges which can 
 
 \begin{proposition}
     Let $p,q \in V(P)$ and $t,u\in V(T)$. If $p \lessmap{k} t$ and $q \lessmap{k} u$ then
-     $\paths(p, q, 2) \le \paths(t, u, 2) + k$.
+     $\paths(p, q, 2) - k \le \paths(t, u, 2)$.
 \end{proposition}
+\begin{proof}
+Let $P_{2}$ be the set of all paths of length two between $p$ and $q$,
+\begin{align*}
+P_{2} = & \{((p,x),(x,q)) : (p,x),(x,q)\in E(P) \} \\
+ = & \{((p,x),(x,q)) : x\in N(p) \text{ and } x\in N(q) \} \\
+ = & \{((p,x),(x,q)) : x\in N(p)\cap N(q) \} .
+\end{align*}
+So $\paths(p,q,2) = | N(p)\cap N(q)| \leq deg(p)$.
+
+If we remove up to $k$ vertices from the neighbourhood of $p$, it will impact the intersection of the neighbourhoods of $p$ and $q$, and by Proposition~\ref{prop:deg}, as $p\lessmap{k}t$
+\[
+|N(p)\cap N(q)| - k \leq deg(p) - k \leq deg(t).
+\]
+As $|N(p)\cap N(q)|\leq deg(p) \leq |N(t)\cap N(u)|\leq deg(t)$, we have
+\[
+|N(p)\cap N(q)| - k \leq deg(p) - k\leq |N(t)\cap N(u)|\leq deg(t)
+\]
+which is
+\[
+\paths(p, q, 2) - k \leq \paths(t, u, 2).
+\]
+\end{proof}
 
 This leads to the following:
 
