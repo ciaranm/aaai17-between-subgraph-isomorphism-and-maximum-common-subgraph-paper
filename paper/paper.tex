@@ -57,8 +57,10 @@
 
 % Maths operators
 \newcommand{\nds}{\operatorname{nds}}
+\newcommand{\paths}{\operatorname{paths}}
 \newcommand{\lessnonind}[1]{\prescript{}{#1}{\rightarrowtail}\ }
 \newcommand{\lessind}[1]{\prescript{}{#1}{\hookrightarrow}\ }
+\newcommand{\lessmap}[1]{\prescript{}{#1}{\mapsto}\ }
 
 % to do comments
 \usepackage{color}
@@ -153,7 +155,7 @@ Let $S$ and $T$ be two sequences. We define $S \preceq T$
 
 \begin{proposition}
     Let $p$ be a vertex in $P$ and $t$ a vertex in $T$. For both non-induced and induced
-    $k$-less-subgraph isomorphisms, if $p \prescript{}{k}{\mapsto} t$ then
+    $k$-less-subgraph isomorphisms, if $p \lessmap t$ then
     $\deg(p) - k \le \deg(t)$.
 \end{proposition}
 \begin{proof}
@@ -164,7 +166,7 @@ Let $p$ be a vertex in $P$, and $t$ a vertex in $T$, with $p\mapsto t$. Then by 
 \end{proof}
 
 \begin{proposition}
-    More powerfully, if $p \prescript{}{k}{\mapsto} t$ then
+    More powerfully, if $p \lessmap t$ then
     $(\nds(p)[k+1] - k, \nds(p)[k+2] - k, \ldots) \preceq \nds(t)$.
 \end{proposition}
 
@@ -184,11 +186,12 @@ In \cref{figure:ids} we show that this is useful in practice.
 
 As well as reasoning about degrees, we can also reason about paths.
 
-\todo{Define paths}
+A \emph{path} between two vertices $p$ and $q$ is a sequence of edges which can be traversed from $p$ to reach $q$. We define $\paths(p,q,n)$ to be the number of paths of length $n$ between the vertices $p$ and $q$.
+%\todo{Define paths}
 
 \begin{proposition}
-    If $p \prescript{}{k}{\mapsto} t$ and $q \prescript{}{k}{\mapsto} u$ then
-     $\operatorname{paths}(p, q, 2) \le \operatorname{paths}(t, u, 2) + k$.
+    Let $p,q \in V(P)$ and $t,u\in V(T)$. If $p \lessmap{k} t$ and $q \lessmap{k} u$ then
+     $\paths(p, q, 2) \le \paths(t, u, 2) + k$.
 \end{proposition}
 
 This leads to the following:
