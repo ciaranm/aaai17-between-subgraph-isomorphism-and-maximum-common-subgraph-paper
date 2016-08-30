@@ -177,13 +177,17 @@ Let
 \end{proof}
 \begin{figure}
     \begin{center}
-        \begin{tikzpicture}{every node/.style={circle, inner sep=1mm}}
-            \node[fill=black] (p)  {};
-            \node[fill=red] (n1) [above left of = p] {};
-            \node[fill=blue] (n2) [above of = p] {};
-            \node[fill=blue] (n3) [above right of = p] {};
-            \node[fill=green] (q) [above of = n2] {};
-            %\path[]
+        \begin{tikzpicture}[every node/.style={circle, inner sep=1mm}]
+            \node[fill=black] (p) {};
+            \node[draw=none,right of = p,node distance=3mm,yshift=-1mm] {$p$};
+            \node[fill=uofglawn] (n2) [above of = p,node distance=12mm] {};
+            \node[fill=uofgpumpkin] (n1) [left of = n2] {};
+            \node[fill=uofglawn] (n3) [right of = n2] {};
+            \node[fill=uofgcobalt] (q) [above of = n2,node distance=12mm] {};
+            \path (p) edge (n1) edge (n2) edge (n3)
+                (n1) edge (q)
+                (n2) edge (n3) edge (q)
+                (n3) edge (q);
         \end{tikzpicture}
         \caption{Graph that Craig wanted}
         \label{fig:nds}
