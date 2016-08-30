@@ -149,9 +149,8 @@ isomorphism between $P$ and $T$ with $k$ extra universally-adjacent vertices. (H
 bit better algorithmically.) For induced $k$-less-subgraph isomorphisms, such an approach cannot
 work.
 
-Let $S$ and $T$ be two sequences. We define $S \preceq T$
-
-\todo{Define $\preceq$, deg, nds}
+Let $p$ be a vertex in a graph $P$, the \emph{degree} of $p$, $\deg(p)$, is the number of vertices
+to which it is adjacent
 
 \begin{proposition}
     \label{prop:deg}
@@ -166,15 +165,46 @@ Let $p$ be a vertex in $P$, and $t$ a vertex in $T$, with $p\mapsto t$. Then by 
 \]
 \end{proof}
 
+A vertex $q$ which is adjacent to $p$ is called its \emph{neighbour}.  Let $N(p) = \{ q \in V_p | p
+\text{ and } q \text{ are adjacent }\}$ be the set of neighbours of $p$.  The \emph{neighbourhood
+degree sequence} (NDS) of $p$, $\nds(p)$, is the (non-ascending) sequence of degrees of its
+neighbours.
+
+Let $S = ( s_1 , \ldots , s_n )$ and $T = ( t_1 , \ldots , t_m)$ be two sequences.  We say that $S
+\preceq T$ if $n \leq m$ and $\forall s_i \in S$ there exists a distinct $t_j \in T$ with $s_i \leq
+t_j$.  (When considering a $k$-less-subgraph isomorphism) we say that $S \prescript{}{k}{\preceq}
+T$ if $n - k \leq m$ and $\forall s_i \in S \setminus S_k$, where $S_k$ is a subsequence of $S$
+containing up to $k$ members of $S$, there exists a distinct $t_j \in T$ with $s_i - k \leq t_j$.
+
+
 \begin{proposition}
-    More powerfully, if $p \lessmap t$ then
-    $(\nds(p)[k+1] - k, \nds(p)[k+2] - k, \ldots) \preceq \nds(t)$.
+If $p \prescript{}{k}{\mapsto} t$, then $\nds(p) \prescript{}{k}{\preceq} \nds(t)$.
 \end{proposition}
 
 \begin{proof}
-Let
+Let $p \prescript{}{k}{\mapsto} t$.  Then $\deg(p) - k \leq \deg(q)$, by Proposition 1, which
+implies that $|\nds(p)| -k \leq |\nds(t)|$.
 
+Also, $p \prescript{}{k}{\mapsto} t$ implies that for each $q \in N(p)\setminus P_k$, where $P_k$
+is some subset of $P$ with $|P_k| \leq k$, $q \prescript{}{k}{\mapsto} u$, where $u \in N(t)$ and
+each $u$ is distinct.  Then $\deg(q) - k \leq \deg(u)$, by Proposition 1.  Hence $\nds(p)
+\prescript{}{k}{\preceq} \nds(t)$.
 \end{proof}
+
+Figure\ref{fig:nds} illustrates the three cases possible when filtering by neighbourhood degree
+sequence.  Removing the top node causes each entry in $\nds(p)$ to be reduced; removing the 
+left-middle node removes an entry from $\nds(p)$; and removing either of the connected nodes in the
+middle layer causes both the size of $\nds(p)$ to be reduced and an entry in $\nds(p)$ to be reduced.
+
+\begin{corollary}
+You can just ignore the first K things in $\nds(p)$, assuming it's ordered.
+\end{corollary}
+
+\begin{proof}
+Do we need this?
+\end{proof}
+
+
 \begin{figure}
     \begin{center}
         \begin{tikzpicture}[every node/.style={circle, inner sep=1mm}]
