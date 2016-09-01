@@ -57,13 +57,14 @@
 
 
 % Maths operators
-\newcommand{\nds}{\operatorname{nds}}
 \newcommand{\paths}{\operatorname{paths}}
 \newcommand{\lessnonind}[1]{\prescript{}{#1}{\rightarrowtail}\ }
 \newcommand{\lessind}[1]{\prescript{}{#1}{\hookrightarrow}\ }
 \newcommand{\lessmap}[1]{\prescript{}{#1}{\mapsto}\ }
 \newcommand{\lesspreceq}[1]{\prescript{}{#1}{\preceq}\ }
 \newcommand{\V}{\operatorname{V}}
+\newcommand{\N}{\operatorname{N}}
+\newcommand{\nds}{\operatorname{S}}
 % to do comments
 \usepackage{color}
 \newcommand{\todo}[1]{{\color{red} {[}{#1}{]}}}
@@ -165,7 +166,7 @@ Let $p$ be a vertex in $P$, and $t$ a vertex in $T$, with $p\mapsto t$. Then by 
 \]
 \end{proof}
 
-A vertex $q$ which is adjacent to $p$ is called its \emph{neighbour}.  Let $N(p) = \{ q \in \V(P) :
+A vertex $q$ which is adjacent to $p$ is called its \emph{neighbour}.  Let $\N(p) = \{ q \in \V(P) :
  p \text{ and } q \text{ are adjacent }\}$ be the set of neighbours of $p$.  The \emph{neighbourhood
 degree sequence} (NDS) of $p$, $\nds(p)$, is the (non-ascending) sequence of degrees of its
 neighbours.
@@ -185,8 +186,8 @@ If $p \lessmap{k} t$, then $\nds(p) \lesspreceq{k} \nds(t)$.
 Let $p \lessmap{k} t$.  Then $\deg(p) - k \leq \deg(q)$, by Proposition 1, which
 implies that $|\nds(p)| -k \leq |\nds(t)|$.
 
-Also, $p \lessmap{k} t$ implies that for each $q \in N(p)\setminus P_k$, where $P_k$
-is some subset of $P$ with $|P_k| \leq k$, $q \lessmap{k} u$, where $u \in N(t)$ and
+Also, $p \lessmap{k} t$ implies that for each $q \in \N(p)\setminus P_k$, where $P_k$
+is some subset of $P$ with $|P_k| \leq k$, $q \lessmap{k} u$, where $u \in \N(t)$ and
 each $u$ is distinct.  Then $\deg(q) - k \leq \deg(u)$, by Proposition 1.  Hence $\nds(p)
 \lesspreceq{k} \nds(t)$.
 \end{proof}
@@ -247,18 +248,18 @@ A \emph{path} between two vertices $p$ and $q$ is a sequence of edges which can 
 Let $P_{2}$ be the set of all paths of length two between $p$ and $q$,
 \begin{align*}
 P_{2} = & \{((p,x),(x,q)) : (p,x),(x,q)\in E(P) \} \\
- = & \{((p,x),(x,q)) : x\in N(p) \text{ and } x\in N(q) \} \\
- = & \{((p,x),(x,q)) : x\in N(p)\cap N(q) \} .
+ = & \{((p,x),(x,q)) : x\in \N(p) \text{ and } x\in \N(q) \} \\
+ = & \{((p,x),(x,q)) : x\in \N(p)\cap \N(q) \} .
 \end{align*}
-So $\paths(p,q,2) = | N(p)\cap N(q)| \leq deg(p)$.
+So $\paths(p,q,2) = | \N(p)\cap \N(q)| \leq deg(p)$.
 
 If we remove up to $k$ vertices from the neighbourhood of $p$, it will impact the intersection of the neighbourhoods of $p$ and $q$, and by Proposition~\ref{prop:deg}, as $p\lessmap{k}t$
 \[
-|N(p)\cap N(q)| - k \leq deg(p) - k \leq deg(t).
+|\N(p)\cap \N(q)| - k \leq deg(p) - k \leq deg(t).
 \]
-As $|N(p)\cap N(q)|\leq deg(p) \leq |N(t)\cap N(u)|\leq deg(t)$, we have
+As $|\N(p)\cap \N(q)|\leq deg(p) \leq |\N(t)\cap \N(u)|\leq deg(t)$, we have
 \[
-|N(p)\cap N(q)| - k \leq deg(p) - k\leq |N(t)\cap N(u)|\leq deg(t)
+|\N(p)\cap \N(q)| - k \leq deg(p) - k\leq |\N(t)\cap \N(u)|\leq deg(t)
 \]
 which is
 \[
@@ -273,7 +274,7 @@ This leads to the following:
     vertices $p$ and $q$ in $G^{n, \ell}$ are adjacent, if there are at least $n$ simple paths of
     length exactly $\ell$ between $p$ and $q$ in $G$. Then any $k$-less-subgraph isomorphism
     $P \lessnonind{k} T$ induces a new $k$-less-subgraph isomorphism
-    $P^{n, 2}\lessnonind{k} T^{n - k, 2}$.
+    $P^{n+k, 2}\lessnonind{k} T^{n, 2}$.
 \end{proposition}
 
 To allow for fast propagation, we create supplemental graphs for paths of length 2, looking at
