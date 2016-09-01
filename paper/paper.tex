@@ -15,6 +15,8 @@
 \usepackage{tikz}
 \usepackage{mathtools}
 \usepackage{graphicx}
+\usepackage{multicol}
+\usepackage[ruled,vlined]{algorithm2e}
 
 \usepackage{showframe}
 
@@ -309,6 +311,83 @@ strong improvement are from the ``LV'' family of graphs.
 \end{figure*}
 
 \section{A New Algorithm}
+
+\begin{algorithm*}[tb]
+\DontPrintSemicolon
+\begin{multicols}{2}
+\nl $\FuncSty{klessSubgraphIsomorphism}$ (\\\hspace*{2em}Graph $\mathcal{P}$, Graph $\mathcal{T}$, Int $k$) $\rightarrow$ Bool \;
+\nl \Begin{
+    \nl \lIf{$\left|\V(\mathcal{P})\right| + k > \left|\V(\mathcal{T})\right|$}{$\KwSty{return}~\KwSty{false}$\label{line:enough}}
+    \nl $L \gets \big[ (\mathcal{P},\ \mathcal{T}), (\shortoverline{\mathcal{P}},
+        \shortoverline{\mathcal{T}}),$
+        \\\hspace*{1.0em}$(\mathcal{P}^{1 + k,2},\ \mathcal{T}^{1,2}), (\mathcal{P}^{2 + k,2},\
+    \mathcal{T}^{2,2}), (\mathcal{P}^{3 + k,2},\ \mathcal{T}^{3,2}) \big]$ \;
+    \nl \ForEach{$v \in \V(\mathcal{P})$}{
+        \nl $D_v \gets \V(\mathcal{T})$\;
+        \nl \ForEach{$(P,\,T) \in L$}{
+            \nl $D_v \gets D_v \cap \{ w \in D_v : $ \\
+            \hspace*{7em}$v \sim_P v \Rightarrow w \sim_T w~\wedge$ \\
+            \hspace*{7em}$\nds_P(v) \lesspreceq{k} \nds_T(w)\}$ \;
+        }
+        \nl $D_v \gets D_v \cup k~\textnormal{distinct wildcard values}$
+    }
+    \nl \lIf{\FuncSty{propagate}(D)}{$\KwSty{return}~\FuncSty{search}(L, D, k)$}
+    \nl \lElse{$\KwSty{return}~\KwSty{false}$}
+}
+\nl $\FuncSty{search}$ (GraphPairs $L$, Domains $D$, Int $k$) $\rightarrow$ Bool \;
+\nl \Begin{
+    \nl \lIf{$D = \emptyset$}{$\KwSty{return}~\KwSty{true}$}
+    \nl $D_v \gets \textnormal{the smallest domain in}~D$ \;
+    \nl \ForEach {$v' \in D_v~\textnormal{ordered by static degree in}~\mathcal{T}$\label{line:parforeach}}{
+        \nl \If{$v'$ \textnormal{is not the first wildcard we have tried}}{
+            \nl \KwSty{continue} \;
+        }
+        \nl $D' \gets \FuncSty{clone}(D)$ \;
+        \nl $D'_v \gets \{ v' \} $ \;
+        \nl \If{\FuncSty{propagate}(D')}{
+            \nl \If{$\FuncSty{search}(L, \{ D \in D' : \left|D\right| > 1 \}, k)$}{
+                \nl $\KwSty{return}~\KwSty{true}$ \;
+            }
+        }
+    }
+}
+\nl $\FuncSty{propagate}$ (GraphPairs $L$, Domains $D$) $\rightarrow$ Bool \;
+\nl \Begin{
+    \nl \While{\KwSty{true}}{
+        \nl \If{\textnormal{no unit domains remain}}{
+            \nl \If{$\KwSty{not}~\FuncSty{allDifferent}(D)$}{
+                \nl $\KwSty{return}~\KwSty{false}$ \;
+            }
+        }
+        \nl \lIf{$\textnormal{no unit domains remain}$}{$\KwSty{return}~\KwSty{true}$}
+        \nl $D_v = \{ v' \} \gets \textnormal{a unit domain from}~D$ \;
+        \nl \ForEach{$D_w \in D \setminus \{ D_v \}$}{
+            \nl $D_w \gets D_w \setminus \{ v' \}$ \label{line:removev} \;
+            \nl \ForEach{$(P,\,T) \in L$}{
+                \nl \If{$v \sim_P w$}{
+                    \nl $D_w \gets D_w \cap \left(\N_T(v') \cup \textnormal{wildcards}\right)$
+                }
+            }
+            \nl \lIf{$D_w = \emptyset$}{$\KwSty{return}~\KwSty{false}$}
+        }
+    }
+}
+\nl $\FuncSty{allDifferent}$ (Domains $D$) $\rightarrow$ Bool \;
+\nl \Begin{
+\nl $(F,\,H,\,A,\,n) \gets (\emptyset,\,\emptyset,\,\emptyset,\,0)$ \;
+\nl \ForEach{$D_v \in D$ \textnormal{from smallest to largest\label{line:eachdomain}}}{
+    \nl $F \gets F + v$ \;
+    \nl $D_v \gets D_v \setminus H$ \label{line:elimhall} \;
+    \nl $(A,\,n) \gets (A \cup D_v,\,n + 1)$ \label{line:acc} \;
+    \nl \lIf{$D_v = \emptyset~\KwSty{or}~|A| < n$}{$\KwSty{return}~\KwSty{false}$\label{line:failhall}}
+    \nl \lIf{$|A| = n$}{$(H,\,A,\,n) \gets (H \cup A,\,\emptyset,\,0)$\label{line:hall}}
+}
+\nl $\KwSty{return}~\KwSty{true}$ \;
+}
+\end{multicols}
+\caption{An algorithm for the $k$-less subgraph isomorphism problem.}
+\label{algorithm:sip}
+\end{algorithm*}
 
 \section{Empirical Evaluation}
 
