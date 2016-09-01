@@ -137,10 +137,34 @@ subgraph is sought---this problem is usually called the maximum common \emph{par
 problem instead. However, this is not what we will be discussing in this paper: maximum common
 subgraph problems are symmetric in their inputs, but when discussing the non-induced case we are
 allowing extra edges only in the target graph, not in the pattern.
-\todo{is this example graph still needed??}
+
+\todo{is this example graph still needed?? yes, Patrick likes pictures}
+
 \subsection{Constraint Models and Algorithms}
 
 \subsection{Experimental Setup}
+
+\section{Relationship between non-induced and induced subgraph isomorphism}
+
+The \emph{complement} of a graph $P$ is the graph $\bar{P}~$.  Adjacent vertices in $P$ are non-adjacent in $\bar{P}$ while non-adjacent vertices in $P$ are adjacent in $\bar{P}$.
+
+\begin{proposition}\label{prop:comp}
+Let $i$ be an assignment of $T$ vertices to $P$ vertices.  Then $i$ satisfies the definition of $P \hookrightarrow T$ if and only if both $i$ satisfies the definition of $P \rightarrowtail T$ and $\bar{P} \rightarrowtail \bar{T}$.
+\end{proposition}
+
+\begin{proof}
+Follows directly from the definition of an induced subgraph isomorphism and the definition of the complement of a graph.  Could flesh this out if we need to fill up space and look cleverer??
+\end{proof}
+
+
+\begin{corollary}
+Let $i$ be an assignment of $T$ vertices to $P$ vertices.  Then $i$ satisfies the definition of $P \lessind{k} T$ if and only if both $i$ satisfies the definition of $P \lessnonind{k} T$ and $\bar{P} \lessnonind{k} \bar{T}$.
+\end{corollary}
+
+Should we just give the corollary as the proof??
+
+In our algorithm we make use of \cref{prop:comp} by seeking an $i$ which simultaneously satisfies $P \rightarrowtail T$ and $\bar{P} \rightarrowtail \bar{T}$ when searching for an induced subgraph isomorphism.  Further, \cref{prop:comp} tells us that every induced subgraph isomorphism is equivalent to simultaneous non-induced subgraph isomorphisms both $P$ and $T$ as well as their complements.
+
 
 \section{Domain Filtering using Degrees}
 
@@ -172,22 +196,22 @@ neighbours.
 
 Let $S = ( s_1 , \ldots , s_n )$ and $T = ( t_1 , \ldots , t_m)$ be two sequences.  We say that $S
 \preceq T$ if $n \leq m$ and $\forall s_i \in S$ there exists a distinct $t_j \in T$ with $s_i \leq
-t_j$.  (When considering a $k$-less-subgraph isomorphism) we say that $S \lesspreceq{k}
+t_j$.  When considering a $k$-less-subgraph isomorphism we say that $S \lesspreceq{k}
 T$ if $n - k \leq m$ and $\forall s_i \in S \setminus S_k$, where $S_k$ is a subsequence of $S$
 containing up to $k$ members of $S$, there exists a distinct $t_j \in T$ with $s_i - k \leq t_j$.
 
 
-\begin{proposition}
+\begin{proposition}\label{prop:nds}
 If $p \lessmap{k} t$, then $\nds(p) \lesspreceq{k} \nds(t)$.
 \end{proposition}
 
 \begin{proof}
-Let $p \lessmap{k} t$.  Then $\deg(p) - k \leq \deg(q)$, by Proposition 1, which
+Let $p \lessmap{k} t$.  Then $\deg(p) - k \leq \deg(q)$, by \cref{prop:deg}, which
 implies that $|\nds(p)| -k \leq |\nds(t)|$.
 
 Also, $p \lessmap{k} t$ implies that for each $q \in N(p)\setminus P_k$, where $P_k$
 is some subset of $P$ with $|P_k| \leq k$, $q \lessmap{k} u$, where $u \in N(t)$ and
-each $u$ is distinct.  Then $\deg(q) - k \leq \deg(u)$, by Proposition 1.  Hence $\nds(p)
+each $u$ is distinct.  Then $\deg(q) - k \leq \deg(u)$, by \cref{prop:deg}.  Hence $\nds(p)
 \lesspreceq{k} \nds(t)$.
 \end{proof}
 
@@ -197,11 +221,12 @@ left-middle node removes an entry from $\nds(p)$; and removing either of the con
 middle layer causes both the size of $\nds(p)$ to be reduced and an entry in $\nds(p)$ to be reduced.
 
 \begin{corollary}
-You can just ignore the first K things in $\nds(p)$, assuming it's ordered.
+Since both $\nds(p)$ and $\nds(t)$ are non-ascending, wlog we can replace $S \setminus S_k$ from the definition of $S \lesspreceq{k}
+T$ with $S[k, n]$.
 \end{corollary}
 
 \begin{proof}
-Do we need this?
+Sketch?? Let $S_k$ be some elements of the sequence which aren't the first $k$ elements.  Then these elements are less than or equal to the first $k$ elements.
 \end{proof}
 
 
@@ -219,7 +244,7 @@ Do we need this?
                 (n2) edge (n3) edge (q)
                 (n3) edge (q);
         \end{tikzpicture}
-        \caption{Graph that Craig wanted}
+        \caption{Example of neighbourhood degree filtering cases}
         \label{fig:nds}
     \end{center}
 \end{figure}
@@ -340,7 +365,7 @@ What proportion of instances are actually satisfiable as $k$ increases?
 
 \section*{Acknowledgements}
 
-We're not going to thank anyone, no, no.
+We're not going to thank anyone, no, no.  Thanks to Frances for making us less smelly throughout the writing of the paper (by thieving toiletries from a fancy hotel).
 
 \bibliographystyle{named}
 \bibliography{paper}
