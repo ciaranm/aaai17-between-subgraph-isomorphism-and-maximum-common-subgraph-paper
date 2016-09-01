@@ -334,6 +334,7 @@ strong improvement are from the ``LV'' family of graphs.
     \nl \lIf{\FuncSty{propagate}(D)}{$\KwSty{return}~\FuncSty{search}(L, D, k)$}
     \nl \lElse{$\KwSty{return}~\KwSty{false}$}
 }
+\bigskip
 \nl $\FuncSty{search}$ (GraphPairs $L$, Domains $D$, Int $k$) $\rightarrow$ Bool \;
 \nl \Begin{
     \nl \lIf{$D = \emptyset$}{$\KwSty{return}~\KwSty{true}$}
@@ -351,6 +352,7 @@ strong improvement are from the ``LV'' family of graphs.
         }
     }
 }
+\bigskip
 \nl $\FuncSty{propagate}$ (GraphPairs $L$, Domains $D$) $\rightarrow$ Bool \;
 \nl \Begin{
     \nl \While{\KwSty{true}}{
@@ -372,6 +374,7 @@ strong improvement are from the ``LV'' family of graphs.
         }
     }
 }
+\bigskip
 \nl $\FuncSty{allDifferent}$ (Domains $D$) $\rightarrow$ Bool \;
 \nl \Begin{
 \nl $(F,\,H,\,A,\,n) \gets (\emptyset,\,\emptyset,\,\emptyset,\,0)$ \;
@@ -385,6 +388,7 @@ strong improvement are from the ``LV'' family of graphs.
 \nl $\KwSty{return}~\KwSty{true}$ \;
 }
 \end{multicols}
+\vspace*{0.4cm}% bug in algorithm2e + multicol: incorrect space left above the vertical line
 \caption{An algorithm for the $k$-less subgraph isomorphism problem.}
 \label{algorithm:sip}
 \end{algorithm*}
