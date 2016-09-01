@@ -75,7 +75,7 @@
 \title{Between Subgraph Isomorphism and Maximum Common Subgraph}
 
 \author{Ruth Hoffmann \and Ciaran McCreesh\thanks{This work was supported by the Engineering and Physical Sciences
-Research Council [grant number EP/K503058/1]} \and Craig Reilly \\
+Research Council [grant number EP/K503058/1]} \and Craig Reilly\thanks{This work was supported by the Engineering and Physical Sciences Research Council [grant number EP/M506539/1]} \\
 University of Glasgow, Glasgow, Scotland \\
 ruth.hoffmann@glasgow.ac.uk \and \{c.mccreesh.1,c.reilly.2\}@research.gla.ac.uk}
 
@@ -210,10 +210,10 @@ If $p \lessmap{k} t$, then $\nds(p) \lesspreceq{k} \nds(t)$.
 
 \begin{proof}
 Let $p \lessmap{k} t$.  Then $\deg(p) - k \leq \deg(q)$, by \cref{prop:deg}, which
-implies that $|\nds(p)| -k \leq |\nds(t)|$.
-
-Also, $p \lessmap{k} t$ implies that for each $q \in N(p)\setminus P_k$, where $P_k$
-is some subset of $P$ with $|P_k| \leq k$, $q \lessmap{k} u$, where $u \in N(t)$ and
+implies that $|\nds(p)| -k \leq \left| \nds(t) \right| $.
+ 
+Also, $p \lessmap{k} t$ implies that for each $q \in N(p) \setminus P_k$, where $P_k$
+is some subset of $P$ with $\left| P_k \right| \leq k$, $q \lessmap{k} u$, where $u \in N(t)$ and
 each $u$ is distinct.  Then $\deg(q) - k \leq \deg(u)$, by \cref{prop:deg}.  Hence $\nds(p)
 \lesspreceq{k} \nds(t)$.
 \end{proof}
@@ -278,15 +278,15 @@ P_{2} = & \{((p,x),(x,q)) : (p,x),(x,q)\in E(P) \} \\
  = & \{((p,x),(x,q)) : x\in \N(p) \text{ and } x\in \N(q) \} \\
  = & \{((p,x),(x,q)) : x\in \N(p)\cap \N(q) \} .
 \end{align*}
-So $\paths(p,q,2) = | \N(p)\cap \N(q)| \leq deg(p)$.
+So $\paths(p,q,2) = \left| \N(p)\cap \N(q) \right|  \leq deg(p)$.
 
 If we remove up to $k$ vertices from the neighbourhood of $p$, it will impact the intersection of the neighbourhoods of $p$ and $q$, and by Proposition~\ref{prop:deg}, as $p\lessmap{k}t$
 \[
-|\N(p)\cap \N(q)| - k \leq deg(p) - k \leq deg(t).
+\left| \N(p)\cap \N(q)\right| - k \leq deg(p) - k \leq deg(t).
 \]
-As $|\N(p)\cap \N(q)|\leq deg(p) \leq |\N(t)\cap \N(u)|\leq deg(t)$, we have
+As $\left|\N(p)\cap \N(q)\right|\leq deg(p) \leq \left|\N(t)\cap \N(u)\right|\leq deg(t)$, we have
 \[
-|\N(p)\cap \N(q)| - k \leq deg(p) - k\leq |\N(t)\cap \N(u)|\leq deg(t)
+\left|\N(p)\cap \N(q)\right| - k \leq deg(p) - k\leq \left|\N(t)\cap \N(u)\right|\leq deg(t)
 \]
 which is
 \[
