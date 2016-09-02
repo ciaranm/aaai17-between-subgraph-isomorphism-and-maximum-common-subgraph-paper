@@ -145,7 +145,7 @@ $\bar{P}
 A common induced subgraph of graphs $G$ and $H$ is a graph $P$, together with two induced subgraph
 isomorphisms to $G$ and $H$; a maximum common induced subgraph is a common induced subgraph with as
 many vertices as possible. An induced $k$-less subgraph isomorphism $P \lessind{k} T$ is equivalent
-to a common induced subgraph of $P$ and $T$ with $|\V(P)| - k$ vertices.
+to a common induced subgraph of $P$ and $T$ with $\left|\V(P)\right| - k$ vertices.
 
 If defined similarly, a maximum common non-induced subgraph would allow us to select every vertex in
 the smaller of the two graphs, and none of the edges. It is therefore traditional to change the
@@ -223,7 +223,7 @@ If $p \lessmap{k} t$, then $\nds(p) \lesspreceq{k} \nds(t)$.
 
 \begin{proof}
 Let $p \lessmap{k} t$.  Then $\deg(p) - k \leq \deg(q)$, by \cref{prop:deg}, which
-implies that $|\nds(p)| -k \leq \left| \nds(t) \right| $.
+implies that $\left|\nds(p)\right| -k \leq \left| \nds(t) \right| $.
  
 Also, $p \lessmap{k} t$ implies that for each $q \in N(p) \setminus P_k$, where $P_k$
 is some subset of $P$ with $\left| P_k \right| \leq k$, $q \lessmap{k} u$, where $u \in N(t)$ and
@@ -420,8 +420,8 @@ strong improvement are from the ``LV'' family of graphs.
     \nl $F \gets F + v$ \;
     \nl $D_v \gets D_v \setminus H$ \label{line:elimhall} \;
     \nl $(A,\,n) \gets (A \cup D_v,\,n + 1)$ \label{line:acc} \;
-    \nl \lIf{$D_v = \emptyset~\KwSty{or}~|A| < n$}{$\KwSty{return}~\KwSty{false}$\label{line:failhall}}
-    \nl \lIf{$|A| = n$}{$(H,\,A,\,n) \gets (H \cup A,\,\emptyset,\,0)$\label{line:hall}}
+    \nl \lIf{$D_v = \emptyset~\KwSty{or}~\left|A\right| < n$}{$\KwSty{return}~\KwSty{false}$\label{line:failhall}}
+    \nl \lIf{$\left|A\right| = n$}{$(H,\,A,\,n) \gets (H \cup A,\,\emptyset,\,0)$\label{line:hall}}
 }
 \nl $\KwSty{return}~\KwSty{true}$ \;
 }
