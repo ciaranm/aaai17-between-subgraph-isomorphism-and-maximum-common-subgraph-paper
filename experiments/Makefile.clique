@@ -1,0 +1,16 @@
+SHELL := /bin/bash
+FILTER := -1
+MODULUS := 1
+INSTANCES := $(shell cut -d' ' -f1 instances.txt | if [[ $(FILTER) == -1 ]] ; then cat ; else awk "(NR % $(MODULUS)) == ($(FILTER) % $(MODULUS))" ; fi )
+TIMEOUT := 1000
+ALGORITHMS := clique
+RESULTS := results
+
+all : $(foreach i, $(INSTANCES), $(foreach a, $(ALGORITHMS), $(RESULTS)/$(a)/$i.out ))
+
+$(RESULTS)/clique/%.out :
+	mkdir -p $(RESULTS)/clique
+	ulimit -s 4153344 -v 16613376 ; ../clique/solve_max_common_subgraph --timeout $(TIMEOUT) \
+	    $(shell grep "^`basename $*` " < instances.txt | cut -d' ' -f2 ) \
+	    $(shell grep "^`basename $*` " < instances.txt | cut -d' ' -f3 ) > >(tee $@ ) || { rm $@ ; false ; }
+
