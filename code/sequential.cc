@@ -353,67 +353,92 @@ namespace
                         ++cn;
                     }
                 }
-
-                for (unsigned t = 0 ; t < target.size() ; ++t) {
-                    unsigned cn = 0;
-                    for (auto & c : adjacency_constraints) {
-                        t_nds[cn].resize(target.size());
-                        for (unsigned q = 0 ; q < target.size() ; ++q)
-                            if (c.second[t][q])
-                                t_nds[cn][t].push_back(c.second[q].count());
-                        sort(t_nds[cn][t].begin(), t_nds[cn][t].end(), greater<unsigned>());
-                        ++cn;
-                    }
-                }
             }
 
             // build up initial domains
-            for (unsigned p = 0 ; p < pattern.size() ; ++p) {
-                initial_domains[p].v = p;
-                initial_domains[p].values = Bitset_(domain_size);
-                initial_domains[p].fixed = false;
+            Bitset_ initial_domains_union = Bitset_(domain_size);
+            for (unsigned q = 0 ; q < domain_size ; ++q)
+                initial_domains_union.set(q);
 
-                // decide initial domain values
-                for (unsigned t = 0 ; t < target.size() ; ++t) {
-                    bool ok = true;
+            while (true) {
+                if (params.nds) {
+                    t_nds = vector<vector<vector<unsigned> > >(adjacency_constraints.size());
 
-                    for (auto & c : adjacency_constraints) {
-                        // check loops
-                        if (c.first[p][p] && ! c.second[t][t])
-                            ok = false;
-
-                        // check degree
-                        if (ok && params.degree && 0 == params.except && ! (c.first[p].count() <= c.second[t].count()))
-                            ok = false;
-
-                        // check except-degree
-                        if (ok && params.degree && params.except >= 1 && ! (c.first[p].count() <= c.second[t].count() + params.except))
-                            ok = false;
-
-                        if (! ok)
-                            break;
+                    for (unsigned t = 0 ; t < target.size() ; ++t) {
+                        unsigned cn = 0;
+                        for (auto & c : adjacency_constraints) {
+                            t_nds[cn].resize(target.size());
+                            for (unsigned q = 0 ; q < target.size() ; ++q)
+                                if (c.second[t][q])
+                                    t_nds[cn][t].push_back((c.second[q] & initial_domains_union).count());
+                            sort(t_nds[cn][t].begin(), t_nds[cn][t].end(), greater<unsigned>());
+                            ++cn;
+                        }
                     }
+                }
 
-                    // neighbourhood degree sequences
-                    if (params.nds) {
-                        for (unsigned cn = 0 ; cn < 1 && ok ; ++cn) {
-                            for (unsigned i = params.except ; i < p_nds[cn][p].size() ; ++i) {
-                                if (t_nds[cn][t][i - params.except] + params.except < p_nds[cn][p][i]) {
-                                    ok = false;
-                                    break;
+                for (unsigned p = 0 ; p < pattern.size() ; ++p) {
+                    initial_domains[p].v = p;
+                    initial_domains[p].values = Bitset_(domain_size);
+                    initial_domains[p].fixed = false;
+
+                    // decide initial domain values
+                    for (unsigned t = 0 ; t < target.size() ; ++t) {
+                        if (! initial_domains_union[t])
+                            continue;
+
+                        bool ok = true;
+
+                        for (auto & c : adjacency_constraints) {
+                            // check loops
+                            if (c.first[p][p] && ! c.second[t][t])
+                                ok = false;
+
+                            auto c_second_t = c.second[t] & initial_domains_union;
+
+                            // check degree
+                            if (ok && params.degree && 0 == params.except && ! (c.first[p].count() <= c_second_t.count()))
+                                ok = false;
+
+                            // check except-degree
+                            if (ok && params.degree && params.except >= 1 && ! (c.first[p].count() <= c_second_t.count() + params.except))
+                                ok = false;
+
+                            if (! ok)
+                                break;
+                        }
+
+                        // neighbourhood degree sequences
+                        if (params.nds) {
+                            for (unsigned cn = 0 ; cn < 1 && ok ; ++cn) {
+                                for (unsigned i = params.except ; i < p_nds[cn][p].size() ; ++i) {
+                                    if (t_nds[cn][t][i - params.except] + params.except < p_nds[cn][p][i]) {
+                                        ok = false;
+                                        break;
+                                    }
                                 }
                             }
                         }
+
+                        if (ok)
+                            initial_domains[p].values.set(t);
                     }
 
-                    if (ok)
-                        initial_domains[p].values.set(t);
+                    // wildcard in domain?
+                    if (params.except >= 1)
+                        for (unsigned v = wildcard_start ; v != domain_size ; ++v)
+                            initial_domains[p].values.set(v);
                 }
 
-                // wildcard in domain?
-                if (params.except >= 1)
-                    for (unsigned v = wildcard_start ; v != domain_size ; ++v)
-                        initial_domains[p].values.set(v);
+                if (! params.ilf)
+                    break;
+
+                auto old_card = initial_domains_union.count();
+                initial_domains_union = Bitset_(domain_size);
+                for (unsigned p = 0 ; p < pattern.size() ; ++p)
+                    initial_domains_union |= initial_domains[p].values;
+                if (initial_domains_union.count() == old_card)
+                    break;
             }
 
             if (params.expensive_stats) {

@@ -22,6 +22,7 @@ struct Params
     bool degree = false;
     bool expensive_stats = false;
     bool high_wildcards = false;
+    bool ilf = false;
 
     unsigned except = 0;
 };
