@@ -180,6 +180,8 @@ All different.
 For subgraph isomorphism, we can also do domain filtering at the top of search. We discuss this in
 \cref{section:degreefiltering}. Additional constraints, discuss this in \cref{section:pathfiltering}.
 
+?? Also the clique encoding.
+
 \subsection{Experimental Setup}
 
 We perform our experiments on systems with dual Intel Xeon CPU E5-2640 processors with 64GBytes of
@@ -196,7 +198,18 @@ and graphs close to the satisfiable-unsatisfiable phase transition
 \cite{DBLP:conf/ijcai/McCreeshPT16}; all these instances are available in a simple text
 format\footnote{\texttt{http://liris.cnrs.fr/csolnon/SIP.html}}.
 
-?? Note about the size of these instances, and how they're much larger than MCS instances.
+?? Using the French code, and the Glasgow clique code.
+
+Note that many of these instances are \emph{much} larger than were used in the recent comparison of
+maximum common subgraph algorithms by \citet{DBLP:conf/cp/McCreeshNPS16}: for unlabelled graphs,
+they used pairs of graphs with up to 35 vertices in each, whilst our dataset contains patterns with
+up to ?? vertices and targets with up to ?? vertices. This causes problems: both the maximum common
+subgraph algorithm and the clique encoding require $O(\left|\V(P)\right|^2\left|\V(T)\right|^2)$
+memory. For maximum common subgraph, 1,560 of the instances cannot fit in the amount of RAM we have
+available---we treat these instances as having timed out. The situation for the clique encoding is
+even worse, and 3,653 of these instances do not fit in RAM. In contrast, the approach we discuss
+here requires only $O(\left|\V(P)\right|^2\left|\V(T)\right|)$ space (which would still be a problem
+on some desktop machines, but not on our server hardware).
 
 \section{Domain Filtering using Degrees}\label{section:degreefiltering}
 
@@ -410,13 +423,18 @@ strong improvement are from the ``LV'' family of graphs.
 \nl $\FuncSty{propagate}$ (GraphPairs $L$, Domains $D$) $\rightarrow$ Bool \;
 \nl \Begin{
     \nl \While{\KwSty{true}}{
-        \nl \If{\textnormal{no unit domains remain}}{
+        \nl \If{\textnormal{no effectively-unit (treating all wildcard values as a single value)
+        domains remain}}{
             \nl \If{$\KwSty{not}~\FuncSty{allDifferent}(D)$}{
                 \nl $\KwSty{return}~\KwSty{false}$ \;
             }
         }
-        \nl \lIf{$\textnormal{no unit domains remain}$}{$\KwSty{return}~\KwSty{true}$}
-        \nl $D_v = \{ v' \} \gets \textnormal{a unit domain from}~D$ \;
+        \nl \If{\textnormal{no effectively-unit domains remain}}{
+            \nl $\KwSty{return}~\KwSty{true}$ \;
+        }
+        \nl $D_v \gets \textnormal{an effectively-unit domain from}~D$ \;
+        \nl $v' \gets $ the single value in $D_v$, or an arbitrary wildcard value if there is more
+        than one \;
         \nl \ForEach{$D_w \in D \setminus \{ D_v \}$}{
             \nl $D_w \gets D_w \setminus \{ v' \}$ \label{line:removev} \;
             \nl \ForEach{$(P,\,T) \in L$}{
