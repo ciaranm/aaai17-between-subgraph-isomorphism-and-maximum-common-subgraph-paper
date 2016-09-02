@@ -182,6 +182,8 @@ For subgraph isomorphism, we can also do domain filtering at the top of search. 
 
 ?? Also the clique encoding.
 
+?? Explain effectively-unit domain, multiple $\bot$ values.
+
 \subsection{Experimental Setup}
 
 We perform our experiments on systems with dual Intel Xeon CPU E5-2640 processors with 64GBytes of
@@ -423,8 +425,8 @@ strong improvement are from the ``LV'' family of graphs.
 \nl $\FuncSty{propagate}$ (GraphPairs $L$, Domains $D$) $\rightarrow$ Bool \;
 \nl \Begin{
     \nl \While{\KwSty{true}}{
-        \nl \If{\textnormal{no effectively-unit (treating all wildcard values as a single value)
-        domains remain}}{
+        \nl \If{\textnormal{no effectively-unit domains (treating all wildcard values as a single
+        value) remain}}{
             \nl \If{$\KwSty{not}~\FuncSty{allDifferent}(D)$}{
                 \nl $\KwSty{return}~\KwSty{false}$ \;
             }
@@ -451,7 +453,7 @@ strong improvement are from the ``LV'' family of graphs.
 \nl \Begin{
 \nl $(F,\,H,\,A,\,n) \gets (\emptyset,\,\emptyset,\,\emptyset,\,0)$ \;
 \nl \ForEach{$D_v \in D$ \textnormal{from smallest to largest\label{line:eachdomain}}}{
-    \nl $F \gets F + v$ \;
+    \nl $F \gets F \cup \{ v \}$ \;
     \nl $D_v \gets D_v \setminus H$ \label{line:elimhall} \;
     \nl $(A,\,n) \gets (A \cup D_v,\,n + 1)$ \label{line:acc} \;
     \nl \lIf{$D_v = \emptyset~\KwSty{or}~\left|A\right| < n$}{$\KwSty{return}~\KwSty{false}$\label{line:failhall}}
