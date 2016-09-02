@@ -573,8 +573,9 @@ namespace
 
         auto select_unit_domain(Domains & domains) -> typename Domains::iterator
         {
-            return find_if(domains.begin(), domains.end(), [] (const auto & a) {
-                    return (! a.fixed) && 1 == a.values.count();
+            return find_if(domains.begin(), domains.end(), [&] (const auto & a) {
+                    auto c = a.values.count();
+                    return (! a.fixed) && (1 == c || (c > 1 && a.values.find_first() >= wildcard_start));
                     });
         }
 
