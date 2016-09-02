@@ -106,7 +106,7 @@ many vertices of the pattern into the target as possible. In the induced case, t
 maximum common induced subgraph problem (we discuss the non-induced case below). However, although
 recent subgraph isomorphism algorithms are comfortable working with graphs with thousands of
 vertices, the state of the art for the maximum common subgraph problem becomes computationally
-infeasible at only 35 vertices when working with unlabelled graphs \citep{CP2016MCSPaper}. This is
+infeasible at only 35 vertices when working with unlabelled graphs \citep{DBLP:conf/cp/McCreeshNPS16}. This is
 largely because strong inference, based upon the degrees of vertices
 \citep{DBLP:journals/ai/Solnon10} and the distances or paths between them
 \citep{DBLP:conf/cp/AudemardLMGP14,DBLP:conf/cp/McCreeshP15}, is possible with subgraph isomorphism,
@@ -178,11 +178,27 @@ complements.
 All different.
 
 For subgraph isomorphism, we can also do domain filtering at the top of search. We discuss this in
-??. Additional constraints, discuss this in ??.
+\cref{section:degreefiltering}. Additional constraints, discuss this in \cref{section:pathfiltering}.
 
 \subsection{Experimental Setup}
 
-\section{Domain Filtering using Degrees}
+We perform our experiments on systems with dual Intel Xeon CPU E5-2640 processors with 64GBytes of
+RAM, running Ubuntu 14.04. Our algorithm was implemented in C++\footnote{URL removed for anonymous
+review}, and source code was compiled using
+GCC 5.3.0. We used a timeout of 1,000 seconds for each instance.
+
+For datasets, we use the same 5,725 instances used in a recent work on portfolios of algorithms for
+subgraph isomorphism \cite{thelionpaper}. This collection includes randomly generated scale-free
+graphs \cite{constraints10}, an assortment of real-world graphs of varying sizes \cite{LV02},
+randomly generated graph pairs (using bounded degree, regular mesh, and uniform models; all are
+satisfiable), segmented images~\cite{pr15,cviu11}, meshes from modelling 3D objects \cite{cviu11},
+and graphs close to the satisfiable-unsatisfiable phase transition
+\cite{DBLP:conf/ijcai/McCreeshPT16}; all these instances are available in a simple text
+format\footnote{\texttt{http://liris.cnrs.fr/csolnon/SIP.html}}.
+
+?? Note about the size of these instances, and how they're much larger than MCS instances.
+
+\section{Domain Filtering using Degrees}\label{section:degreefiltering}
 
 A non-induced $k$-less-subgraph isomorphism from $P$ to $T$ is equivalent to a subgraph
 isomorphism between $P$ and $T$ with $k$ extra universally-adjacent vertices. (However, we can do a
@@ -273,7 +289,7 @@ In \cref{figure:ids} we show that this is useful in practice.
     \caption{We get domain filtering. Woohoo.}\label{figure:ids}
 \end{figure}
 
-\section{Filtering During Search Using Paths}
+\section{Filtering During Search Using Paths}\label{section:pathfiltering}
 
 As well as reasoning about degrees, we can also reason about paths.
 
