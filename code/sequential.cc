@@ -417,6 +417,13 @@ namespace
             }
 
             if (params.expensive_stats) {
+                Bitset_ initial_domains_union = Bitset_(domain_size);
+                for (unsigned p = 0 ; p < pattern.size() ; ++p)
+                    initial_domains_union |= initial_domains[p].values;
+
+                result.stats.emplace("UA", to_string(initial_domains_union.count()));
+                result.stats.emplace("UP", to_string(domain_size));
+
                 vector<pair<Domain *, unsigned> > assignments;
 
                 for (auto & d : initial_domains)
