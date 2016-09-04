@@ -395,9 +395,9 @@ strong improvement are from the ``LV'' family of graphs.
     \nl \ForEach{$v \in \V(\mathcal{P})$}{
         \nl $D_v \gets \V(\mathcal{T})$\;
         \nl \ForEach{$(P,\,T) \in L$}{
-            \nl $D_v \gets D_v \cap \{ w \in D_v : $ \\
-            \hspace*{7em}$v \sim_P v \Rightarrow w \sim_T w~\wedge$ \\
-            \hspace*{7em}$\nds_P(v) \lesspreceq{k} \nds_T(w)\}$ \;
+            \nl $D_v \gets \{ w \in D_v : $ \\
+            \hspace*{4em}$v \sim_P v \Rightarrow w \sim_T w~\wedge$ \\
+            \hspace*{4em}$\nds_P(v) \lesspreceq{k} \nds_T(w)\}$ \;
         }
         \nl $D_v \gets D_v \cup k~\textnormal{distinct wildcard values}$
     }
