@@ -69,7 +69,7 @@
 \newcommand{\nds}{\operatorname{S}}
 % to do comments
 \usepackage{color}
-\newcommand{\todo}[1]{{\color{red} {[}{#1}{]}}}
+\newcommand{\todo}[1]{{\color{red} {?? [}{#1}{]}}}
 
 
 \title{Between Subgraph Isomorphism and Maximum Common Subgraph}
@@ -255,7 +255,7 @@ If $p \lessmap{k} t$, then $\nds(p) \lesspreceq{k} \nds(t)$.
 \begin{proof}
 Let $p \lessmap{k} t$.  Then $\deg(p) - k \leq \deg(q)$, by \cref{prop:deg}, which
 implies that $\left|\nds(p)\right| -k \leq \left| \nds(t) \right| $.
- 
+
 Also, $p \lessmap{k} t$ implies that for each $q \in N(p) \setminus P_k$, where $P_k$
 is some subset of $P$ with $\left| P_k \right| \leq k$, $q \lessmap{k} u$, where $u \in N(t)$ and
 each $u$ is distinct.  Then $\deg(q) - k \leq \deg(u)$, by \cref{prop:deg}.  Hence $\nds(p)
@@ -268,12 +268,12 @@ left-middle node removes an entry from $\nds(p)$; and removing either of the con
 middle layer causes both the size of $\nds(p)$ to be reduced and an entry in $\nds(p)$ to be reduced.
 
 \begin{corollary}
-Since both $\nds(p)$ and $\nds(t)$ are non-ascending, wlog we can replace $S \setminus S_k$ from the definition of $S \lesspreceq{k}
-T$ with $S[k, n]$.
+Since both $\nds(p)$ and $\nds(t)$ are non-ascending, without loss of generality we can replace
+$S \setminus S_k$ from the definition of $S \lesspreceq{k} T$ with $S[k, n]$.
 \end{corollary}
 
 \begin{proof}
-Sketch?? Let $S_k$ be some elements of the sequence which aren't the first $k$ elements.  Then these elements are less than or equal to the first $k$ elements.
+\todo{Sketch?? Let $S_k$ be some elements of the sequence which aren't the first $k$ elements.  Then these elements are less than or equal to the first $k$ elements.}
 \end{proof}
 
 
@@ -323,15 +323,15 @@ P_{2} = & \{((p,x),(x,q)) : (p,x),(x,q)\in E(P) \} \\
  = & \{((p,x),(x,q)) : x\in \N(p) \text{ and } x\in \N(q) \} \\
  = & \{((p,x),(x,q)) : x\in \N(p)\cap \N(q) \} .
 \end{align*}
-So $\paths(p,q,2) = \left| \N(p)\cap \N(q) \right|  \leq deg(p)$.
+So $\paths(p,q,2) = \left| \N(p)\cap \N(q) \right|  \leq \deg(p)$.
 
 If we remove up to $k$ vertices from the neighbourhood of $p$, it will impact the intersection of the neighbourhoods of $p$ and $q$, and by Proposition~\ref{prop:deg}, as $p\lessmap{k}t$
 \[
-\left| \N(p)\cap \N(q)\right| - k \leq deg(p) - k \leq deg(t).
+\left| \N(p)\cap \N(q)\right| - k \leq \deg(p) - k \leq \deg(t).
 \]
-As $\left|\N(p)\cap \N(q)\right|\leq deg(p) \leq \left|\N(t)\cap \N(u)\right|\leq deg(t)$, we have
+As $\left|\N(p)\cap \N(q)\right|\leq \deg(p) \leq \left|\N(t)\cap \N(u)\right|\leq \deg(t)$, we have
 \[
-\left|\N(p)\cap \N(q)\right| - k \leq deg(p) - k\leq \left|\N(t)\cap \N(u)\right|\leq deg(t)
+\left|\N(p)\cap \N(q)\right| - k \leq \deg(p) - k\leq \left|\N(t)\cap \N(u)\right|\leq \deg(t)
 \]
 which is
 \[
