@@ -92,8 +92,12 @@ ruth.hoffmann@glasgow.ac.uk \and \{c.mccreesh.1,c.reilly.2\}@research.gla.ac.uk}
     When a small pattern graph does not occur inside a larger target graph, we can ask how to find
     ``as much of the pattern as possible'' inside the target graph. In general, this is maximum
     common subgraph problem, which is much more computationally challenging in practice than
-    subgraph isomorphism. We present and evaluate a new constraint-style algorithm which lies
-    between these two approaches, for cases when nearly all of the pattern is present.
+    subgraph isomorphism. We introduce a restricted alternative, where we ask if all but $k$
+    vertices from the pattern can be found in the target. This allows us to develop slightly
+    weakened forms of certain invariants from subgraph isomorphism, retaining most of their
+    effectiveness. For small values of $k$, we can solve this problem on most of the standard problem
+    instances used to benchmark subgraph isomorphism algorithms, despite these instances being much
+    too large for current maximum common subgraph algorithms to handle.
 \end{abstract}
 
 \section{Introduction}
@@ -106,18 +110,20 @@ many vertices of the pattern into the target as possible. In the induced case, t
 maximum common induced subgraph problem (we discuss the non-induced case below). However, although
 recent subgraph isomorphism algorithms are comfortable working with graphs with thousands of
 vertices, the state of the art for the maximum common subgraph problem becomes computationally
-infeasible at only 35 vertices when working with unlabelled graphs \citep{DBLP:conf/cp/McCreeshNPS16}. This is
-largely because strong inference, based upon the degrees of vertices
-\citep{DBLP:journals/ai/Solnon10} and the distances or paths between them
+infeasible at only 35 vertices when working with unlabelled graphs
+\citep{DBLP:conf/cp/McCreeshNPS16}. This is largely because strong inference, based upon the degrees
+of vertices \citep{DBLP:journals/ai/Solnon10} and the distances or paths between them
 \citep{DBLP:conf/cp/AudemardLMGP14,DBLP:conf/cp/McCreeshP15}, is possible with subgraph isomorphism,
-but not maximum common subgraph, and so the state space in the former is much more restricted. In
-this work we discuss an intermediate problem, where we must map all but $k$ vertices of the pattern
-graph into the target. We show that if $k$ is reasonably small (say, between 1 and 5), then weakened
-forms of degree and path based filterings are still effective in pruning the search space and
-providing additional constraints respectively. We then show that combining these techniques does
-lead to a practical algorithm which can scale to work with the families of graphs commonly used to
-benchmark subgraph isomorphism algorithms: depending upon the benchmark family, in a substantial
-portion of ; in many more cases, we can at least obtain an upper bound.
+but not maximum common subgraph, and so the state space in the former is much more restricted,
+whilst filtering during search is vastly stronger.
+
+In this work we discuss an intermediate problem, where we must map all but $k$ vertices of the
+pattern graph into the target. We show that if $k$ is reasonably small (say, between 1 and 5), then
+weakened forms of degree and path based filterings are still effective in pruning the initial search
+space and in providing additional constraints respectively. We then show that combining these
+techniques leads to a practical algorithm which can scale to work with the families of graphs
+commonly used to benchmark subgraph isomorphism algorithms: depending upon the benchmark family, in
+a substantial portion of ??; in ?? more cases, we can at least obtain an upper bound.
 
 \subsection{Definitions and Notations}
 
