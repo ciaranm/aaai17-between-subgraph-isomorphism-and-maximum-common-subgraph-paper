@@ -90,14 +90,15 @@ ruth.hoffmann@glasgow.ac.uk \and \{c.mccreesh.1,c.reilly.2\}@research.gla.ac.uk}
 
 \begin{abstract}
     When a small pattern graph does not occur inside a larger target graph, we can ask how to find
-    ``as much of the pattern as possible'' inside the target graph. In general, this is known as
-    the maximum common subgraph problem, which is much more computationally challenging in practice
-    than subgraph isomorphism. We introduce a restricted alternative, where we ask if all but $k$
+    ``as much of the pattern as possible'' inside the target graph. In general, this is known as the maximum
+    common subgraph problem, which is much more computationally challenging in practice than
+    subgraph isomorphism. We introduce a restricted alternative, where we ask if all but $k$
     vertices from the pattern can be found in the target graph. This allows for the development of
-    slightly weakened forms of certain invariants from subgraph isomorphism, while retaining their
-    effectiveness. For small values of $k$, we solve this problem on most of the standard
-    problem instances used to benchmark subgraph isomorphism algorithms, despite these instances
-    being too large for current maximum common subgraph algorithms to handle.
+    slightly weakened forms of certain invariants from subgraph isomorphism which are based upon degree and
+    number of paths.  We show that when $k$ is small, weakening the invariants still retains much of
+    their effectiveness. We are then able to solve this problem on most of the standard problem
+    instances used to benchmark subgraph isomorphism algorithms, despite these instances being much
+    too large for current maximum common subgraph algorithms to handle.
 \end{abstract}
 
 \section{Introduction}
