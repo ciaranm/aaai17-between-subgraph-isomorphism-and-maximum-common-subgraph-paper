@@ -1,6 +1,7 @@
 /* vim: set sw=4 sts=4 et foldmethod=syntax : */
 
 #include "lad.hh"
+#include "vf.hh"
 #include "dimacs.hh"
 #include "sequential.hh"
 
@@ -108,7 +109,7 @@ auto main(int argc, char * argv[]) -> int
         display_options.add_options()
             ("help",                                  "Display help information")
             ("timeout",            po::value<int>(),  "Abort after this many seconds")
-            ("format",             po::value<std::string>(), "Specify graph file format (lad or dimacs)")
+            ("format",             po::value<std::string>(), "Specify graph file format (lad, dimacs or vf)")
             ("d2graphs",                              "Use d2 graphs")
             ("d2cgraphs",                             "Use d2 complement graphs")
             ("degree",                                "Use degree filtering")
@@ -195,6 +196,8 @@ auto main(int argc, char * argv[]) -> int
                 read_function = read_lad;
             else if (options_vars["format"].as<std::string>() == "dimacs")
                 read_function = read_dimacs;
+            else if (options_vars["format"].as<std::string>() == "vf")
+                read_function = read_vf;
             else {
                 std::cerr << "Unknown format " << options_vars["format"].as<std::string>() << std::endl;
                 return EXIT_FAILURE;

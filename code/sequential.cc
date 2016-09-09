@@ -848,8 +848,10 @@ auto sequential_ix_subgraph_isomorphism(const pair<Graph, Graph> & graphs, const
             modified_result.stats.emplace("SIZE", to_string(graphs.first.size() - modified_params.except));
             return modified_result;
         }
-        else
+        else {
+            cerr << "-- " << pass_time.count() << " <" << graphs.first.size() - modified_params.except << endl;
             modified_result.stats.emplace("FAIL" + to_string(modified_params.except), to_string(pass_time.count()));
+        }
 
         if (++modified_params.except >= graphs.first.size())
             break;
