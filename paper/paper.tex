@@ -67,11 +67,17 @@
 \newcommand{\V}{\operatorname{V}}
 \newcommand{\N}{\operatorname{N}}
 \newcommand{\nds}{\operatorname{S}}
-\newcommand{\loopcomp}[1]{\overset{\multimap}{#1}}
+\newcommand{\loopcomp}[1]{\oset[.1ex]{\multimap}{#1}}
 % to do comments
 \usepackage{color}
 \newcommand{\todo}[1]{{\color{red} {?? [}{#1}{]}}}
 
+\makeatletter
+\newcommand{\oset}[3][0ex]{%
+  \mathrel{\mathop{#3}\limits^{
+    \vbox to#1{\kern-2\ex@
+    \hbox{$\scriptstyle#2$}\vss}}}}
+\makeatother
 
 \title{Between Subgraph Isomorphism and Maximum Common Subgraph}
 
