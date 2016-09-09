@@ -144,8 +144,7 @@ We define a $k$-less-subgraph isomorphism from $P$ to $T$ to be a subgraph isomo
 $k$ vertices of $P$ to $T$; this may be non-induced or induced, written $P \lessnonind{k} T$ and $P
 \lessind{k} T$ respectively.
 
-The \emph{complement} of a (simple) graph $P$ is the graph $\bar{P}~$.  Adjacent vertices in $P$ are
-non-adjacent in $\bar{P}$ while non-adjacent vertices in $P$ are adjacent in $\bar{P}$.  The \emph{loop complement} of a graph $P$ is the graph $\loopcomp{P}$.  The constructcion of $\loopcomp{P}$ is similar to that of $\bar{P}~$, however whenever a vertex has a loop in $P$ it does not in $\loopcomp{P}$ and vice versa.  When solving an induced subgraph isomorphism problem we make use of the loop complement; we care about mapping vertices with loops to vertices with loops, and edges without loops to vertices without loops.  (Although when we filter by paths we make use of the complement rather than the loop complement.)  The following proposition follows directly from the definitions.
+The \emph{complement} of a (simple) graph $P$ is the graph $\bar{P}~$.  Adjacent distinct vertices in $P$ are non-adjacent in $\bar{P}$ while non-adjacent vertices in $P$ are adjacent in $\bar{P}$.  The \emph{loop complement} of a graph $P$ is the graph $\loopcomp{P}$.  The constructcion of $\loopcomp{P}$ is similar to that of $\bar{P}~$, however whenever a vertex has a loop in $P$ it does not in $\loopcomp{P}$ and vice versa.  When solving an induced subgraph isomorphism problem we make use of the loop complement; we care about mapping vertices with loops to vertices with loops, and edges without loops to vertices without loops.  (Although when we filter by paths we make use of the complement rather than the loop complement.)  The following proposition follows directly from the definitions.
 
 \begin{proposition}\label{prop:comp}
 Let $i$ be an assignment of $T$ vertices to $P$ vertices.  Then $i$ satisfies the definition of $P
@@ -316,7 +315,7 @@ $S \setminus S_k$ from the definition of $S \lesspreceq{k} T$ with $S[k, n]$.
 In \cref{figure:ids} we show that this is useful in practice.
 
 \begin{figure}
-    \includegraphics*{gen-graph-ids.pdf}
+    % \includegraphics*{gen-graph-ids.pdf}
     \caption{We get domain filtering. Woohoo.}\label{figure:ids}
 \end{figure}
 
@@ -390,8 +389,8 @@ A closer inspection of the raw data shows that for $k = 3$, nearly all of the in
 strong improvement are from the ``LV'' family of graphs.
 
 \begin{figure*}
-    \includegraphics*{gen-graph-constraints.pdf}\\[0.1cm]
-    \includegraphics*{gen-graph-constraints-induced.pdf}
+    % \includegraphics*{gen-graph-constraints.pdf}\\[0.1cm]
+    % \includegraphics*{gen-graph-constraints-induced.pdf}
     \caption{We get new constraints. More woohoo.}\label{figure:constraints}
 \end{figure*}
 
@@ -486,7 +485,7 @@ strong improvement are from the ``LV'' family of graphs.
 \section{Empirical Evaluation}
 
 \begin{figure}
-    \includegraphics*{gen-graph-runtimes.pdf}
+    % \includegraphics*{gen-graph-runtimes.pdf}
     \caption{Look how amazing our stuff is.}\label{figure:runtimes}
 \end{figure}
 
@@ -495,7 +494,7 @@ strong improvement are from the ``LV'' family of graphs.
 What proportion of instances are actually satisfiable as $k$ increases?
 
 \begin{figure}
-    \includegraphics*{gen-graph-which-k-by-family.pdf}
+    % \includegraphics*{gen-graph-which-k-by-family.pdf}
     \caption{There are satisfiable instances for small values of $k$. Yay.}\label{figure:which-k}
 \end{figure}
 
@@ -506,7 +505,7 @@ What proportion of instances are actually satisfiable as $k$ increases?
 \subsection{Solving from the Top Down}
 
 \begin{figure}
-    \includegraphics*{gen-graph-versus-cp.pdf}
+    % \includegraphics*{gen-graph-versus-cp.pdf}
     \caption{A righteous spanking.}\label{figure:versus-cp}
 \end{figure}
 
