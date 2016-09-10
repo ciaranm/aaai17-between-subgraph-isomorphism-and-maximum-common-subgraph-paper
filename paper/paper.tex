@@ -410,8 +410,8 @@ instances showing a strong improvement are from the ``LV'' family of graphs.
 \nl $\FuncSty{klessSubgraphIsomorphism}$ (\\\hspace*{2em}Graph $\mathcal{P}$, Graph $\mathcal{T}$, Int $k$) $\rightarrow$ Bool \;
 \nl \Begin{
     \nl \lIf{$\left|\V(\mathcal{P})\right| + k > \left|\V(\mathcal{T})\right|$}{$\KwSty{return}~\KwSty{false}$\label{line:enough}}
-    \nl $L \gets \big[ (\mathcal{P},\ \mathcal{T}), (\shortoverline{\mathcal{P}},
-        \shortoverline{\mathcal{T}}),$
+    \nl $L \gets \big[ (\mathcal{P},\ \mathcal{T}), (\loopcomp{\mathcal{P}},
+        \loopcomp{\mathcal{T}}) \textnormal{~only if we want induced},$
         \\\hspace*{1.0em}$(\mathcal{P}^{1 + k,2},\ \mathcal{T}^{1,2}), (\mathcal{P}^{2 + k,2},\
     \mathcal{T}^{2,2}), (\mathcal{P}^{3 + k,2},\ \mathcal{T}^{3,2}) \big]$ \;
     \nl \ForEach{$v \in \V(\mathcal{P})$}{
