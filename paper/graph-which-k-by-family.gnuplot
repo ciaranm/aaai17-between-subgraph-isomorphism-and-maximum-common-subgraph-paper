@@ -3,7 +3,8 @@
 set terminal tikz standalone color size 9cm,15cm font '\scriptsize' preamble '\usepackage{times,microtype}'
 set output "gen-graph-which-k-by-family.tex"
 
-load "chromajs.pal"
+load "ylgnbu.pal"
+set palette negative
 
 set multiplot layout 2,1
 
@@ -24,7 +25,7 @@ set nocolorbox
 set yrange [0:1]
 
 set title "Non-Induced"
-plot for [COL=3:9] "../experiments/faster-gpgnode-results/family-which-k-sequential-d2.data" u (column(COL)/$2):xticlabels(1) ti columnheader lt palette frac ((COL-3)/6.0)
+plot for [COL=3:9] "../experiments/faster-gpgnode-results/family-which-k-sequential-d2.data" u (column(COL)/$2):xticlabels(1) ti columnheader lt palette frac ((COL-3)/8.0)
 
 set title "Induced"
-plot for [COL=3:9] "../experiments/faster-gpgnode-results/family-which-k-sequential-d2-induced.data" u (column(COL)/$2):xticlabels(1) ti columnheader lt palette frac ((COL-3)/6.0)
+plot for [COL=3:9] "../experiments/faster-gpgnode-results/family-which-k-sequential-d2-induced.data" u (column(COL)/$2):xticlabels(1) ti columnheader lt palette frac ((COL-3)/8.0)

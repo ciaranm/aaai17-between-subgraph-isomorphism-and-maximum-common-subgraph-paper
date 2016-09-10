@@ -313,11 +313,28 @@ $S \setminus S_k$ from the definition of $S \lesspreceq{k} T$ with $S[k, n]$.
 In \cref{figure:ids} we show that this is useful in practice.
 
 \begin{figure}
-    % \includegraphics*{gen-graph-ids.pdf}
-    \caption{We get domain filtering. Woohoo.}\label{figure:ids}
+    \includegraphics*{gen-graph-ids.pdf}
+    \caption{The amount of domain reduction achieved for the induced problem, with increasing values
+    of $k$. The $y$ value shows for how many instances we may reduce the domain size to be at most
+    the $x$ proportion of the size the domains would be for the maximum common subgraph
+    problem.}\label{figure:ids}
 \end{figure}
 
 \section{Filtering During Search Using Paths}\label{section:pathfiltering}
+
+\begin{figure*}[tb]
+    \centering
+    \includegraphics*{gen-graph-constraints-induced-0.pdf}
+    \includegraphics*{gen-graph-constraints-induced-1.pdf}
+    \includegraphics*{gen-graph-constraints-induced-2.pdf}
+    \includegraphics*{gen-graph-constraints-induced-3.pdf}
+    \includegraphics*{gen-graph-constraints-induced-4.pdf}
+    \includegraphics*{gen-graph-constraints-induced-5.pdf}
+
+    \caption{For the induced problem, the proportion of pairs of assignments from the filtered
+    domains which are not permitted simultaneously, without path constraints on the $x$-axis and
+    with path constraints on the $y$-axis, for increasing values of $k$.}\label{figure:constraints}
+\end{figure*}
 
 As well as reasoning about degrees, we can also reason about paths.
 
@@ -370,27 +387,20 @@ $t$, which we say is permitted if it does not violate any adjacency constraint. 
 permitted assignment pair ratio to be the proportion of assignment pairs which are permitted.
 Finally, we scatter plot the permitted assignment pair ratio with and without supplemental
 graphs\footnote{Because of the large sizes of the domains, we randomly sample one million pairs
-rather than considering every pair. In some cases, we have nearly a thousand domains, each with nearly
-ten thousand values---a complete quadratic calculation involving even a trivial arithmetic operation
-on this would take many hours.}. For $k = 0$, we see many points above the $x-y$ diagonal, which
-shows that for many instances, we are able to create a substantial number of new constraints at the
-top of search; on the other hand, there are also points on the diagonal, which shows that sometimes
-this technique provides no benefit. (Occasionally, points fall below the $x-y$ diagonal. This is
-because the use of neighbourhood degree sequence reasoning on supplemental graphs can also lead to
-increased domain filtering, which could in turn eliminate a higher proportion of forbidden than
-permitted assignment pairs.) For $k = 1$ and $k = 2$, the proportion of points above the diagonal
-diminishes, but we are still able to create new constraints for many instances. By the time $k = 3$,
-most of the benefit is disappearing---although sometimes we are still able to make a difference, and
-bear in mind that sometimes adding just one new constrained pair can vastly reduce the search space.
-
-A closer inspection of the raw data shows that for $k = 3$, nearly all of the instances showing a
-strong improvement are from the ``LV'' family of graphs.
-
-\begin{figure*}
-    % \includegraphics*{gen-graph-constraints.pdf}\\[0.1cm]
-    % \includegraphics*{gen-graph-constraints-induced.pdf}
-    \caption{We get new constraints. More woohoo.}\label{figure:constraints}
-\end{figure*}
+rather than considering every pair. In some cases, we have nearly a thousand domains, each with
+nearly ten thousand values---a complete quadratic calculation involving even a trivial arithmetic
+operation on this would take many hours.}. For $k = 0$, we see many points above the $x-y$ diagonal,
+which shows that for many instances, we are able to create a substantial number of new constraints
+at the top of search; on the other hand, there are also points on the diagonal, which shows that
+sometimes this technique provides no benefit. (Occasionally, points fall below the $x-y$ diagonal.
+This is because the use of neighbourhood degree sequence reasoning on supplemental graphs can also
+lead to increased domain filtering, which could in turn eliminate a higher proportion of forbidden
+than permitted assignment pairs.) For $k = 1$ and $k = 2$, the proportion of points above the
+diagonal diminishes, but we are still able to create new constraints for many instances. By the time
+$k = 3$, most of the benefit is disappearing---although sometimes we are still able to make a
+difference, and bear in mind that sometimes adding just one new constrained pair can vastly reduce
+the search space.  A closer inspection of the raw data shows that for $k \ge 3$, nearly all of the
+instances showing a strong improvement are from the ``LV'' family of graphs.
 
 \section{A New Algorithm}
 
@@ -480,11 +490,16 @@ strong improvement are from the ``LV'' family of graphs.
 \label{algorithm:sip}
 \end{algorithm*}
 
+
+
 \section{Empirical Evaluation}
 
 \begin{figure}
-    % \includegraphics*{gen-graph-runtimes.pdf}
-    \caption{Look how amazing our stuff is.}\label{figure:runtimes}
+    \includegraphics*{gen-graph-runtimes.pdf}
+    \caption{The cumulative number of instances solved over time, for the induced and non-induced
+    problems, with different values of $k$. We also show the results of iteratively decreasing $k$
+    until a solution is found, and in the induced case, the performance of a leading maximum common
+    subgraph algorithm.}\label{figure:runtimes}
 \end{figure}
 
 \subsection{Induced}
@@ -492,8 +507,11 @@ strong improvement are from the ``LV'' family of graphs.
 What proportion of instances are actually satisfiable as $k$ increases?
 
 \begin{figure}
-    % \includegraphics*{gen-graph-which-k-by-family.pdf}
-    \caption{There are satisfiable instances for small values of $k$. Yay.}\label{figure:which-k}
+    \includegraphics*{gen-graph-which-k-by-family.pdf}
+    \caption{The proportion of instances, in different families, which become satisfiable for
+    increasing values of $k$. The larger instances are those where we can prove unsatisfiability for
+    $k = 5$, whilst the gap between the top of the bar and the top of the graph is the fraction of
+    instances where a timeout was reached for at least one value of $k$.}\label{figure:which-k}
 \end{figure}
 
 \subsection{Non-Induced}
@@ -501,11 +519,6 @@ What proportion of instances are actually satisfiable as $k$ increases?
 What proportion of instances are actually satisfiable as $k$ increases?
 
 \subsection{Solving from the Top Down}
-
-\begin{figure}
-    % \includegraphics*{gen-graph-versus-cp.pdf}
-    \caption{A righteous spanking.}\label{figure:versus-cp}
-\end{figure}
 
 \section{Conclusion}
 
