@@ -474,9 +474,8 @@ instances showing a strong improvement are from the ``LV'' family of graphs.
 \bigskip
 \nl $\FuncSty{allDifferent}$ (Domains $D$) $\rightarrow$ Bool \;
 \nl \Begin{
-\nl $(F,\,H,\,A,\,n) \gets (\emptyset,\,\emptyset,\,\emptyset,\,0)$ \;
+\nl $(H,\,A,\,n) \gets (\emptyset,\,\emptyset,\,\emptyset,\,0)$ \;
 \nl \ForEach{$D_v \in D$ \textnormal{from smallest to largest\label{line:eachdomain}}}{
-    \nl $F \gets F \cup \{ v \}$ \;
     \nl $D_v \gets D_v \setminus H$ \label{line:elimhall} \;
     \nl $(A,\,n) \gets (A \cup D_v,\,n + 1)$ \label{line:acc} \;
     \nl \lIf{$D_v = \emptyset~\KwSty{or}~\left|A\right| < n$}{$\KwSty{return}~\KwSty{false}$\label{line:failhall}}
@@ -489,8 +488,6 @@ instances showing a strong improvement are from the ``LV'' family of graphs.
 \caption{An algorithm for the $k$-less subgraph isomorphism problem.}
 \label{algorithm:sip}
 \end{algorithm*}
-
-
 
 \section{Empirical Evaluation}
 
