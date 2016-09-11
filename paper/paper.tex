@@ -211,9 +211,36 @@ problem.
 
 ?? Also the clique encoding.
 
+\subsection{Algorithms for the $k$-Less Problem}
+
+A non-induced $k$-less-subgraph isomorphism from $P$ to $T$ is equivalent to a subgraph isomorphism
+between $P$ and $T$ with $k$ extra universally-adjacent vertices added to $T$. However, using such
+an approach is not ideal, because it would introduce symmetries; for induced $k$-less-subgraph
+isomorphisms, an approach based around adding vertices to $T$ cannot work at all.
+
+Another algorithmic approach could be to try each way of removing $k$ vertices from the pattern
+graph, and solving the subgraph isomorphism problem in turn. This approach might be feasible for $k
+= 1$, although it would involve a lot of duplication of search effort, but for larger values of $k$
+the number of searches which would have to be made would grow very quickly.
+
+Finally, for the induced case we could try adapting maximum common subgraph algorithms to solve the
+decision problem. However, both the maximum common subgraph algorithm and the clique encoding
+require $O(\left|\V(P)\right|^2\left|\V(T)\right|^2)$ memory, which is extremely problematic on the
+instances we wish to work with.
+
+Instead, we introduce a new algorithm, inspired by a state of the art subgraph isomorphism
+algorithm. The approach we discuss requires only $O(\left|\V(P)\right|^2\left|\V(T)\right|)$ space
+(this can be thousands of times less than maximum common subgraph approaches, once the constant
+factors and orders of $T$ in our instances are considered). We list the algorithm in
+\cref{algorithm:sip}, explain it fully in \cref{section:algorithm}, and evaluate it in
+\cref{section:evaluation}, but first we will discuss our experimental setup, and then detail some
+experiments to verify that we can gain effective domain filtering (\cref{section:degreefiltering})
+and implied constraints (\cref{section:pathfiltering}) by using subgraph isomorphism style reasoning
+about degrees and paths in the $k$-less setting.
+
 ?? Explain effectively-unit domain, multiple $\bot$ values.
 
-\subsection{Experimental Setup}
+\section{Experimental Setup}
 
 We perform our experiments on systems with dual Intel Xeon CPU E5-2640 processors with 64GBytes of
 RAM, running Ubuntu 14.04. Our algorithm was implemented in C++\footnote{URL removed for anonymous
@@ -234,20 +261,13 @@ format\footnote{\texttt{http://liris.cnrs.fr/csolnon/SIP.html}}.
 Note that many of these instances are \emph{much} larger than were used in the recent comparison of
 maximum common subgraph algorithms by \citet{DBLP:conf/cp/McCreeshNPS16}: for unlabelled graphs,
 they used pairs of graphs with up to 35 vertices in each, whilst our dataset contains patterns with
-up to ?? vertices and targets with up to ?? vertices. This causes problems: both the maximum common
-subgraph algorithm and the clique encoding require $O(\left|\V(P)\right|^2\left|\V(T)\right|^2)$
-memory. For maximum common subgraph, 1,560 of the instances cannot fit in the amount of RAM we have
-available---we treat these instances as having timed out. The situation for the clique encoding is
-even worse, and 3,653 of these instances do not fit in RAM. In contrast, the approach we discuss
-here requires only $O(\left|\V(P)\right|^2\left|\V(T)\right|)$ space (which would still be a problem
-on some desktop machines, but not on our server hardware).
+up to ?? vertices and targets with up to ?? vertices. For maximum common subgraph, 1,560 of the
+instances cannot fit in the amount of RAM we have available---we treat these instances as having
+timed out. The situation for the clique encoding is even worse, and 3,653 of these instances do not
+fit in RAM. In contrast, for our algorithm, every instance fits comfortably (at least on modern
+server-class hardware).
 
 \section{Domain Filtering using Degrees}\label{section:degreefiltering}
-
-A non-induced $k$-less-subgraph isomorphism from $P$ to $T$ is equivalent to a subgraph
-isomorphism between $P$ and $T$ with $k$ extra universally-adjacent vertices. (However, we can do a
-bit better algorithmically.) For induced $k$-less-subgraph isomorphisms, such an approach cannot
-work.
 
 Let $p$ be a vertex in a graph $P$, the \emph{degree} of $p$, $\deg(p)$, is the number of vertices
 to which it is adjacent
@@ -400,14 +420,16 @@ This leads to the following:
 \end{proposition}
 
 Unlike in conventional subgraph isomorphism, we cannot extend this filtering to look at paths of
-length three: removing a single vertex can delete arbitrarily many such paths. We could count paths
-of any length which are vertex disjoint, although calculating this is too expensive to be useful in
-practice.
+length three: removing a single vertex can delete arbitrarily many such paths. We \emph{could}
+instead count paths of any length which are vertex disjoint, although calculating this appears to be
+too expensive to be beneficial in practice.
 
 To allow for fast propagation, rather than calculating paths dynamically, we follow the approach of
-\citet{DBLP:conf/cp/McCreeshP15} and construct supplemental graphs. We use paths of length 2,
-looking at counts of 1, 2, and 3 in the target graph (and so counts of $1 + k$ up to $3 + k$ in the
-pattern).  We then investigate whether this leads to new constraints being generated.
+\citet{DBLP:conf/cp/McCreeshP15} and construct supplemental graphs, and find a mapping which is
+simultaneously a non-induced subgraph isomorphism between every supplemental graph pair. We use
+paths of length 2, looking at counts of 1, 2, and 3 in the target graph (and so counts of $1 + k$ up
+to $3 + k$ in the pattern).  We then investigate whether this leads to new constraints being
+generated.
 
 By an assignment, we mean considering mapping a pattern vertex $p$ to a target vertex $t$ (and not
 $\bot$) which does not violate any loop constraints. An assignment pair is two assignments with
@@ -432,7 +454,7 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
 inspection of the raw data shows that for $k \ge 3$, nearly all of the instances showing a strong
 improvement are from the ``LV'' family of graphs.
 
-\section{A New Algorithm}
+\section{A New Algorithm}\label{section:algorithm}
 
 \begin{algorithm*}[tb]
 \DontPrintSemicolon
@@ -532,7 +554,7 @@ techniques were not beneficial for $k > 0$.
 ?? Discuss how we do induced. We do not look at paths in the loop complements, since this is
 expensive to calculate and provides little benefit in practice on the instances we considered.
 
-\section{Empirical Evaluation}
+\section{Empirical Evaluation}\label{section:evaluation}
 
 \begin{figure}[tb]
     \includegraphics*{gen-graph-runtimes.pdf}
