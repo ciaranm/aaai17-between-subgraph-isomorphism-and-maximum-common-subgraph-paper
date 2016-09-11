@@ -7,7 +7,7 @@ set output "gen-graph-ids.tex"
 set xrange [1e-30:1]
 set y2range [0:5725]
 
-set xlabel "Domain size reduced to at least this proportion"
+set xlabel "Search space size reduced to at least this proportion"
 set y2label "Number of instances"
 set logscale x
 set border 1

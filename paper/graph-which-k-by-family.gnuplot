@@ -1,6 +1,6 @@
 # vim: set et ft=gnuplot sw=4 :
 
-set terminal tikz standalone color size 9cm,15cm font '\scriptsize' preamble '\usepackage{times,microtype}'
+set terminal tikz standalone color size 8cm,16cm font '\scriptsize' preamble '\usepackage{times,microtype}'
 set output "gen-graph-which-k-by-family.tex"
 
 load "ylgnbu.pal"
@@ -11,7 +11,7 @@ set multiplot layout 2,1
 set ylabel "Proportion of Instances Satisfiable"
 set border 3
 set grid nox y
-set xtics nomirror scale 0 rotate by 270 offset character 0, character 0.5
+set xtics nomirror scale 0 rotate by 315 offset character 0, character 0.5
 set ytics nomirror scale 0
 set key outside right top
 

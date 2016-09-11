@@ -54,6 +54,9 @@
 \crefname{figure}{Figure}{Figures}
 \Crefname{figure}{Figure}{Figures}
 
+\crefname{algocf}{Algorithm}{Algorithms}
+\Crefname{algocf}{Algorithm}{Algorithms}
+
 % http://tex.stackexchange.com/questions/22100/the-bar-and-overline-commands
 \newcommand{\shortoverline}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
 
@@ -131,7 +134,9 @@ weakened forms of degree and path based filterings are still effective in prunin
 space and in providing additional constraints respectively. We then show that combining these
 techniques leads to a practical algorithm which can scale to work with the families of graphs
 commonly used to benchmark subgraph isomorphism algorithms: depending upon the benchmark family, in
-a substantial portion of ??; in ?? more cases, we can at least obtain an upper bound.
+a substantial portion of ??; in ?? more cases, we can at least obtain an upper bound. This is a
+significant improvement over state of the art maximum common subgraph solvers, which cannot even fit
+many of these instances in RAM.
 
 \subsection{Definitions and Notations}
 
@@ -142,7 +147,15 @@ We define a $k$-less-subgraph isomorphism from $P$ to $T$ to be a subgraph isomo
 $k$ vertices of $P$ to $T$; this may be non-induced or induced, written $P \lessnonind{k} T$ and $P
 \lessind{k} T$ respectively.
 
-The \emph{complement} of a (simple) graph $P$ is the graph $\bar{P}~$.  Adjacent distinct vertices in $P$ are non-adjacent in $\bar{P}$ while non-adjacent vertices in $P$ are adjacent in $\bar{P}$.  The \emph{loop complement} of a graph $P$ is the graph $\loopcomp{P}$.  The constructcion of $\loopcomp{P}$ is similar to that of $\bar{P}~$, however whenever a vertex has a loop in $P$ it does not in $\loopcomp{P}$ and vice versa.  When solving an induced subgraph isomorphism problem we make use of the loop complement; we care about mapping vertices with loops to vertices with loops, and edges without loops to vertices without loops.  (Although when we filter by paths we make use of the complement rather than the loop complement.)  The following proposition follows directly from the definitions.
+The \emph{complement} of a (simple) graph $P$ is the graph $\shortoverline{P}~$.  Adjacent distinct
+vertices in $P$ are non-adjacent in $\shortoverline{P}$ while non-adjacent vertices in $P$ are
+adjacent in $\shortoverline{P}$.  The \emph{loop complement} of a graph $P$ is the graph
+$\loopcomp{P}$.  The construction of $\loopcomp{P}$ is similar to that of $\bar{P}~$, however
+whenever a vertex has a loop in $P$ it does not in $\loopcomp{P}$ and vice versa.  When solving an
+induced subgraph isomorphism problem we make use of the loop complement; we care about mapping
+vertices with loops to vertices with loops, and vertices without loops to vertices without loops.
+(Although when we filter by paths we make use of the complement rather than the loop complement.)
+The following proposition follows directly from the definitions.
 
 \begin{proposition}\label{prop:comp}
 Let $i$ be an assignment of $T$ vertices to $P$ vertices.  Then $i$ satisfies the definition of $P
@@ -171,26 +184,30 @@ allowing extra edges only in the target graph, not in the pattern.
 
 \subsection{Constraint Models and Algorithms}
 
-For both subgraph isomorphism and maximum common subgraph, constraint-based models are the best
-approach (although constraint programming toolkits are not used, to facilitate better memory layouts
-and propagation queues). For both problems, we create a variable for each vertex in the pattern
-graph (the smaller graph, in the case of maximum common subgraph), with domains ranging over the
-vertices in the target graph (the larger graph). For maximum common subgraph, each domain is given
-an additional $\bot$ value, meaning ``unmapped''.
+For both subgraph isomorphism and maximum common subgraph, constraint programming is the best known
+approach\footnote{Note that toolkits are not used, to facilitate better memory layouts and
+propagation queues, although the algorithms are heavily inspired by the constraint programming
+literature}. For both problems, we create a variable for each vertex in the pattern graph (the
+smaller graph, in the case of maximum common subgraph), with domains ranging over the vertices in
+the target graph (the larger graph). For maximum common subgraph, each domain is given an additional
+$\bot$ value, meaning ``unmapped''.
 
 We also have constraints for adjacency and non-adjacency. For the maximum common subgraph case,
 $\bot$ is ignored.
 
 In our algorithm we make use of \cref{prop:comp} by seeking an $i$ which simultaneously satisfies $P
-\rightarrowtail T$ and $\bar{P} \rightarrowtail \bar{T}$ when searching for an induced subgraph
+\rightarrowtail T$ and $\loopcomp{P} \rightarrowtail \loopcomp{T}$ when searching for an induced subgraph
 isomorphism.  Further, \cref{prop:comp} tells us that every induced subgraph isomorphism is
 equivalent to simultaneous non-induced subgraph isomorphisms both $P$ and $T$ as well as their
 complements.
 
-All different.
+?? All different.
 
-For subgraph isomorphism, we can also do domain filtering at the top of search. We discuss this in
-\cref{section:degreefiltering}. Additional constraints, discuss this in \cref{section:pathfiltering}.
+For subgraph isomorphism, we can do domain filtering at the top of search, to reduce the initial
+sizes of domains---we discuss this in \cref{section:degreefiltering}. Subgraph isomorphism also
+allows us to generate additional implied constraints, which we discuss in
+\cref{section:pathfiltering}. Neither of these techniques are valid for the maximum common subgraph
+problem.
 
 ?? Also the clique encoding.
 
@@ -312,11 +329,15 @@ $S \setminus S_k$ from the definition of $S \lesspreceq{k} T$ with $S[k, n]$.
 
 In \cref{figure:ids} we show that this is useful in practice.
 
+Some other forms do not translate. For example, another invariant which can be effective on regular
+graphs is to count the number of neighbours of a vertex which are present in a triangle. Removing a
+single vertex can alter this count arbitrarily, so we cannot make use of this fact.
+
 \begin{figure}
     \includegraphics*{gen-graph-ids.pdf}
     \caption{The amount of domain reduction achieved for the induced problem, with increasing values
-    of $k$. The $y$ value shows for how many instances we may reduce the domain size to be at most
-    the $x$ proportion of the size the domains would be for the maximum common subgraph
+    of $k$. The $y$ value shows for how many instances we may reduce the initial search space to be
+    at most the $x$ proportion of the size the search space would be for the maximum common subgraph
     problem.}\label{figure:ids}
 \end{figure}
 
@@ -378,29 +399,38 @@ This leads to the following:
     $P^{n+k, 2}\lessnonind{k} T^{n, 2}$.
 \end{proposition}
 
-To allow for fast propagation, we create supplemental graphs for paths of length 2, looking at
-counts of 1, 2, and 3 in the target graph (and so counts of $1 + k$ up to $3 + k$ in the pattern).
-We then investigate whether this leads to new constraints being generated. By an assignment, we mean
-considering mapping a pattern vertex $p$ to a target vertex $t$ (and not $\bot$) which does not
-violate any loop constraints. An assignment pair is two assignments with distinct $p$ and distinct
-$t$, which we say is permitted if it does not violate any adjacency constraint. We define the
-permitted assignment pair ratio to be the proportion of assignment pairs which are permitted.
-Finally, we scatter plot the permitted assignment pair ratio with and without supplemental
-graphs\footnote{Because of the large sizes of the domains, we randomly sample one million pairs
-rather than considering every pair. In some cases, we have nearly a thousand domains, each with
-nearly ten thousand values---a complete quadratic calculation involving even a trivial arithmetic
-operation on this would take many hours.}. For $k = 0$, we see many points above the $x-y$ diagonal,
-which shows that for many instances, we are able to create a substantial number of new constraints
-at the top of search; on the other hand, there are also points on the diagonal, which shows that
-sometimes this technique provides no benefit. (Occasionally, points fall below the $x-y$ diagonal.
-This is because the use of neighbourhood degree sequence reasoning on supplemental graphs can also
-lead to increased domain filtering, which could in turn eliminate a higher proportion of forbidden
-than permitted assignment pairs.) For $k = 1$ and $k = 2$, the proportion of points above the
-diagonal diminishes, but we are still able to create new constraints for many instances. By the time
-$k = 3$, most of the benefit is disappearing---although sometimes we are still able to make a
-difference, and bear in mind that sometimes adding just one new constrained pair can vastly reduce
-the search space.  A closer inspection of the raw data shows that for $k \ge 3$, nearly all of the
-instances showing a strong improvement are from the ``LV'' family of graphs.
+Unlike in conventional subgraph isomorphism, we cannot extend this filtering to look at paths of
+length three: removing a single vertex can delete arbitrarily many such paths. We could count paths
+of any length which are vertex disjoint, although calculating this is too expensive to be useful in
+practice.
+
+To allow for fast propagation, rather than calculating paths dynamically, we follow the approach of
+\citet{DBLP:conf/cp/McCreeshP15} and construct supplemental graphs. We use paths of length 2,
+looking at counts of 1, 2, and 3 in the target graph (and so counts of $1 + k$ up to $3 + k$ in the
+pattern).  We then investigate whether this leads to new constraints being generated.
+
+By an assignment, we mean considering mapping a pattern vertex $p$ to a target vertex $t$ (and not
+$\bot$) which does not violate any loop constraints. An assignment pair is two assignments with
+distinct $p$ and distinct $t$, which we say is permitted if it does not violate any adjacency
+constraint. We define the permitted assignment pair ratio to be the proportion of assignment pairs
+which are permitted.  Finally, we scatter plot the permitted assignment pair ratio with and without
+supplemental graphs\footnote{Because of the large sizes of the domains, we randomly sample one
+million pairs rather than considering every pair. In some cases, we have nearly a thousand domains,
+each with nearly ten thousand values---a complete quadratic calculation involving even a trivial
+arithmetic operation on this would take many hours.}.
+
+For $k = 0$, we see many points above the $x-y$ diagonal, which shows that for many instances, we
+are able to create a substantial number of new constraints at the top of search; on the other hand,
+there are also points on the diagonal, which shows that sometimes this technique provides no
+benefit. (Occasionally, points fall below the $x-y$ diagonal.  This is because the use of
+neighbourhood degree sequence reasoning on supplemental graphs can also lead to increased domain
+filtering, which could in turn eliminate a higher proportion of forbidden than permitted assignment
+pairs.) For $k = 1$ and $k = 2$, the proportion of points above the diagonal diminishes, but we are
+still able to create new constraints for many instances. By the time $k = 3$, most of the benefit is
+disappearing---although sometimes we are still able to make a difference, and bear in mind that
+sometimes adding just one new constrained pair can vastly reduce the search space.  A closer
+inspection of the raw data shows that for $k \ge 3$, nearly all of the instances showing a strong
+improvement are from the ``LV'' family of graphs.
 
 \section{A New Algorithm}
 
@@ -448,7 +478,7 @@ instances showing a strong improvement are from the ``LV'' family of graphs.
 \nl $\FuncSty{propagate}$ (GraphPairs $L$, Domains $D$) $\rightarrow$ Bool \;
 \nl \Begin{
     \nl \While{\KwSty{true}}{
-        \nl \If{\textnormal{no effectively-unit domains (treating all wildcard values as a single
+        \nl \If{\textnormal{no effectively-unit domains (treating all wildcard~values as a single
         value) remain}}{
             \nl \If{$\KwSty{not}~\FuncSty{allDifferent}(D)$}{
                 \nl $\KwSty{return}~\KwSty{false}$ \;
@@ -458,7 +488,7 @@ instances showing a strong improvement are from the ``LV'' family of graphs.
             \nl $\KwSty{return}~\KwSty{true}$ \;
         }
         \nl $D_v \gets \textnormal{an effectively-unit domain from}~D$ \;
-        \nl $v' \gets $ the single value in $D_v$, or an arbitrary wildcard value if there is more
+        \nl $v' \gets $ the single value in $D_v$, or an arbitrary wildcard~value if there is more
         than one \;
         \nl \ForEach{$D_w \in D \setminus \{ D_v \}$}{
             \nl $D_w \gets D_w \setminus \{ v' \}$ \label{line:removev} \;
@@ -489,9 +519,22 @@ instances showing a strong improvement are from the ``LV'' family of graphs.
 \label{algorithm:sip}
 \end{algorithm*}
 
+\cref{algorithm:sip}. This is derived from a subgraph isomorphism due to
+\citet{DBLP:conf/cp/McCreeshP15}, which in a recent evaluation of algorithm portfolios
+\citep{thelionpaper} was the single strongest solver. As well as the modifications to solve $k$-less
+and induced problems, we have made two simplifications: we do not use conflict-directed backjumping,
+and we do not use iterated label filtering to recalculate neighbourhood degree sequences if vertices
+are not present in any target domain after construction---in preliminary experiments, these
+techniques were not beneficial for $k > 0$.
+
+?? Discuss how we did wildcards, effectively unit domains. The all diff propagator.
+
+?? Discuss how we do induced. We do not look at paths in the loop complements, since this is
+expensive to calculate and provides little benefit in practice on the instances we considered.
+
 \section{Empirical Evaluation}
 
-\begin{figure}
+\begin{figure}[tb]
     \includegraphics*{gen-graph-runtimes.pdf}
     \caption{The cumulative number of instances solved over time, for the induced and non-induced
     problems, with different values of $k$. We also show the results of iteratively decreasing $k$
@@ -503,7 +546,7 @@ instances showing a strong improvement are from the ``LV'' family of graphs.
 
 What proportion of instances are actually satisfiable as $k$ increases?
 
-\begin{figure}
+\begin{figure}[tb]
     \includegraphics*{gen-graph-which-k-by-family.pdf}
     \caption{The proportion of instances, in different families, which become satisfiable for
     increasing values of $k$. The larger instances are those where we can prove unsatisfiability for
@@ -519,9 +562,18 @@ What proportion of instances are actually satisfiable as $k$ increases?
 
 \section{Conclusion}
 
-% \section*{Acknowledgements}
-% 
-% Thanks to Christine, Samba, Patrick.
+We looked at . We saw that we could modify invariants, and that doing so still provided additional
+domain reduction and filtering power.
+
+Relaxed form of the problem which is easier to solve. Far from making maximum common subgraph scale
+as well as subgraph isomorphism, but we can at least get somewhere.
+
+Future work.
+
+\section*{Acknowledgements}
+
+We'd like to thank some people whose names we've removed for anonymous review for providing us with
+source code and problem instances, and someone at one of our institutions for inspiration.
 
 \bibliographystyle{named}
 \bibliography{paper}
