@@ -185,21 +185,19 @@ allowing extra edges only in the target graph, not in the pattern.
 \subsection{Constraint Models and Algorithms}
 
 For both subgraph isomorphism and maximum common subgraph, constraint programming is the best known
-approach\footnote{Note that toolkits are not used, to facilitate better memory layouts and
-propagation queues, although the algorithms are heavily inspired by the constraint programming
-literature}. For both problems, we create a variable for each vertex in the pattern graph (the
-smaller graph, in the case of maximum common subgraph), with domains ranging over the vertices in
-the target graph (the larger graph). For maximum common subgraph, each domain is given an additional
-$\bot$ value, meaning ``unmapped''.
+approach\footnote{Note that toolkits are not used in state of the art implementations, to facilitate
+better memory layouts and propagation queues, although the algorithms are heavily inspired by
+constraint programming.}. For both problems, we create a variable for each vertex in the
+pattern graph (the smaller graph, in the case of maximum common subgraph), with domains ranging over
+the vertices in the target graph (the larger graph). For maximum common subgraph, each domain is
+given an additional $\bot$ value, meaning ``unmapped''.
 
-We also have constraints for adjacency and non-adjacency. For the maximum common subgraph case,
-$\bot$ is ignored.
-
-In our algorithm we make use of \cref{prop:comp} by seeking an $i$ which simultaneously satisfies $P
-\rightarrowtail T$ and $\loopcomp{P} \rightarrowtail \loopcomp{T}$ when searching for an induced subgraph
-isomorphism.  Further, \cref{prop:comp} tells us that every induced subgraph isomorphism is
-equivalent to simultaneous non-induced subgraph isomorphisms both $P$ and $T$ as well as their
-complements.
+Constraints are used to ensure that adjacency pairs of vertices are mapped to adjacenct pairs of
+vertices. For the maximum common subgraph case, any pair of assignments with $\bot$ as either value
+is also permitted.  To handle the induced case, rather than the more usual approach of directly
+having constraints for non-adjacent pairs of vertices, we will make use of \cref{prop:comp} by
+seeking an $i$ which simultaneously satisfies $P \rightarrowtail T$ and $\loopcomp{P}
+\rightarrowtail \loopcomp{T}$.
 
 ?? All different.
 
@@ -214,15 +212,13 @@ problem.
 \subsection{Algorithms for the $k$-Less Problem}
 
 A non-induced $k$-less-subgraph isomorphism from $P$ to $T$ is equivalent to a subgraph isomorphism
-between $P$ and $T$ with $k$ extra universally-adjacent vertices added to $T$. However, using such
+between $P$ and $T$, with $k$ extra universally-adjacent vertices added to $T$. However, using such
 an approach is not ideal, because it would introduce symmetries; for induced $k$-less-subgraph
 isomorphisms, an approach based around adding vertices to $T$ cannot work at all.
-
 Another algorithmic approach could be to try each way of removing $k$ vertices from the pattern
 graph, and solving the subgraph isomorphism problem in turn. This approach might be feasible for $k
 = 1$, although it would involve a lot of duplication of search effort, but for larger values of $k$
 the number of searches which would have to be made would grow very quickly.
-
 Finally, for the induced case we could try adapting maximum common subgraph algorithms to solve the
 decision problem. However, both the maximum common subgraph algorithm and the clique encoding
 require $O(\left|\V(P)\right|^2\left|\V(T)\right|^2)$ memory, which is extremely problematic on the
@@ -240,7 +236,7 @@ about degrees and paths in the $k$-less setting.
 
 ?? Explain effectively-unit domain, multiple $\bot$ values.
 
-\section{Experimental Setup}
+\subsection{Experimental Setup}
 
 We perform our experiments on systems with dual Intel Xeon CPU E5-2640 processors with 64GBytes of
 RAM, running Ubuntu 14.04. Our algorithm was implemented in C++\footnote{URL removed for anonymous
@@ -582,7 +578,6 @@ What proportion of instances are actually satisfiable as $k$ increases?
 What proportion of instances are actually satisfiable as $k$ increases?
 
 \subsection{Solving from the Top Down}
-
 \section{Conclusion}
 
 We looked at . We saw that we could modify invariants, and that doing so still provided additional
