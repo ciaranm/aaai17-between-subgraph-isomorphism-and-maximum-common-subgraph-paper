@@ -275,9 +275,9 @@ If defined similarly, a maximum common non-induced subgraph would allow us to se
 the smaller of the two graphs, and none of the edges. It is therefore traditional to change the
 objective to maximise the number of edges selected, rather than vertices, when a non-induced common
 subgraph is sought---this problem is usually called the maximum common \emph{partial} subgraph
-problem instead. However, this is not what we will be discussing in this paper: maximum common
-subgraph problems are symmetric in their inputs, but when discussing the non-induced case we are
-allowing extra edges only in the target graph, not in the pattern.
+problem instead \citep{DBLP:conf/cp/NdiayeS11}. However, this is not what we will be discussing in
+this paper: maximum common subgraph problems are symmetric in their inputs, but when discussing the
+non-induced case we are allowing extra edges only in the target graph, not in the pattern.
 
 \subsection{Constraint Models and Algorithms}
 
@@ -301,8 +301,8 @@ injectivity.
 For subgraph isomorphism, this model can be enhanced with domain filtering at the top of search, to
 reduce the initial sizes of domains---we discuss this in \cref{section:degreefiltering}. Subgraph
 isomorphism also allows us to generate additional implied constraints, which we discuss in
-\cref{section:pathfiltering}. Neither of these techniques are valid for the maximum common subgraph
-problem.
+\cref{section:pathfiltering}. However, neither of these techniques are valid for the maximum common
+subgraph problem.
 
 \subsection{Algorithms for the $k$-Less Problem}
 
