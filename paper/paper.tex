@@ -20,7 +20,7 @@
 \usepackage{mathtools}
 \usepackage{graphicx}
 \usepackage{multicol}
-\usepackage[ruled,vlined]{algorithm2e}
+\usepackage[vlined]{algorithm2e}
 
 % to restate the propostions
 \usepackage{thmtools,thm-restate}
@@ -98,9 +98,12 @@
     \hbox{$\scriptstyle#2$}\vss}}}}
 \makeatother
 
+\newcommand*\samethanks[1][\value{footnote}]{\footnotemark[#1]}
+
 \title{Between Subgraph Isomorphism and Maximum Common Subgraph}
 
-\author{Anonymous \and Anonymous\thanks{This work was supported by an anonymous funding agency [grant number 12345]} \and Anonymous\thanks{This work was supported by an anonymous funding agency [grant number 67890]} \\
+\author{Anonymous \and Anonymous\thanks{This work was supported by an anonymous funding agency
+[grant numbers 12345 and 67890]} \and Anonymous\samethanks \\
 Top Secret Research Lab, Atlantis \\
 anonymous@anonymous}
 
@@ -131,46 +134,24 @@ anonymous@anonymous}
 \section{Introduction}
 
 The subgraph isomorphism problem is to find a copy of a small \emph{pattern} graph inside a larger
-\emph{target} graph. This is used in many areas, including bioinformatics \citep{Bonnici:2013},
-computer vision \citep{cviu11,pr15}, malware detection \citep{DBLP:conf/dimva/BruschiMM06},
-compilers \citep{DBLP:conf/cgo/MurrayF12,DBLP:conf/cp/BlindellLCS15}, and pattern recognition
-\citep{Conte:2004}.  The problem comes in two forms: in the non-induced variant, edges must be
-mapped to edges, but the target may have ``extra edges'', whilst in the induced variant, non-edges
-may only be mapped to non-edges.
+\emph{target} graph. The problem arises in many areas, including bioinformatics
+\citep{Bonnici:2013}, computer vision \citep{cviu11,pr15}, malware detection
+\citep{DBLP:conf/dimva/BruschiMM06}, compilers
+\citep{DBLP:conf/cgo/MurrayF12,DBLP:conf/cp/BlindellLCS15}, model checking \cite{Sevegnani:2015}, and pattern recognition
+\citep{Conte:2004}, which has lead to substantial research into how best to solve the problem in
+practice \cite[and
+more]{mcgregor79,Ullman,Cordella:2004,DBLP:journals/ai/Solnon10,DBLP:conf/cp/AudemardLMGP14,DBLP:conf/cp/McCreeshP15}.
+The problem comes in two forms: in the non-induced variant, edges must be mapped to edges, but the
+target may have ``extra edges'', whilst in the induced variant, non-edges must be mapped to
+non-edges.
 
-When a pattern cannot be found, we may wish to be given a result which maps as many vertices of the
-pattern into the target as possible. In the induced case, this is known as the maximum common
-induced subgraph problem (we discuss the non-induced case in \cref{section:definitions}). However,
-although recent subgraph isomorphism algorithms are comfortable working with graphs with thousands
-of vertices, the state of the art for the maximum common subgraph problem
-\citep{DBLP:conf/cp/McCreeshNPS16} becomes computationally infeasible at only 35 vertices when
-working with unlabelled graphs. This is largely because strong inference, based upon the degrees of
-vertices \citep{DBLP:journals/ai/Solnon10} and the distances or paths between them
-\citep{DBLP:conf/cp/AudemardLMGP14,DBLP:conf/cp/McCreeshP15}, is possible with subgraph isomorphism,
-but not maximum common subgraph, and so the state space in the former is much more restricted,
-whilst filtering during search is vastly stronger.
-
-In this work we discuss an intermediate problem, where we must map all but $k$ vertices of the
-pattern graph into the target---we show an example in \cref{fig:subgraphexample}. This in some
-ways resembles the approximate subgraph matching model of \citet{DBLP:conf/cp/ZampelliDD05},
-although we allow any vertex to be removed. We show that if $k$ is reasonably small (say, between 1
-and 5), then weakened forms of degree and path based filterings are still effective in pruning the
-initial search space and in providing additional constraints respectively. We then show that
-combining these techniques leads to a practical algorithm which can scale to work with the families
-of graphs commonly used to benchmark subgraph isomorphism algorithms: depending upon the benchmark
-family, we can close a substantial portion of the instances, and in many more cases, we can at least
-obtain an upper bound. This is a significant improvement over state of the art maximum common
-subgraph solvers, which cannot even fit many of these instances in RAM. Finally, we show that
-iteratively increasing $k$ gives a competitive algorithm for the maximum common induced subgraph
-problem.
-
-\begin{figure}
+\begin{figure}[b]
     \centering
-    \begin{tikzpicture}[scale=0.6]%[every node/.style={circle, inner sep=0.5mm,node
+    \begin{tikzpicture}[scale=0.5]%[every node/.style={circle, inner sep=0.5mm,node
         %distance=10mm,fill=black}, scale=0.2]
 
         \begin{scope}[xshift=-1cm, yshift=-3cm, color=black]
-        \node at (0, -0.5) {$P$};
+        \node at (-2, 1) {$P$:};
         \node [fill, circle, inner sep=1.5pt] (a) at (0,0) {};
         \node [fill, circle, inner sep=1.5pt] (b) at (-1,1) {};
         \node [fill, circle, inner sep=1.5pt] (c) at (0,1) {};
@@ -179,31 +160,10 @@ problem.
 
         \path[solid] (a) edge (b) edge (c) edge (d)
             (e) edge (b) edge (c) edge (d);
-        % \node (a2) [below left of = aa,node distance=13mm,xshift=2mm] {};
-        % \node (aa2) [above left of = a2,node distance=13mm,xshift=-2mm] {};
-        % \node (ab2) [below left of = a2,node distance=13mm,xshift=-2mm] {};
-        % \node (ac2) [fill=gray!50,above left of = ab2,node distance=13mm,xshift=-2mm] {};
-        % \node (b2) [below right of = aa,node distance=13mm,xshift=-2mm] {};
-        % \node (ba2) [above right of = b2,node distance=13mm,xshift=2mm] {};
-        % \node (bb2) [below right of = b2,node distance=13mm,xshift=2mm] {};
-        % \node (bc2) [fill=gray!50,above right of = bb2,node distance=13mm,xshift=2mm] {};
-
-        % \node (aaa) [below of =aa, node distance=20mm] {};
-        %
-        % \path[dotted] (a) edge (a1) edge (b1);
-        % \path (aa) edge (a1) edge (b1) edge (a2) edge (b2)
-        %     (a1) edge (b1)
-        %     (aaa) edge (a2) edge (b2)
-        %     (a2) edge (aa2) edge (ab2)
-        %     (b2) edge (ba2) edge (bb2);
-        % \path[color=gray!50] (ac2) edge (ab2) edge (aa2)
-        %     (bc2) edge (bb2) edge (ba2);
-        %
-        % \node [cross] {};
         \end{scope}
 
-        \begin{scope}[xshift=3cm, yshift=-3cm, color=black]
-        \node at (0, -0.5) {$T$};
+        \begin{scope}[xshift=4cm, yshift=-3cm, color=black]
+        \node at (-2, 1) {$T$:};
         \node [fill, circle, inner sep=1.5pt] (a) at (0,0) {};
         \node [fill, circle, inner sep=1.5pt] (b) at (-1,1) {};
         \node [fill, circle, inner sep=1.5pt] (c) at (1,2) {};
@@ -218,28 +178,6 @@ problem.
             (d) edge (c) edge (f)
             (c) edge (h)
             (f) edge (g);
-
-        % \node (a2) [below left of = aa,node distance=13mm,xshift=2mm] {};
-        % \node (aa2) [above left of = a2,node distance=13mm,xshift=-2mm] {};
-        % \node (ab2) [below left of = a2,node distance=13mm,xshift=-2mm] {};
-        % \node (ac2) [fill=gray!50,above left of = ab2,node distance=13mm,xshift=-2mm] {};
-        % \node (b2) [below right of = aa,node distance=13mm,xshift=-2mm] {};
-        % \node (ba2) [above right of = b2,node distance=13mm,xshift=2mm] {};
-        % \node (bb2) [below right of = b2,node distance=13mm,xshift=2mm] {};
-        % \node (bc2) [fill=gray!50,above right of = bb2,node distance=13mm,xshift=2mm] {};
-
-        % \node (aaa) [below of =aa, node distance=20mm] {};
-        %
-        % \path[dotted] (a) edge (a1) edge (b1);
-        % \path (aa) edge (a1) edge (b1) edge (a2) edge (b2)
-        %     (a1) edge (b1)
-        %     (aaa) edge (a2) edge (b2)
-        %     (a2) edge (aa2) edge (ab2)
-        %     (b2) edge (ba2) edge (bb2);
-        % \path[color=gray!50] (ac2) edge (ab2) edge (aa2)
-        %     (bc2) edge (bb2) edge (ba2);
-        %
-        % \node [cross] {};
         \end{scope}
 
     \end{tikzpicture}
@@ -247,6 +185,33 @@ problem.
     the central vertex in $P$ is removed, then a subgraph isomorphism exists.}
     \label{fig:subgraphexample}
 \end{figure}
+
+When a pattern cannot be found, we may wish to be given a result which maps as many vertices of the
+pattern into the target as possible. In the induced case, this is known as the maximum common
+induced subgraph problem (we discuss the non-induced case in \cref{section:definitions}). However,
+although recent subgraph isomorphism algorithms are comfortable working with graphs with thousands
+of vertices, the state of the art for the maximum common subgraph problem
+\citep{DBLP:conf/cp/McCreeshNPS16} becomes computationally infeasible at only 35 vertices when
+working with unlabelled graphs. This is largely because strong inference, based upon the degrees of
+vertices \citep{DBLP:journals/ai/Solnon10} and the distances or paths between them
+\citep{DBLP:conf/cp/AudemardLMGP14,DBLP:conf/cp/McCreeshP15}, is possible with subgraph isomorphism,
+but not maximum common subgraph, and so the state space in the former is much more restricted,
+whilst filtering during search is vastly stronger.
+
+In this work we discuss an intermediate problem, where we must map all but $k$ vertices of the
+pattern graph into the target---we show an example in \cref{figure:subgraphexample}. (This in some
+ways resembles the approximate subgraph matching model of \citet{DBLP:conf/cp/ZampelliDD05},
+although we allow any vertex to be removed.) We show that if
+$k$ is reasonably small (say, between 1 and 5), then weakened forms of degree and path based
+filterings are still effective in pruning the initial search space and in providing additional
+constraints respectively. We then show that combining these techniques leads to a practical
+algorithm which can scale to work with the families of graphs commonly used to benchmark subgraph
+isomorphism algorithms: depending upon the benchmark family, we can close a substantial portion of
+the instances, and in many more cases, we can at least obtain an upper bound. This is a significant
+improvement over state of the art maximum common subgraph solvers, which cannot even fit many of
+these instances in RAM. Finally, we show that iteratively increasing $k$ gives a competitive
+algorithm for the maximum common induced subgraph problem.
+
 \subsection{Definitions and Notations} \label{section:definitions}
 
 A \emph{non-induced subgraph isomorphism} from a graph $P$ to a graph $T$ is an injective mapping $P
@@ -293,7 +258,7 @@ non-induced case we are allowing extra edges only in the target graph, not in th
 
 For both subgraph isomorphism and maximum common subgraph, constraint programming is the best known
 approach\footnote{Note that toolkits are not used in state of the art implementations, to facilitate
-better memory layouts and propagation queues, although the algorithms are heavily inspired by
+better memory layouts and propagation queues, although the algorithms are inspired by
 constraint programming.}, although a reduction to maximum clique is better when edge labels are
 present \citep{DBLP:conf/cp/NdiayeS11,DBLP:conf/cp/McCreeshNPS16}. For both problems, we create a variable for each vertex
 in the pattern graph (the smaller graph, in the case of maximum common subgraph), with domains
@@ -327,7 +292,7 @@ the number of searches which would have to be made would grow very quickly.
 Finally, for the induced case we could try adapting maximum common subgraph algorithms to solve the
 decision problem. However, both the maximum common subgraph algorithm and the clique encoding
 require $O(\left|\V(P)\right|^2\left|\V(T)\right|^2)$ memory \citep{DBLP:conf/cp/McCreeshNPS16},
-which is extremely problematic on the instances we wish to work with.
+which is extremely problematic on the instances with which we wish to work.
 
 Instead, this paper introduces a new algorithm, inspired by a state of the art subgraph isomorphism
 algorithm \citep{DBLP:conf/cp/McCreeshP15}. The approach we discuss requires only
@@ -366,38 +331,39 @@ eliminate some infeasible values from domains.
 \begin{figure}[t]
     \centering
     \begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm}]
+        \begin{scope}
         \node[fill=black] (p) {};
         \node[fill=black] (b) [above of = p,node distance=5mm] {};
-        \node[fill=black] (a) [left of = b] {};
-        \node[fill=black] (c) [right of = b] {};
+        \node[fill=black] (a) [left of = b, node distance=7mm] {};
+        \node[fill=black] (c) [right of = b, node distance=7mm] {};
         \node[fill=black] (d) [above of = b,node distance=5mm] {};
 
-        \node[draw=none,right of = p,node distance=3mm,yshift=-1mm] {$p$};
-        \node[draw=none,left of = a,node distance=3mm,yshift=-1mm] {$a$};
-        \node[draw=none,left of = b,node distance=3mm,yshift=-1mm] {$b$};
-        \node[draw=none,right of = c,node distance=3mm,yshift= 1mm] {$c$};
-        \node[draw=none,above of = d,node distance=3mm,yshift=1mm] {$d$};
+        \node[draw=none,right of = p,node distance=3mm,yshift=-0.5mm] {$p$};
+        \node[draw=none,left of = a,node distance=3mm,anchor=base] {$a$};
+        \node[draw=none,left of = b,node distance=1.8mm,anchor=base] {$b$};
+        \node[draw=none,right of = c,node distance=2mm,anchor=base] {$c$};
+        \node[draw=none,right of = d,node distance=3mm,anchor=base] {$d$};
 
-        \node[draw=none, below of = p, node distance=6mm] {$P$};
+        \node[draw=none, left of = a, node distance=8mm] {$P$:};
 
         \path (p) edge (a) edge (b) edge (c)
             (a) edge (d)
             (b) edge (c) edge (d)
             (c) edge (d);
-        \end{tikzpicture}\hspace{0.5cm}\begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm}]
-        \node[fill=gray!50] (a1) [right of = d, node distance = 2cm] {};
-        \node[fill=black] (b1) [right of = a1] {};
-        \node[fill=gray!50] (c1) [right of = b1] {};
-        \node[fill=black] (a2) [below of = a1, node distance=6mm] {};
-        \node[fill=black] (b2) [right of = a2] {};
-        \node[fill=black] (c2) [right of = b2] {};
-        \node[fill=gray!50] (a3) [below of = a2, node distance=6mm] {};
-        \node[fill=black] (b3) [right of = a3] {};
-        \node[fill=gray!50] (c3) [right of = b3] {};
+
+        \node[fill=gray!50] (a1) [right of = d, node distance = 2.2cm] {};
+        \node[fill=black] (b1) [right of = a1, node distance=7mm] {};
+        \node[fill=gray!50] (c1) [right of = b1, node distance=7mm] {};
+        \node[fill=black] (a2) [below of = a1, node distance=5mm] {};
+        \node[fill=black] (b2) [right of = a2, node distance=7mm] {};
+        \node[fill=black] (c2) [right of = b2, node distance=7mm] {};
+        \node[fill=gray!50] (a3) [below of = a2, node distance=5mm] {};
+        \node[fill=black] (b3) [right of = a3, node distance=7mm] {};
+        \node[fill=gray!50] (c3) [right of = b3, node distance=7mm] {};
 
         \node[draw=none,right of = b3,node distance=1mm, yshift=-2mm] {$q$};
 
-        \node[draw=none, below of = b3, node distance=6mm] {$T$};
+        \node[draw=none, left of = a2, node distance=6mm] {$T$:};
 
         \path[color=gray!50] (a1) edge (b1) edge (a2)
             (b1) edge (c1)
@@ -410,22 +376,23 @@ eliminate some infeasible values from domains.
             (a2) edge (b3)
             (b2) edge (c2) edge (b3)
             (c2) edge (b3);
-    \end{tikzpicture}\hspace{0.5cm}\begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm}]
-        \node[fill=black] (p) {};
-        \node[draw=none] (b) [above of = p,node distance=5mm] {};
-        \node[fill=black] (a) [left of = b] {};
-        \node[fill=black] (c) [right of = b] {};
+
+        \node[draw=none] (b) [right of = c2, node distance=2cm] {};
+        \node[fill=black] (p) [below of = b, node distance=5mm] {};
+        \node[fill=black] (a) [left of = b, node distance=7mm] {};
+        \node[fill=black] (c) [right of = b, node distance=7mm] {};
         \node[fill=black] (d) [above of = b,node distance=5mm] {};
 
-        \node[draw=none, below of = p, node distance=6mm] {$U$};
+        \node[draw=none, left of = a, node distance=5mm] {$U$:};
 
         \path (p) edge (a) edge (c)
             (a) edge (d)
             (c) edge (d);
+        \end{scope}
     \end{tikzpicture}
     \caption{There is a non-induced isomorphism $P\rightarrowtail T$ from the first graph to the
     second, using the highlighted vertices. No such isomorphism exists to the third graph, but there
-    is a $1$-less isomorphism $P\lessnonind{1} U$ omitting vertex $b$.}\label{fig:klessexample}
+    is a $1$-less isomorphism $P\lessnonind{1} U$ omitting vertex $b$.}\label{figure:klessexample}
 \end{figure}
 
 \begin{restatable}{proposition}{propdeg}\label{prop:deg}
@@ -451,7 +418,7 @@ If $p \lessmap{k} t$, then $\nds(p) \lesspreceq{k} \nds(t)$.
 
 \begin{example}
 Consider the pattern graph $P$ and the two target graphs $T$ and $U$ shown in
-\cref{fig:klessexample}. The neighbourhood degree sequence of pattern vertex $p$ is
+\cref{figure:klessexample}. The neighbourhood degree sequence of pattern vertex $p$ is
 $\nds(p)=(3,3,2)$.
 We highlight a subgraph in $T$ which is non-induced isomorphic to $P$. The vertex $p$ can be
 mapped to $q$ in the target graph $T$, as $\nds(q)=(5,5,4,2,2)$.  There is a non-induced
@@ -459,10 +426,10 @@ mapping of the pattern graph $P$ into $U$ by removing $b$ of $P$.  This removal
 changes the neighbourhood degree sequence of $p$ in the $k$-less version of $P$ to $\nds(p)=(2,2)$.
 \end{example}
 
-\Cref{fig:klessexample} also illustrates the three cases possible when filtering by neighbourhood degree
-sequence.  Removing the top node causes each entry in $\nds(p)$ to be reduced; removing the
-left-middle node removes an entry from $\nds(p)$; and removing either of the connected nodes in the
-middle layer causes both the size of $\nds(p)$ to be reduced and an entry in $\nds(p)$ to be reduced.
+\Cref{figure:klessexample} also illustrates the three cases possible when filtering by neighbourhood
+degree sequence.  Removing vertex $d$ causes each entry in $\nds(p)$ to be reduced; removing vertex
+$a$ removes an entry from $\nds(p)$; and removing either of vertex $b$ or $c$ in the middle layer
+causes both the size of $\nds(p)$ to be reduced and an entry in $\nds(p)$ to be reduced.
 
 \begin{corollary}
 Since both $\nds(p)$ and $\nds(t)$ are non-ascending, without loss of generality we can replace
@@ -708,8 +675,8 @@ the solution has a direct real-world interpretation in terms of closeness of ima
 What would happen if we used our approach to solve the maximum common induced problem? We could
 simply start at $k = 0$, and increase $k$ until a solution is found. This would be tackling the
 problem in the opposite direction from existing approaches, which work by attempting to construct
-larger and larger solutions. The dotted lines in \cref{figure:runtimes} show this approach: the $k
-\downarrow$ is our algorithm, whilst ``FC'' and ``clique'' are the two algorithms discussed by
+larger and larger solutions. The dotted lines in \cref{figure:runtimes} show this approach: ``$k
+\downarrow$'' is our algorithm, whilst ``FC'' and ``clique'' are the two algorithms discussed by
 \citet{DBLP:conf/cp/McCreeshNPS16}.  Recalling the disclaimer in \cref{section:setup}
 regarding instances not fitting in the 64GBytes of RAM we have available, we see that our approach is
 able to close over twice as many of these instances as the previous state of the art. (The same
