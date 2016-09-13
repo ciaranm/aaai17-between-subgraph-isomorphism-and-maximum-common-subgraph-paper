@@ -1,10 +1,12 @@
 # vim: set et ft=gnuplot sw=4 :
 
-set terminal tikz standalone color size 8cm,16cm font '\scriptsize' preamble '\usepackage{times,microtype}'
+set terminal tikz standalone color size 18cm,6cm font '\scriptsize' preamble '\usepackage{times,microtype}'
 #set terminal tikz standalone color size 3.3in,5.6in font '\scriptsize' preamble '\usepackage{times,microtype}'
 set output "gen-graph-runtimes.tex"
 
-set multiplot layout 2,1
+set multiplot layout 1,3
+
+set rmargin 5
 
 set xrange [1:1e6]
 set yrange [0:5725]
@@ -43,3 +45,26 @@ plot \
     "../experiments/faster-gpgnode-results/runtime-sequential-d2.data" u 7:($7>=1e6?1e-10:1) smooth cumulative w steps ti "$k=4$" at end lc 5, \
     "../experiments/faster-gpgnode-results/runtime-sequential-d2.data" u 8:($8>=1e6?1e-10:1) smooth cumulative w steps ti "$k=5$" at end lc 6, \
     "../experiments/faster-gpgnode-results/runtime-sequentialix-d2.data" u 3:($3>=1e6?1e-10:1) smooth cumulative w steps ti "$k\\downarrow$" at end lc 8 dt '.'
+
+
+set xrange [1:1e6]
+set yrange [0:4110]
+
+set xlabel "Runtime (ms)"
+set ylabel "Number of instances"
+set logscale x
+set border 3
+set grid x y
+set xtics nomirror
+set ytics nomirror add ('' 4000) add ('$4110$' 4110)
+set key off
+
+set title "Induced, MCS Instances"
+
+set format x '$10^{%T}$'
+
+plot \
+    "../experiments/mcs-gpgnode-results/runtime-cp.data" u ($3*1000):($3>=1e3?1e-10:1) smooth cumulative w steps ti "FC" at end lc 2, \
+    "../experiments/mcs-gpgnode-results/runtime-sequentialix-d2-induced.data" u 3:($3>=1e6?1e-10:1) smooth cumulative w steps ti "$k\\downarrow$" at end lc 1, \
+    "../experiments/mcs-gpgnode-results/runtime-clique.data" u 3:($3>=1e6?1e-10:1) smooth cumulative w steps ti "Clique" at end lc 3
+

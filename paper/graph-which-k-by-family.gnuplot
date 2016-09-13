@@ -1,12 +1,12 @@
 # vim: set et ft=gnuplot sw=4 :
 
-set terminal tikz standalone color size 8cm,16cm font '\scriptsize' preamble '\usepackage{times,microtype}'
+set terminal tikz standalone color size 18cm,7cm font '\scriptsize' preamble '\usepackage{times,microtype}'
 set output "gen-graph-which-k-by-family.tex"
 
 load "ylgnbu.pal"
 set palette negative
 
-set multiplot layout 2,1
+set multiplot layout 1,2
 
 set ylabel "Proportion of Instances Satisfiable"
 set border 3

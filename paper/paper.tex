@@ -656,21 +656,23 @@ expensive to calculate and provides little benefit in practice on the instances 
 
 \section{Empirical Evaluation}\label{section:evaluation}
 
-\begin{figure}[tb]
+\begin{figure*}[tb]
     \includegraphics*{gen-graph-runtimes.pdf}
-    \caption{The cumulative number of instances solved over time, for the induced and non-induced
-    problems, with different values of $k$. We also show the results of iteratively decreasing $k$
-    until a solution is found, and in the induced case, the performance of a leading maximum common
-    subgraph algorithm.}\label{figure:runtimes}
-\end{figure}
+    \caption{In the first two plots, the cumulative number of instances solved over time, for the
+        induced and non-induced problems, with different values of $k$. We also show the results of
+        iteratively decreasing $k$ until a solution is found, and in the induced case, the
+        performance of two leading maximum common subgraph algorithms. In the third plot, results
+        comparing our algorithm with iteratively decreasing $k$ to other approaches on maximum
+        common induced subgraph instances.}\label{figure:runtimes}
+\end{figure*}
 
-\begin{figure}[tb]
+\begin{figure*}[tb]
     \includegraphics*{gen-graph-which-k-by-family.pdf}
     \caption{The proportion of instances, in different families, which become satisfiable for
     increasing values of $k$. The larger instances are those where we can prove unsatisfiability for
     $k = 5$, whilst the gap between the top of the bar and the top of the graph is the fraction of
     instances where a timeout was reached for at least one value of $k$.}\label{figure:which-k}
-\end{figure}
+\end{figure*}
 
 We now evaluate our algorithm and show that it is effective in practice, even on the larger subgraph
 isomorphism instances. In \cref{figure:runtimes} we give cumulative distribution plots for the
@@ -701,15 +703,8 @@ see that our approach is able to close over twice as many of these instances as 
 of the art. (The same conclusion holds even if every instance which is satisfiable with $k = 0$ is
 removed from the dataset.)
 
-\begin{figure}[tb]
-    \includegraphics*{gen-graph-mcsruntimes.pdf}
-    \caption{The cumulative number of maximum common induced subgraph instances solved over time,
-    comparing our decreasing $k$ approach with two state of the art
-    solvers.}\label{figure:mcsruntimes}
-\end{figure}
-
-What about if we use instances designed for the maximum common subgraph problem? In
-\cref{figure:mcsruntimes} we again compare these approaches, but using the first ten instances from
+What about if we use instances designed for the maximum common subgraph problem? In the third plot
+in \cref{figure:runtimes} we again compare these approaches, but using the first ten instances from
 each family of a standard benchmark set
 \citep{DBLP:journals/prl/SantoFSV03,DBLP:journals/jgaa/ConteFV07}, selecting undirected, unlabelled
 graphs with up to 50 vertices---this gives us a total of 4,110 instances. In these instances the
