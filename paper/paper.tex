@@ -2,10 +2,14 @@
 
 \documentclass[letterpaper]{article}
 
-\usepackage[pass]{geometry}
+\setlength{\pdfpagewidth}{8.5in}
+\setlength{\pdfpageheight}{11in}
 
-\usepackage{ijcai16}
+\usepackage{aaai17}
+
 \usepackage{times}
+\usepackage{helvet}
+\usepackage{courier}
 \usepackage{complexity}
 \usepackage{microtype}
 \usepackage{amsmath}
@@ -22,6 +26,8 @@
 \usepackage{thmtools,thm-restate}
 
 \declaretheorem[name=Proposition,style=definition]{proposition}
+
+\setcounter{secnumdepth}{2}
 
 % \usepackage{showframe}
 
@@ -761,7 +767,7 @@ filtering now being possible.
 
 % \section*{Acknowledgements}
 
-\bibliographystyle{named}
+\bibliographystyle{aaai}
 \bibliography{paper}
 
 \clearpage
