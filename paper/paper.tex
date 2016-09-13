@@ -339,15 +339,15 @@ decision problem. However, both the maximum common subgraph algorithm and the cl
 require $O(\left|\V(P)\right|^2\left|\V(T)\right|^2)$ memory, which is extremely problematic on the
 instances we wish to work with.
 
-Instead, we introduce a new algorithm, inspired by a state of the art subgraph isomorphism
-algorithm. The approach we discuss requires only $O(\left|\V(P)\right|^2\left|\V(T)\right|)$ space
-(this can be thousands of times less than maximum common subgraph approaches, once the constant
-factors and orders of $T$ in our instances are considered). We list the algorithm in
-\cref{algorithm:sip}, explain it fully in \cref{section:algorithm}, and evaluate it in
-\cref{section:evaluation}, but first we will discuss our experimental setup, and then detail some
-experiments to verify that we can gain effective domain filtering (\cref{section:degreefiltering})
-and implied constraints (\cref{section:pathfiltering}) by using subgraph isomorphism style reasoning
-about degrees and paths in the $k$-less setting.
+Instead, we introduce a new algorithm, inspired by a state of the art subgraph isomorphism algorithm
+\citep{DBLP:conf/cp/McCreeshP15}. The approach we discuss requires only
+$O(\left|\V(P)\right|^2\left|\V(T)\right|)$ space (this can be thousands of times less than maximum
+    common subgraph approaches, once the constant factors and orders of $T$ in our instances are
+considered). We list the algorithm in \cref{algorithm:sip}, explain it fully in
+\cref{section:algorithm}, and evaluate it in \cref{section:evaluation}, but first we will discuss
+our experimental setup, and then detail some experiments to verify that we can gain effective domain
+filtering (\cref{section:degreefiltering}) and implied constraints (\cref{section:pathfiltering}) by
+using subgraph isomorphism style reasoning about degrees and paths in the $k$-less setting.
 
 \subsection{Experimental Setup} \label{section:setup}
 
