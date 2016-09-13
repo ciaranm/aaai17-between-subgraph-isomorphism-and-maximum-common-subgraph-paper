@@ -302,10 +302,11 @@ changes the neighbourhood degree sequence of $p$ in the $k$-less version of $P$ 
 For both subgraph isomorphism and maximum common subgraph, constraint programming is the best known
 approach\footnote{Note that toolkits are not used in state of the art implementations, to facilitate
 better memory layouts and propagation queues, although the algorithms are heavily inspired by
-constraint programming.}. For both problems, we create a variable for each vertex in the
-pattern graph (the smaller graph, in the case of maximum common subgraph), with domains ranging over
-the vertices in the target graph (the larger graph). For maximum common subgraph, each domain is
-given an additional $\bot$ value, meaning ``unmapped''.
+constraint programming.}, although a reduction to maximum clique is better when edge labels are
+present \citep{DBLP:conf/cp/NdiayeS11,DBLP:conf/cp/McCreeshNPS16}. For both problems, we create a variable for each vertex
+in the pattern graph (the smaller graph, in the case of maximum common subgraph), with domains
+ranging over the vertices in the target graph (the larger graph). For maximum common subgraph, each
+domain is given an additional $\bot$ value, meaning ``unmapped''.
 
 Constraints are used to ensure that adjacency pairs of vertices are mapped to adjacenct pairs of
 vertices. For the maximum common subgraph case, any pair of assignments with $\bot$ as either value
@@ -320,8 +321,6 @@ reduce the initial sizes of domains---we discuss this in \cref{section:degreefil
 isomorphism also allows us to generate additional implied constraints, which we discuss in
 \cref{section:pathfiltering}. Neither of these techniques are valid for the maximum common subgraph
 problem.
-
-?? Also the clique encoding.
 
 \subsection{Algorithms for the $k$-Less Problem}
 
