@@ -49,6 +49,9 @@
 \newcommand{\citet}[1]{\citeauthor{#1} \shortcite{#1}}
 \newcommand{\citep}[1]{\cite{#1}}
 
+\theoremstyle{plain}
+\newtheorem{example}{Example}
+
 \theoremstyle{definition}
 \newtheorem{proposition}{Proposition}
 \newtheorem{corollary}{Corollary}
@@ -216,6 +219,17 @@ problem instead. However, this is not what we will be discussing in this paper: 
 subgraph problems are symmetric in their inputs, but when discussing the non-induced case we are
 allowing extra edges only in the target graph, not in the pattern.
 
+\begin{example}
+Take a pattern graph $P$ with vertices $V=\{p, a, b, c, d\}$ and edges $E=\{(a,d), (a,p), (b,c),
+(b,d), (b,p), (c,d), (c,p)\}$, which is shown in \cref{fig:klessexample} along with two target
+graphs $T_{1}$ and $T_{2}$. The degree of the vertex $p$ in $P$ is $\deg(p)=3$, the neighbours of
+$p$ are $\N(p)=\{a,b,c\}$, the neighbourhood degree sequence of $p$ is $\nds(p)=(3,3,2)$, as the
+degrees of the neighbours of $p$ are $\deg(a)=2,\ \deg(b)=3$ and $deg(c)=3$.
+
+We can find a subgraph in $T_{1}$ which is non-induced isomorphic to $P$ (indicated through the bold edges and black vertices in $T_{1}$). The vertex $p$ can be  mapped to $t_{1}$ in the target graph $T_{1}$, where $\deg(t_{1})=5$ and $\nds(t_{1})=(5,5,4,2,2)$.
+
+There is a non-induced mapping of the pattern graph $P$ into $T_{2}$ by removing one vertex of $P$. This removal changes the neighbourhood degree sequence of $p$ in the $k$-less version of $P$, to $\nds(p)=(2,2)$.
+
 \begin{figure}
     \centering
     \begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm}]
@@ -248,6 +262,8 @@ allowing extra edges only in the target graph, not in the pattern.
         \node[fill=black] (b3) [right of = a3] {};
         \node[fill=gray!50] (c3) [right of = b3] {};
 
+        \node[draw=none,right of = b3,node distance=1mm, yshift=-2mm] {$t_{1}$};
+
         \node[draw=none, below of = b3, node distance=6mm] {$T_{1}$};
 
         \path[color=gray!50] (a1) edge (b1) edge (a2)
@@ -277,7 +293,7 @@ allowing extra edges only in the target graph, not in the pattern.
     \caption{$P\rightarrowtail T_{1}$, $P\lessnonind{1} T_{2}$}
     \label{fig:klessexample}
 \end{figure}
-
+\end{example}
 
 \subsection{Constraint Models and Algorithms}
 
