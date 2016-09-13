@@ -89,14 +89,13 @@
 \newcommand{\V}{\operatorname{V}}
 \newcommand{\N}{\operatorname{N}}
 \newcommand{\nds}{\operatorname{S}}
-\newcommand{\loopcomp}[1]{\oset[.1ex]{\multimap}{#1}}
+\newcommand{\loopcomp}[1]{\tset{\multimap}{#1}}
 
-\makeatletter
-\newcommand{\oset}[3][0ex]{%
-  \mathrel{\mathop{#3}\limits^{
-    \vbox to#1{\kern-2\ex@
-    \hbox{$\scriptstyle#2$}\vss}}}}
-\makeatother
+\newcommand{\tset}[2]{%
+    \tikz[baseline=(X.base),inner sep=0pt,outer sep=0pt]{%
+        \node[inner sep=0pt,outer sep=0pt] (X) {$#2$};
+        \node[yshift=1.5pt,xshift=1pt] at (X.north) {$\scriptstyle#1$};
+}}
 
 \newcommand*\samethanks[1][\value{footnote}]{\footnotemark[#1]}
 
@@ -199,9 +198,9 @@ but not maximum common subgraph, and so the state space in the former is much mo
 whilst filtering during search is vastly stronger.
 
 In this work we discuss an intermediate problem, where we must map all but $k$ vertices of the
-pattern graph into the target---we show an example in \cref{fig:subgraphexample}. (This in some
+pattern graph into the target---we show an example in \cref{fig:subgraphexample}. This in some
 ways resembles the approximate subgraph matching model of \citet{DBLP:conf/cp/ZampelliDD05},
-although we allow any vertex to be removed.) We show that if
+although we allow any vertex to be removed. We show that if
 $k$ is reasonably small (say, between 1 and 5), then weakened forms of degree and path based
 filterings are still effective in pruning the initial search space and in providing additional
 constraints respectively. We then show that combining these techniques leads to a practical
