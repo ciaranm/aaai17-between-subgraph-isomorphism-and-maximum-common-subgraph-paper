@@ -151,9 +151,9 @@ but not maximum common subgraph, and so the state space in the former is much mo
 whilst filtering during search is vastly stronger.
 
 In this work we discuss an intermediate problem, where we must map all but $k$ vertices of the
-pattern graph into the target---we show an example in \cref{fig:subgraphexample}. (This in some
+pattern graph into the target---we show an example in \cref{fig:subgraphexample}. This in some
 ways resembles the approximate subgraph matching model of \citet{DBLP:conf/cp/ZampelliDD05},
-although we allow any vertex to be removed.) We show that if $k$ is reasonably small (say, between 1
+although we allow any vertex to be removed. We show that if $k$ is reasonably small (say, between 1
 and 5), then weakened forms of degree and path based filterings are still effective in pruning the
 initial search space and in providing additional constraints respectively. We then show that
 combining these techniques leads to a practical algorithm which can scale to work with the families
@@ -244,22 +244,22 @@ problem.
 
     \end{tikzpicture}
     \caption{The pattern graph $P$ on the left cannot be found in the target graph $T$, but if
-    the central vertex in the diamond is removed, then a subgraph isomorphism exists.}
+    the central vertex in $P$ is removed, then a subgraph isomorphism exists.}
     \label{fig:subgraphexample}
 \end{figure}
 \subsection{Definitions and Notations} \label{section:definitions}
 
-A non-induced subgraph isomorphism from a graph $P$ to a graph $T$ is an injective mapping $P
-\rightarrowtail T $ which maps adjacent vertices to adjacent vertices. An induced subgraph
-isomorphism $P \hookrightarrow T$ additionally maps non-adjacent vertices to non-adjacent vertices.
-We define a $k$-less subgraph isomorphism from $P$ to $T$ to be a subgraph isomorphism from all but
+A \emph{non-induced subgraph isomorphism} from a graph $P$ to a graph $T$ is an injective mapping $P
+\rightarrowtail T $ which maps adjacent vertices to adjacent vertices. An \emph{induced subgraph
+isomorphism} $P \hookrightarrow T$ additionally maps non-adjacent vertices to non-adjacent vertices.
+We define a \emph{$k$-less subgraph isomorphism} from $P$ to $T$ to be a subgraph isomorphism from all but
 $k$ vertices of $P$ to $T$; this may be non-induced or induced, written $P \lessnonind{k} T$ and $P
 \lessind{k} T$ respectively.
 
 The \emph{complement} of a (simple) graph $P$ is the graph $\shortoverline{P}~$.  Adjacent distinct
 vertices in $P$ are non-adjacent in $\shortoverline{P}$ while non-adjacent vertices in $P$ are
 adjacent in $\shortoverline{P}$.  The \emph{loop complement} of a graph $P$ is the graph
-$\loopcomp{P}$.  The construction of $\loopcomp{P}$ is similar to that of $\bar{P}~$, however
+$\loopcomp{P}$.  The construction of $\loopcomp{P}$ is similar to that of $\shortoverline{P}~$, however
 whenever a vertex has a loop in $P$ it does not in $\loopcomp{P}$ and vice versa.  When solving an
 induced subgraph isomorphism problem we make use of the loop complement; we care about mapping
 vertices with loops to vertices with loops, and vertices without loops to vertices without loops.
@@ -435,7 +435,7 @@ eliminate some infeasible values from domains.
 \end{restatable}
 
 A vertex $q$ which is adjacent to $p$ is called its \emph{neighbour}.  Let $\N(p) = \{ q \in \V(P) :
- p~\textnormal{and}~q~\textnormal{are adjacent}\}$ be the set of neighbours of $p$.  The \emph{neighbourhood
+ p~\textnormal{and}~q~\textnormal{are adjacent}\}$ be the \emph{set of neighbours} of $p$.  The \emph{neighbourhood
 degree sequence} (NDS) of $p$, $\nds(p)$, is the (non-ascending) sequence of degrees of its
 neighbours.
 
@@ -507,7 +507,7 @@ make use of this fact.
 
 As well as reasoning about degrees, we can also reason about paths.  A \emph{path} between two
 vertices $p$ and $q$ is a sequence of edges which can be traversed from $p$ to reach $q$. We define
-$\paths(p,q,n)$ to be the number of paths of length $n$ between the vertices $p$ and $q$.
+$\paths(p,q,n)$ to be the \emph{number of paths of length $n$} between the vertices $p$ and $q$.
 
 \begin{restatable}{proposition}{proppaths}\label{prop:paths}
     Let $p,q \in \V(P)$ and $t,u\in \V(T)$. If $p \lessmap{k} t$ and $q \lessmap{k} u$ then
