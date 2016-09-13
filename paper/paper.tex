@@ -279,82 +279,6 @@ problem instead. However, this is not what we will be discussing in this paper: 
 subgraph problems are symmetric in their inputs, but when discussing the non-induced case we are
 allowing extra edges only in the target graph, not in the pattern.
 
-\begin{example}
-Consider the pattern graph $P$ and the two target graphs $T$ and $U$ shown in
-\cref{fig:klessexample}. The neighbourhood degree sequence of pattern vertex $p$ is
-$\nds(p)=(3,3,2)$.
-
-We highlight a subgraph in $T$ which is non-induced isomorphic to $P$. The vertex $p$ can be
-mapped to $q$ in the target graph $T$, as $\nds(q)=(5,5,4,2,2)$.  There is a non-induced
-mapping of the pattern graph $P$ into $U$ by removing $b$ of $P$.  This removal
-changes the neighbourhood degree sequence of $p$ in the $k$-less version of $P$ to $\nds(p)=(2,2)$.
-
-\begin{figure}
-    \centering
-    \begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm}]
-        \node[fill=black] (p) {};
-        \node[fill=black] (b) [above of = p,node distance=10mm] {};
-        \node[fill=black] (a) [left of = b] {};
-        \node[fill=black] (c) [right of = b] {};
-        \node[fill=black] (d) [above of = b,node distance=10mm] {};
-
-        \node[draw=none,right of = p,node distance=3mm,yshift=-1mm] {$p$};
-        \node[draw=none,left of = a,node distance=3mm,yshift=-1mm] {$a$};
-        \node[draw=none,left of = b,node distance=3mm,yshift=-1mm] {$b$};
-        \node[draw=none,right of = c,node distance=3mm,yshift= 1mm] {$c$};
-        \node[draw=none,above of = d,node distance=3mm,yshift=1mm] {$d$};
-
-        \node[draw=none, below of = p, node distance=6mm] {$P$};
-
-        \path (p) edge (a) edge (b) edge (c)
-            (a) edge (d)
-            (b) edge (c) edge (d)
-            (c) edge (d);
-        \end{tikzpicture}\hspace{0.5cm}\begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm}]
-        \node[fill=gray!50] (a1) [right of = d, node distance = 2cm] {};
-        \node[fill=black] (b1) [right of = a1] {};
-        \node[fill=gray!50] (c1) [right of = b1] {};
-        \node[fill=black] (a2) [below of = a1] {};
-        \node[fill=black] (b2) [right of = a2] {};
-        \node[fill=black] (c2) [right of = b2] {};
-        \node[fill=gray!50] (a3) [below of = a2] {};
-        \node[fill=black] (b3) [right of = a3] {};
-        \node[fill=gray!50] (c3) [right of = b3] {};
-
-        \node[draw=none,right of = b3,node distance=1mm, yshift=-2mm] {$q$};
-
-        \node[draw=none, below of = b3, node distance=6mm] {$T$};
-
-        \path[color=gray!50] (a1) edge (b1) edge (a2)
-            (b1) edge (c1)
-            (c1) edge (c2)
-            (a2) edge (b2) edge (a3)
-            (c2) edge (c3)
-            (a3) edge (b3)
-            (b3) edge (c3);
-        \path[line width=0.4mm] (b1) edge (a2) edge (b2) edge (c2)
-            (a2) edge (b3)
-            (b2) edge (c2) edge (b3)
-            (c2) edge (b3);
-    \end{tikzpicture}\hspace{0.5cm}\begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm}]
-        \node[fill=black] (p) {};
-        \node[draw=none] (b) [above of = p,node distance=10mm] {};
-        \node[fill=black] (a) [left of = b] {};
-        \node[fill=black] (c) [right of = b] {};
-        \node[fill=black] (d) [above of = b,node distance=10mm] {};
-
-        \node[draw=none, below of = p, node distance=6mm] {$U$};
-
-        \path (p) edge (a) edge (c)
-            (a) edge (d)
-            (c) edge (d);
-    \end{tikzpicture}
-    \caption{There is a non-induced isomorphism $P\rightarrowtail T$ from the first graph to the
-    second, using the highlighted vertices. No such isomorphism exists to the third graph, but there
-    is a $1$-less isomorphism $P\lessnonind{1} U$ omitting vertex $b$.}\label{fig:klessexample}
-\end{figure}
-\end{example}
-
 \subsection{Constraint Models and Algorithms}
 
 For both subgraph isomorphism and maximum common subgraph, constraint programming is the best known
@@ -452,12 +376,86 @@ t_j$.  When considering a $k$-less subgraph isomorphism we say that $S \lessprec
 \leq m$, and if there exists some subsequence $S_k$ of $S$ containing up to $k$ members such that
 $\forall s_i \in S \setminus S_k$, there exists a distinct $t_j \in T$ with $s_i - k \leq t_j$.
 
+\begin{figure}[t]
+    \centering
+    \begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm}]
+        \node[fill=black] (p) {};
+        \node[fill=black] (b) [above of = p,node distance=10mm] {};
+        \node[fill=black] (a) [left of = b] {};
+        \node[fill=black] (c) [right of = b] {};
+        \node[fill=black] (d) [above of = b,node distance=10mm] {};
+
+        \node[draw=none,right of = p,node distance=3mm,yshift=-1mm] {$p$};
+        \node[draw=none,left of = a,node distance=3mm,yshift=-1mm] {$a$};
+        \node[draw=none,left of = b,node distance=3mm,yshift=-1mm] {$b$};
+        \node[draw=none,right of = c,node distance=3mm,yshift= 1mm] {$c$};
+        \node[draw=none,above of = d,node distance=3mm,yshift=1mm] {$d$};
+
+        \node[draw=none, below of = p, node distance=6mm] {$P$};
+
+        \path (p) edge (a) edge (b) edge (c)
+            (a) edge (d)
+            (b) edge (c) edge (d)
+            (c) edge (d);
+        \end{tikzpicture}\hspace{0.5cm}\begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm}]
+        \node[fill=gray!50] (a1) [right of = d, node distance = 2cm] {};
+        \node[fill=black] (b1) [right of = a1] {};
+        \node[fill=gray!50] (c1) [right of = b1] {};
+        \node[fill=black] (a2) [below of = a1] {};
+        \node[fill=black] (b2) [right of = a2] {};
+        \node[fill=black] (c2) [right of = b2] {};
+        \node[fill=gray!50] (a3) [below of = a2] {};
+        \node[fill=black] (b3) [right of = a3] {};
+        \node[fill=gray!50] (c3) [right of = b3] {};
+
+        \node[draw=none,right of = b3,node distance=1mm, yshift=-2mm] {$q$};
+
+        \node[draw=none, below of = b3, node distance=6mm] {$T$};
+
+        \path[color=gray!50] (a1) edge (b1) edge (a2)
+            (b1) edge (c1)
+            (c1) edge (c2)
+            (a2) edge (b2) edge (a3)
+            (c2) edge (c3)
+            (a3) edge (b3)
+            (b3) edge (c3);
+        \path[line width=0.4mm] (b1) edge (a2) edge (b2) edge (c2)
+            (a2) edge (b3)
+            (b2) edge (c2) edge (b3)
+            (c2) edge (b3);
+    \end{tikzpicture}\hspace{0.5cm}\begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm}]
+        \node[fill=black] (p) {};
+        \node[draw=none] (b) [above of = p,node distance=10mm] {};
+        \node[fill=black] (a) [left of = b] {};
+        \node[fill=black] (c) [right of = b] {};
+        \node[fill=black] (d) [above of = b,node distance=10mm] {};
+
+        \node[draw=none, below of = p, node distance=6mm] {$U$};
+
+        \path (p) edge (a) edge (c)
+            (a) edge (d)
+            (c) edge (d);
+    \end{tikzpicture}
+    \caption{There is a non-induced isomorphism $P\rightarrowtail T$ from the first graph to the
+    second, using the highlighted vertices. No such isomorphism exists to the third graph, but there
+    is a $1$-less isomorphism $P\lessnonind{1} U$ omitting vertex $b$.}\label{fig:klessexample}
+\end{figure}
 
 \begin{restatable}{proposition}{propnds}\label{prop:nds}
 If $p \lessmap{k} t$, then $\nds(p) \lesspreceq{k} \nds(t)$.
 \end{restatable}
 
-\Cref{fig:klessexample} illustrates the three cases possible when filtering by neighbourhood degree
+\begin{example}
+Consider the pattern graph $P$ and the two target graphs $T$ and $U$ shown in
+\cref{fig:klessexample}. The neighbourhood degree sequence of pattern vertex $p$ is
+$\nds(p)=(3,3,2)$.
+We highlight a subgraph in $T$ which is non-induced isomorphic to $P$. The vertex $p$ can be
+mapped to $q$ in the target graph $T$, as $\nds(q)=(5,5,4,2,2)$.  There is a non-induced
+mapping of the pattern graph $P$ into $U$ by removing $b$ of $P$.  This removal
+changes the neighbourhood degree sequence of $p$ in the $k$-less version of $P$ to $\nds(p)=(2,2)$.
+\end{example}
+
+\Cref{fig:klessexample} also illustrates the three cases possible when filtering by neighbourhood degree
 sequence.  Removing the top node causes each entry in $\nds(p)$ to be reduced; removing the
 left-middle node removes an entry from $\nds(p)$; and removing either of the connected nodes in the
 middle layer causes both the size of $\nds(p)$ to be reduced and an entry in $\nds(p)$ to be reduced.
