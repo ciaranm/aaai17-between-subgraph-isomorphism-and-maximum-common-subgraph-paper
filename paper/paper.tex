@@ -344,12 +344,12 @@ GCC 5.3.0. We used a timeout of 1,000 seconds for each instance. For comparison,
 implementations of \citet{DBLP:conf/cp/McCreeshNPS16}.
 
 For datasets, we use the same 5,725 instances used in a recent work on portfolios of algorithms for
-subgraph isomorphism \cite{thelionpaper}. This collection includes randomly generated scale-free
-graphs \cite{constraints10}, an assortment of real-world graphs of varying sizes \cite{LV02},
+subgraph isomorphism \citep{thelionpaper}. This collection includes randomly generated scale-free
+graphs \citep{constraints10}, an assortment of real-world graphs of varying sizes \citep{LV02},
 randomly generated graph pairs (using bounded degree, regular mesh, and uniform models; all are
-satisfiable), segmented images~\cite{pr15,cviu11}, meshes from modelling 3D objects \cite{cviu11},
+satisfiable), segmented images~\citep{pr15,cviu11}, meshes from modelling 3D objects \citep{cviu11},
 and graphs close to the satisfiable-unsatisfiable phase transition
-\cite{DBLP:conf/ijcai/McCreeshPT16}. All of these instances are available in a simple text
+\citep{DBLP:conf/ijcai/McCreeshPT16}. All of these instances are available in a simple text
 format\footnote{\texttt{http://liris.cnrs.fr/csolnon/SIP.html}}.  Note that many of these instances
 are \emph{much} larger than were used in the recent comparison of maximum common subgraph algorithms
 by \citet{DBLP:conf/cp/McCreeshNPS16}: for unlabelled graphs, they used pairs of graphs with up to
@@ -497,7 +497,7 @@ version show a similar but slightly weaker trend.)
 
 Some other invariants do not translate. For example, another rule which can be effective on regular
 graphs involves counting the number of neighbours of a vertex which are present in a triangle
-\cite{mckay2014practical}. Removing a single vertex can alter this count arbitrarily, so we cannot
+\citep{mckay2014practical}. Removing a single vertex can alter this count arbitrarily, so we cannot
 make use of this fact.
 
 \begin{figure}
@@ -674,7 +674,7 @@ case.
 
 To handle wildcards, we include $k$ additional $\bot$ values in domains, rather than a single value
 which may be used $k$ times. These are treated as having degree zero, in an attempt to maximising
-the expected number of solutions remaining during search \cite{DBLP:conf/ijcai/McCreeshPT16}. This
+the expected number of solutions remaining during search \citep{DBLP:conf/ijcai/McCreeshPT16}. This
 technique allows us to retain the bit-parallel all different propagator used in the original
 algorithm. However, we must be careful to treat domains containing multiple wildcard values (which
 we call ``effectively unit'') specially during unit propagation (line~\ref{line:effect}), and we
