@@ -348,15 +348,14 @@ randomly generated graph pairs (using bounded degree, regular mesh, and uniform 
 satisfiable), segmented images~\cite{pr15,cviu11}, meshes from modelling 3D objects \cite{cviu11},
 and graphs close to the satisfiable-unsatisfiable phase transition
 \cite{DBLP:conf/ijcai/McCreeshPT16}; all these instances are available in a simple text
-format\footnote{\texttt{http://liris.cnrs.fr/csolnon/SIP.html}}.
-Note that many of these instances are \emph{much} larger than were used in the recent comparison of
-maximum common subgraph algorithms by \citet{DBLP:conf/cp/McCreeshNPS16}: for unlabelled graphs,
-they used pairs of graphs with up to 35 vertices in each, whilst our dataset contains patterns with
-up to ?? vertices and targets with up to ?? vertices. For maximum common subgraph, 1,560 of the
-instances cannot fit in the amount of RAM we have available---we treat these instances as having
-timed out. The situation for the clique encoding is even worse, and 3,653 of these instances do not
-fit in RAM. In contrast, for our algorithm, every instance fits comfortably (at least on modern
-server-class hardware).
+format\footnote{\texttt{http://liris.cnrs.fr/csolnon/SIP.html}}.  Note that many of these instances
+are \emph{much} larger than were used in the recent comparison of maximum common subgraph algorithms
+by \citet{DBLP:conf/cp/McCreeshNPS16}: for unlabelled graphs, they used pairs of graphs with up to
+35 vertices in each, whilst our dataset contains graphs with up to 6,671 vertices. For the CP
+algorithm, 1,560 of the instances cannot fit in the amount of RAM we have available---we treat these
+instances as having timed out. The situation for the clique encoding is even worse, and 3,653 of
+these instances do not fit in RAM. In contrast, for our algorithm, every instance fits comfortably
+(at least on modern server-class hardware).
 
 \section{Domain Filtering using Degrees}\label{section:degreefiltering}
 
