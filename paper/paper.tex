@@ -76,9 +76,6 @@
 \newcommand{\N}{\operatorname{N}}
 \newcommand{\nds}{\operatorname{S}}
 \newcommand{\loopcomp}[1]{\oset[.1ex]{\multimap}{#1}}
-% to do comments
-\usepackage{color}
-\newcommand{\todo}[1]{{\color{red} {?? [}{#1}{]}}}
 
 \makeatletter
 \newcommand{\oset}[3][0ex]{%
@@ -118,7 +115,6 @@ anonymous@anonymous}
 \end{abstract}
 
 \section{Introduction}
-\todo{talk about subgraph isomorphism applications, particularly vision}
 
 The subgraph isomorphism problem is to find a copy of a small \emph{pattern} graph inside a larger
 \emph{target} graph. It comes in two forms: in the non-induced variant, edges must be mapped to
@@ -150,7 +146,8 @@ algorithm for the maximum common induced subgraph problem.
 
 \begin{figure}
     \begin{center}
-        \begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm,node distance=10mm,fill=black}]
+        \begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm,node
+            distance=10mm,fill=black}, scale=0.2]
             \node[fill=uofgcobalt] (a) {};
             \node (a1) [below left of = a] {};
             \node (b1) [below right of = a] {};
@@ -633,9 +630,9 @@ benefit in practice on the instances we considered.
     \includegraphics*{gen-graph-runtimes.pdf}
     \caption{In the first two plots, the cumulative number of instances solved over time, for the
         induced and non-induced problems, with different values of $k$. We also show the results of
-        iteratively decreasing $k$ until a solution is found, and in the induced case, the
+        iteratively increasing $k$ until a solution is found, and in the induced case, the
         performance of two leading maximum common subgraph algorithms. In the third plot, results
-        comparing our algorithm with iteratively decreasing $k$ to other approaches on maximum
+        comparing our algorithm with iteratively increasing $k$ to other approaches on maximum
         common induced subgraph instances.}\label{figure:runtimes}
 \end{figure*}
 
