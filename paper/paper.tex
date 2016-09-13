@@ -741,9 +741,10 @@ If we remove up to $k$ vertices from the neighbourhood of $p$, it will impact th
 \left| \N(p)\cap \N(q)\right| - k \leq \deg(p) - k \leq \deg(t).
 \]
 As $\left|\N(p)\cap \N(q)\right|\leq \deg(p) \leq \left|\N(t)\cap \N(u)\right|\leq \deg(t)$, we have
-\[
-\left|\N(p)\cap \N(q)\right| - k \leq \deg(p) - k\leq \left|\N(t)\cap \N(u)\right|\leq \deg(t)
-\]
+\begin{align*}
+\left|\N(p)\cap \N(q)\right| - k & \leq \deg(p) - k\leq \\
+ &\leq \left|\N(t)\cap \N(u)\right|\leq \deg(t)
+\end{align*}
 which is
 \[
 \paths(p, q, 2) - k \leq \paths(t, u, 2). \qedhere
