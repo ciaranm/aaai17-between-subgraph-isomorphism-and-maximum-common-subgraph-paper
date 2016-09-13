@@ -527,7 +527,7 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
 \nl \Begin{
     \nl \lIf{$\left|\V(\mathcal{P})\right| + k > \left|\V(\mathcal{T})\right|$}{$\KwSty{return}~\KwSty{false}$\label{line:enough}}
     \nl $L \gets \big[ (\mathcal{P},\ \mathcal{T}), (\loopcomp{\mathcal{P}},
-        \loopcomp{\mathcal{T}}) \textnormal{~only if we want induced},$
+        \loopcomp{\mathcal{T}}) \textnormal{~only if we want induced\label{line:comp}},$
         \\\hspace*{1.0em}$(\mathcal{P}^{1 + k,2},\ \mathcal{T}^{1,2}), (\mathcal{P}^{2 + k,2},\
     \mathcal{T}^{2,2}), (\mathcal{P}^{3 + k,2},\ \mathcal{T}^{3,2}) \big]$ \;
     \nl \ForEach{$v \in \V(\mathcal{P})$}{
@@ -548,7 +548,7 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
     \nl \lIf{$D = \emptyset$}{$\KwSty{return}~\KwSty{true}$}
     \nl $D_v \gets \textnormal{the smallest domain in}~D$ \;
     \nl \ForEach {$v' \in D_v~\textnormal{ordered by static degree in}~\mathcal{T}$\label{line:parforeach}}{
-        \nl \If{$v'$ \textnormal{is not the first wildcard we have tried}}{
+        \nl \If{$v'$ \textnormal{is not the first wildcard we have tried\label{line:sym}}}{
             \nl \KwSty{continue} \;
         }
         \nl $D' \gets \FuncSty{clone}(D)$ \;
@@ -565,7 +565,7 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
 \nl \Begin{
     \nl \While{\KwSty{true}}{
         \nl \If{\textnormal{no effectively-unit domains (treating all wildcard~values as a single
-        value) remain}}{
+            value) remain\label{line:effect}}}{
             \nl \If{$\KwSty{not}~\FuncSty{allDifferent}(D)$}{
                 \nl $\KwSty{return}~\KwSty{false}$ \;
             }
@@ -605,18 +605,27 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
 \label{algorithm:sip}
 \end{algorithm*}
 
-\cref{algorithm:sip}. This is derived from a subgraph isomorphism due to
-\citet{DBLP:conf/cp/McCreeshP15}, which in a recent evaluation of algorithm portfolios
-\citep{thelionpaper} was the single strongest solver. As well as the modifications to solve $k$-less
-and induced problems, we have made two simplifications: we do not use conflict-directed backjumping,
-and we do not use iterated label filtering to recalculate neighbourhood degree sequences if vertices
-are not present in any target domain after construction---in preliminary experiments, these
-techniques were not beneficial for $k > 0$.
+We bring these techniques into a full algorithm, listed as \cref{algorithm:sip}. This is derived
+from a subgraph isomorphism due to \citet{DBLP:conf/cp/McCreeshP15}, which in a recent evaluation of
+algorithm portfolios \citep{thelionpaper} was the single strongest solver. As well as the
+modifications to solve $k$-less and induced problems, we have made two simplifications: we do not
+use conflict-directed backjumping, and we do not use iterated label filtering to recalculate
+neighbourhood degree sequences if vertices are not present in any target domain after
+construction---in preliminary experiments, these techniques were not beneficial for $k > 0$. We also
+do not strip isolated vertices, as this is not a valid simplification in the induced case.
 
-?? Discuss how we did wildcards, effectively unit domains. The all diff propagator.
+To handle wildcards, we include $k$ additional $\bot$ values in domains, rather than a single value
+which may be used $k$ times. These are treated as having degree zero, in an attempt to maximising
+the expected number of solutions remaining during search \cite{DBLP:conf/ijcai/McCreeshPT16}. This
+technique allows us to retain the bit-parallel all different propagator used in the original
+algorithm. However, we must be careful to treat domains containing multiple wildcard values (which
+we call ``effectively unit'') specially during unit propagation (line~\ref{line:effect}), and we
+introduce a symmetry break (line~\ref{line:sym}) to try only a single wildcard value for each
+variable.
 
-?? Discuss how we do induced. We do not look at paths in the loop complements, since this is
-expensive to calculate and provides little benefit in practice on the instances we considered.
+To handle the induced case, we make use of \cref{prop:comp} (line~\ref{line:comp}). We also tested
+using path reasoning on complement graphs, but this is expensive to calculate and provides little
+benefit in practice on the instances we considered.
 
 \section{Empirical Evaluation}\label{section:evaluation}
 
