@@ -18,7 +18,9 @@
 \usepackage{multicol}
 \usepackage[ruled,vlined]{algorithm2e}
 
-% \usepackage{showframe}
+\usepackage{placeins}
+
+\usepackage{showframe}
 
 \makeatletter\@ifpackageloaded{showframe}{
     % show lines down the middle columns too
@@ -454,6 +456,7 @@ Some other forms do not translate. For example, another invariant which can be e
 graphs is to count the number of neighbours of a vertex which are present in a triangle \cite{mckay2014practical}. Removing a single vertex can alter this count arbitrarily, so we cannot make use of this fact.
 
 \begin{figure}
+    \centering
     \includegraphics*{gen-graph-ids.pdf}
     \caption{The amount of domain reduction achieved for the induced problem, with increasing values
     of $k$. The $y$ value shows for how many instances we may reduce the initial search space to be
@@ -657,6 +660,7 @@ expensive to calculate and provides little benefit in practice on the instances 
 \section{Empirical Evaluation}\label{section:evaluation}
 
 \begin{figure*}[tb]
+    \centering
     \includegraphics*{gen-graph-runtimes.pdf}
     \caption{In the first two plots, the cumulative number of instances solved over time, for the
         induced and non-induced problems, with different values of $k$. We also show the results of
@@ -667,6 +671,7 @@ expensive to calculate and provides little benefit in practice on the instances 
 \end{figure*}
 
 \begin{figure*}[tb]
+    \centering
     \includegraphics*{gen-graph-which-k-by-family.pdf}
     \caption{The proportion of instances, in different families, which become satisfiable for
     increasing values of $k$. The larger instances are those where we can prove unsatisfiability for
@@ -729,6 +734,8 @@ Future work.
 
 We'd like to thank some people whose names we've removed for anonymous review for providing us with
 source code and problem instances, and someone at one of our institutions for inspiration.
+
+\FloatBarrier
 
 \bibliographystyle{named}
 \bibliography{paper}

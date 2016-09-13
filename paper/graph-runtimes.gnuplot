@@ -1,6 +1,6 @@
 # vim: set et ft=gnuplot sw=4 :
 
-set terminal tikz standalone color size 18cm,6cm font '\scriptsize' preamble '\usepackage{times,microtype}'
+set terminal tikz standalone color size 17.6cm,5.5cm font '\scriptsize' preamble '\usepackage{times,microtype}'
 #set terminal tikz standalone color size 3.3in,5.6in font '\scriptsize' preamble '\usepackage{times,microtype}'
 set output "gen-graph-runtimes.tex"
 
