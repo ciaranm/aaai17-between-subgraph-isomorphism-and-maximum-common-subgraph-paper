@@ -730,13 +730,11 @@ each $u$ is distinct.  Then $\deg(q) - k \leq \deg(u)$, by \cref{prop:deg}.  Hen
 \end{proof}
 
 \begin{proof}[Proof of \cref{prop:paths}]
-Let $P_{2}$ be the set of all paths of length two between $p$ and $q$, $P_{2} = \{((p,x),(x,q)) : (p,x),(x,q)\in E(P) \}$. As we are looking at paths of length 2, the end vertex on the
-\begin{align*}
- \\
- = & \{((p,x),(x,q)) : x\in \N(p) \text{ and } x\in \N(q) \} \\
- = & \{((p,x),(x,q)) : x\in \N(p)\cap \N(q) \} .
-\end{align*}
-So $\paths(p,q,2) = \left| \N(p)\cap \N(q) \right|  \leq \deg(p)$.
+Let $P_{2}$ be the set of all paths of length two between $p$ and $q$,
+$P_{2} = \{((p,x),(x,q)) : (p,x),(x,q)\in E(P) \}$. As we are looking at paths of length 2, the
+intermediate vertices lie in both neigbour vertex sets of $p$ and $q$. We can rewrite $P_{2}$ as
+$P_{2} = \{((p,x),(x,q)) : x\in \N(p) \text{ and } x\in \N(q) \}$, in other words the intermediate vertices lie in the intersection of the neighbour sets of $p$ and $q$,
+$P_{2}=\{((p,x),(x,q)) : x\in \N(p)\cap \N(q) \}$. So $\paths(p,q,2) = \left| \N(p)\cap \N(q) \right|  \leq \deg(p)$.
 
 If we remove up to $k$ vertices from the neighbourhood of $p$, it will impact the intersection of the neighbourhoods of $p$ and $q$, and by Proposition~\ref{prop:deg}, as $p\lessmap{k}t$
 \[
