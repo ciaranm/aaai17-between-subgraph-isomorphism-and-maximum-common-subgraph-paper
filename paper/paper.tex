@@ -113,12 +113,14 @@ anonymous@anonymous}
     number of paths.  We show that when $k$ is small, weakening the invariants still retains much of
     their effectiveness. We are then able to solve this problem on the standard SIP problem
     instances used to benchmark subgraph isomorphism algorithms, despite these instances being
-    too large for current maximum common subgraph algorithms to handle.
+    too large for current maximum common subgraph algorithms to handle. Finally, by iteratively
+    increasing $k$, we obtain an algorithm which is also competitive for the maximum common subgraph
+    problem.
 \end{abstract}
 
 \section{Introduction}
 \todo{talk about subgraph isomorphism applications, particularly vision}
-\todo{talk about reformulating}
+
 The subgraph isomorphism problem is to find a copy of a small \emph{pattern} graph inside a larger
 \emph{target} graph. It comes in two forms: in the non-induced variant, edges must be mapped to
 edges, but the target may have ``extra edges'', whilst in the induced variant, non-edges may only be
@@ -139,10 +141,12 @@ pattern graph into the target. We show that if $k$ is reasonably small (say, bet
 weakened forms of degree and path based filterings are still effective in pruning the initial search
 space and in providing additional constraints respectively. We then show that combining these
 techniques leads to a practical algorithm which can scale to work with the families of graphs
-commonly used to benchmark subgraph isomorphism algorithms: depending upon the benchmark family, in
-a substantial portion of ??; in ?? more cases, we can at least obtain an upper bound. This is a
-significant improvement over state of the art maximum common subgraph solvers, which cannot even fit
-many of these instances in RAM.
+commonly used to benchmark subgraph isomorphism algorithms: depending upon the benchmark family, we
+can close a substantial portion of the instances, and in many more cases, we can at least obtain an
+upper bound. This is a significant improvement over state of the art maximum common subgraph
+solvers, which cannot even fit many of these instances in RAM. Finally, we show that iteratively
+increasing $k$ gives a competitive algorithm for the maximum common induced subgraph problem.
+
 \begin{figure}
     \begin{center}
         \begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm,node distance=10mm,fill=black}]
@@ -193,7 +197,6 @@ $\loopcomp{P}$.  The construction of $\loopcomp{P}$ is similar to that of $\bar{
 whenever a vertex has a loop in $P$ it does not in $\loopcomp{P}$ and vice versa.  When solving an
 induced subgraph isomorphism problem we make use of the loop complement; we care about mapping
 vertices with loops to vertices with loops, and vertices without loops to vertices without loops.
-(Although when we filter by paths we make use of the complement rather than the loop complement.)
 The following proposition follows directly from the definitions.
 
 \begin{proposition}\label{prop:comp}
@@ -310,13 +313,12 @@ vertices. For the maximum common subgraph case, any pair of assignments with $\b
 is also permitted.  To handle the induced case, rather than the more usual approach of directly
 having constraints for non-adjacent pairs of vertices, we will make use of \cref{prop:comp} by
 seeking an $i$ which simultaneously satisfies $P \rightarrowtail T$ and $\loopcomp{P}
-\rightarrowtail \loopcomp{T}$.
+\rightarrowtail \loopcomp{T}$. Finally, an all different except $\bot$ constraint ensures
+injectivity.
 
-?? All different.
-
-For subgraph isomorphism, we can do domain filtering at the top of search, to reduce the initial
-sizes of domains---we discuss this in \cref{section:degreefiltering}. Subgraph isomorphism also
-allows us to generate additional implied constraints, which we discuss in
+For subgraph isomorphism, this model can be enhanced with domain filtering at the top of search, to
+reduce the initial sizes of domains---we discuss this in \cref{section:degreefiltering}. Subgraph
+isomorphism also allows us to generate additional implied constraints, which we discuss in
 \cref{section:pathfiltering}. Neither of these techniques are valid for the maximum common subgraph
 problem.
 
@@ -347,14 +349,13 @@ experiments to verify that we can gain effective domain filtering (\cref{section
 and implied constraints (\cref{section:pathfiltering}) by using subgraph isomorphism style reasoning
 about degrees and paths in the $k$-less setting.
 
-?? Explain effectively-unit domain, multiple $\bot$ values.
-
 \subsection{Experimental Setup} \label{section:setup}
 
 We perform our experiments on systems with dual Intel Xeon CPU E5-2640 processors with 64GBytes of
 RAM, running Ubuntu 14.04. Our algorithm was implemented in C++\footnote{URL removed for anonymous
 review}, and source code was compiled using
-GCC 5.3.0. We used a timeout of 1,000 seconds for each instance.
+GCC 5.3.0. We used a timeout of 1,000 seconds for each instance. For comparison, we used the
+implementations of \citet{DBLP:conf/cp/McCreeshNPS16}.
 
 For datasets, we use the same 5,725 instances used in a recent work on portfolios of algorithms for
 subgraph isomorphism \cite{thelionpaper}. This collection includes randomly generated scale-free
@@ -363,18 +364,14 @@ randomly generated graph pairs (using bounded degree, regular mesh, and uniform 
 satisfiable), segmented images~\cite{pr15,cviu11}, meshes from modelling 3D objects \cite{cviu11},
 and graphs close to the satisfiable-unsatisfiable phase transition
 \cite{DBLP:conf/ijcai/McCreeshPT16}; all these instances are available in a simple text
-format\footnote{\texttt{http://liris.cnrs.fr/csolnon/SIP.html}}.
-
-?? Using the French code, and the Glasgow clique code.
-
-Note that many of these instances are \emph{much} larger than were used in the recent comparison of
-maximum common subgraph algorithms by \citet{DBLP:conf/cp/McCreeshNPS16}: for unlabelled graphs,
-they used pairs of graphs with up to 35 vertices in each, whilst our dataset contains patterns with
-up to ?? vertices and targets with up to ?? vertices. For maximum common subgraph, 1,560 of the
-instances cannot fit in the amount of RAM we have available---we treat these instances as having
-timed out. The situation for the clique encoding is even worse, and 3,653 of these instances do not
-fit in RAM. In contrast, for our algorithm, every instance fits comfortably (at least on modern
-server-class hardware).
+format\footnote{\texttt{http://liris.cnrs.fr/csolnon/SIP.html}}.  Note that many of these instances
+are \emph{much} larger than were used in the recent comparison of maximum common subgraph algorithms
+by \citet{DBLP:conf/cp/McCreeshNPS16}: for unlabelled graphs, they used pairs of graphs with up to
+35 vertices in each, whilst our dataset contains graphs with up to 6,671 vertices. For the CP
+algorithm, 1,560 of the instances cannot fit in the amount of RAM we have available---we treat these
+instances as having timed out. The situation for the clique encoding is even worse, and 3,653 of
+these instances do not fit in RAM. In contrast, for our algorithm, every instance fits comfortably
+(at least on modern server-class hardware).
 
 \section{Domain Filtering using Degrees}\label{section:degreefiltering}
 
@@ -437,10 +434,15 @@ $S \setminus S_k$ from the definition of $S \lesspreceq{k} T$ with $S[k, n]$.
 
 ?? Talk about iterating, what to do when a vertex disappears from all target graphs.
 
-In \cref{figure:ids} we show that this is useful in practice.
+In \cref{figure:ids} we show that this is effective in practice: we show the amount of domain reduction
+we can achieve at the top of search by using invariants and a fixed $k$, compared to the search
+space size for the maximum common induced subgraph problem. (The results on the non-induced version
+show a similar but slightly weaker trend.)
 
-Some other forms do not translate. For example, another invariant which can be effective on regular
-graphs is to count the number of neighbours of a vertex which are present in a triangle \cite{mckay2014practical}. Removing a single vertex can alter this count arbitrarily, so we cannot make use of this fact.
+Some other invariants do not translate. For example, another rule which can be effective on regular
+graphs involves count the number of neighbours of a vertex which are present in a triangle
+\cite{mckay2014practical}. Removing a single vertex can alter this count arbitrarily, so we cannot
+make use of this fact.
 
 \begin{figure}
     \centering
@@ -467,10 +469,9 @@ graphs is to count the number of neighbours of a vertex which are present in a t
     with path constraints on the $y$-axis, for increasing values of $k$.}\label{figure:constraints}
 \end{figure*}
 
-As well as reasoning about degrees, we can also reason about paths.
-
-A \emph{path} between two vertices $p$ and $q$ is a sequence of edges which can be traversed from $p$ to reach $q$. We define $\paths(p,q,n)$ to be the number of paths of length $n$ between the vertices $p$ and $q$.
-%\todo{Define paths}
+As well as reasoning about degrees, we can also reason about paths.  A \emph{path} between two
+vertices $p$ and $q$ is a sequence of edges which can be traversed from $p$ to reach $q$. We define
+$\paths(p,q,n)$ to be the number of paths of length $n$ between the vertices $p$ and $q$.
 
 \begin{proposition}\label{prop:paths}
     Let $p,q \in \V(P)$ and $t,u\in \V(T)$. If $p \lessmap{k} t$ and $q \lessmap{k} u$ then
@@ -490,12 +491,12 @@ length three: removing a single vertex can delete arbitrarily many such paths. W
 instead count paths of any length which are vertex disjoint, although calculating this appears to be
 too expensive to be beneficial in practice.
 
-To allow for fast propagation, rather than calculating paths dynamically, we follow the approach of
-\citet{DBLP:conf/cp/McCreeshP15} and construct supplemental graphs, and find a mapping which is
-simultaneously a non-induced subgraph isomorphism between every supplemental graph pair. We use
-paths of length 2, looking at counts of 1, 2, and 3 in the target graph (and so counts of $1 + k$ up
-to $3 + k$ in the pattern).  We then investigate whether this leads to new constraints being
-generated.
+To allow for fast propagation, rather than calculating paths dynamically like
+\citet{DBLP:conf/cp/AudemardLMGP14}, we follow the approach of \citet{DBLP:conf/cp/McCreeshP15} and
+construct \emph{supplemental graphs}, and find a mapping which is simultaneously a non-induced subgraph
+isomorphism between every supplemental graph pair. We use paths of length 2, looking at counts of 1,
+2, and 3 in the target graph (and so counts of $1 + k$ up to $3 + k$ in the pattern).  We then
+investigate whether this leads to new constraints being generated.
 
 By an assignment, we mean considering mapping a pattern vertex $p$ to a target vertex $t$ (and not
 $\bot$) which does not violate any loop constraints. An assignment pair is two assignments with
