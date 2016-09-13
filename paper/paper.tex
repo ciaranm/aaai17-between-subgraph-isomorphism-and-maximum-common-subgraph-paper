@@ -381,12 +381,6 @@ eliminate some infeasible values from domains.
     $k$-less-subgraph isomorphisms, if $p \lessmap{k} t$ then
     $\deg(p) - k \le \deg(t)$.
 \end{proposition}
-\begin{proof}
-Let $p$ be a vertex in $P$, and $t$ a vertex in $T$, with $p\mapsto t$. Then by the definition of subgraph isomorphisms, $\deg(p) \le \deg(t)$. Let $P'$ be $P$ less $k$ vertices and $p$ a vertex in $P'$. Then
-\[
-\deg_{P}(p)-k \le \deg_{P'}(p) \le \deg_{P}(p) \le \deg(t). \qedhere
-\]
-\end{proof}
 
 A vertex $q$ which is adjacent to $p$ is called its \emph{neighbour}.  Let $\N(p) = \{ q \in \V(P) :
  p \text{ and } q \text{ are adjacent }\}$ be the set of neighbours of $p$.  The \emph{neighbourhood
@@ -404,16 +398,6 @@ containing up to $k$ members of $S$, there exists a distinct $t_j \in T$ with $s
 If $p \lessmap{k} t$, then $\nds(p) \lesspreceq{k} \nds(t)$.
 \end{proposition}
 
-\begin{proof}
-Let $p \lessmap{k} t$.  Then $\deg(p) - k \leq \deg(q)$, by \cref{prop:deg}, which
-implies that $\left|\nds(p)\right| -k \leq \left| \nds(t) \right| $.
-
-Also, $p \lessmap{k} t$ implies that for each $q \in N(p) \setminus P_k$, where $P_k$
-is some subset of $P$ with $\left| P_k \right| \leq k$, $q \lessmap{k} u$, where $u \in N(t)$ and
-each $u$ is distinct.  Then $\deg(q) - k \leq \deg(u)$, by \cref{prop:deg}.  Hence $\nds(p)
-\lesspreceq{k} \nds(t)$.
-\end{proof}
-
 \Cref{fig:klessexample} illustrates the three cases possible when filtering by neighbourhood degree
 sequence.  Removing the top node causes each entry in $\nds(p)$ to be reduced; removing the
 left-middle node removes an entry from $\nds(p)$; and removing either of the connected nodes in the
@@ -423,10 +407,6 @@ middle layer causes both the size of $\nds(p)$ to be reduced and an entry in $\n
 Since both $\nds(p)$ and $\nds(t)$ are non-ascending, without loss of generality we can replace
 $S \setminus S_k$ from the definition of $S \lesspreceq{k} T$ with $S[k, n]$.
 \end{corollary}
-
-\begin{proof}
-\todo{Sketch?? Let $S_k$ be some elements of the sequence which aren't the first $k$ elements.  Then these elements are less than or equal to the first $k$ elements.}
-\end{proof}
 
 
 % \begin{figure}
@@ -485,42 +465,18 @@ As well as reasoning about degrees, we can also reason about paths.
 A \emph{path} between two vertices $p$ and $q$ is a sequence of edges which can be traversed from $p$ to reach $q$. We define $\paths(p,q,n)$ to be the number of paths of length $n$ between the vertices $p$ and $q$.
 %\todo{Define paths}
 
-\begin{proposition}
+\begin{proposition}\label{prop:paths}
     Let $p,q \in \V(P)$ and $t,u\in \V(T)$. If $p \lessmap{k} t$ and $q \lessmap{k} u$ then
      $\paths(p, q, 2) - k \le \paths(t, u, 2)$.
 \end{proposition}
-\begin{proof}
-Let $P_{2}$ be the set of all paths of length two between $p$ and $q$,
-\begin{align*}
-P_{2} = & \{((p,x),(x,q)) : (p,x),(x,q)\in E(P) \} \\
- = & \{((p,x),(x,q)) : x\in \N(p) \text{ and } x\in \N(q) \} \\
- = & \{((p,x),(x,q)) : x\in \N(p)\cap \N(q) \} .
-\end{align*}
-So $\paths(p,q,2) = \left| \N(p)\cap \N(q) \right|  \leq \deg(p)$.
 
-If we remove up to $k$ vertices from the neighbourhood of $p$, it will impact the intersection of the neighbourhoods of $p$ and $q$, and by Proposition~\ref{prop:deg}, as $p\lessmap{k}t$
-\[
-\left| \N(p)\cap \N(q)\right| - k \leq \deg(p) - k \leq \deg(t).
-\]
-As $\left|\N(p)\cap \N(q)\right|\leq \deg(p) \leq \left|\N(t)\cap \N(u)\right|\leq \deg(t)$, we have
-\[
-\left|\N(p)\cap \N(q)\right| - k \leq \deg(p) - k\leq \left|\N(t)\cap \N(u)\right|\leq \deg(t)
-\]
-which is
-\[
-\paths(p, q, 2) - k \leq \paths(t, u, 2). \qedhere
-\]
-\end{proof}
-
-This leads to the following:
-
-\begin{proposition}
+\begin{corollary}
     For a graph $G$, let $G^{n, \ell}$ be the graph with vertex set $\V(G)$. The
     vertices $p$ and $q$ in $G^{n, \ell}$ are adjacent, if there are at least $n$ simple paths of
     length exactly $\ell$ between $p$ and $q$ in $G$. Then any $k$-less-subgraph isomorphism
     $P \lessnonind{k} T$ induces a new $k$-less-subgraph isomorphism
     $P^{n+k, 2}\lessnonind{k} T^{n, 2}$.
-\end{proposition}
+\end{corollary}
 
 Unlike in conventional subgraph isomorphism, we cannot extend this filtering to look at paths of
 length three: removing a single vertex can delete arbitrarily many such paths. We \emph{could}
@@ -739,5 +695,50 @@ source code and problem instances, and someone at one of our institutions for in
 
 \bibliographystyle{named}
 \bibliography{paper}
+
+\clearpage
+\appendix
+
+\section{Proofs Omitted From Main Text}
+
+\begin{proof}[Proof of \cref{prop:deg}]
+Let $p$ be a vertex in $P$, and $t$ a vertex in $T$, with $p\mapsto t$. Then by the definition of subgraph isomorphisms, $\deg(p) \le \deg(t)$. Let $P'$ be $P$ less $k$ vertices and $p$ a vertex in $P'$. Then
+\[
+\deg_{P}(p)-k \le \deg_{P'}(p) \le \deg_{P}(p) \le \deg(t). \qedhere
+\]
+\end{proof}
+
+\begin{proof}[Proof of \cref{prop:nds}]
+Let $p \lessmap{k} t$.  Then $\deg(p) - k \leq \deg(q)$, by \cref{prop:deg}, which
+implies that $\left|\nds(p)\right| -k \leq \left| \nds(t) \right| $.
+
+Also, $p \lessmap{k} t$ implies that for each $q \in N(p) \setminus P_k$, where $P_k$
+is some subset of $P$ with $\left| P_k \right| \leq k$, $q \lessmap{k} u$, where $u \in N(t)$ and
+each $u$ is distinct.  Then $\deg(q) - k \leq \deg(u)$, by \cref{prop:deg}.  Hence $\nds(p)
+\lesspreceq{k} \nds(t)$.
+\end{proof}
+
+\begin{proof}[Proof of \cref{prop:paths}]
+Let $P_{2}$ be the set of all paths of length two between $p$ and $q$,
+\begin{align*}
+P_{2} = & \{((p,x),(x,q)) : (p,x),(x,q)\in E(P) \} \\
+ = & \{((p,x),(x,q)) : x\in \N(p) \text{ and } x\in \N(q) \} \\
+ = & \{((p,x),(x,q)) : x\in \N(p)\cap \N(q) \} .
+\end{align*}
+So $\paths(p,q,2) = \left| \N(p)\cap \N(q) \right|  \leq \deg(p)$.
+
+If we remove up to $k$ vertices from the neighbourhood of $p$, it will impact the intersection of the neighbourhoods of $p$ and $q$, and by Proposition~\ref{prop:deg}, as $p\lessmap{k}t$
+\[
+\left| \N(p)\cap \N(q)\right| - k \leq \deg(p) - k \leq \deg(t).
+\]
+As $\left|\N(p)\cap \N(q)\right|\leq \deg(p) \leq \left|\N(t)\cap \N(u)\right|\leq \deg(t)$, we have
+\[
+\left|\N(p)\cap \N(q)\right| - k \leq \deg(p) - k\leq \left|\N(t)\cap \N(u)\right|\leq \deg(t)
+\]
+which is
+\[
+\paths(p, q, 2) - k \leq \paths(t, u, 2). \qedhere
+\]
+\end{proof}
 
 \end{document}
