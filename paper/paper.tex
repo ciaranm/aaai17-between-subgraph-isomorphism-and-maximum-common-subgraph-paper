@@ -35,7 +35,10 @@
 }}{}
 \makeatother
 
-\usetikzlibrary{decorations, decorations.pathreplacing, calc, backgrounds}
+\usetikzlibrary{decorations, decorations.pathreplacing, calc, backgrounds,shapes.misc}
+%cross
+\tikzset{cross/.style={cross out, draw=uofgcobalt, minimum size=2*(#1-\pgflinewidth), inner sep=0pt, outer sep=0pt},cross/.default={1.5mm}}
+
 
 \definecolor{uofgsandstone}{rgb}{0.321569, 0.278431, 0.231373}
 \definecolor{uofglawn}{rgb}{0.517647, 0.741176, 0}
@@ -137,7 +140,40 @@ commonly used to benchmark subgraph isomorphism algorithms: depending upon the b
 a substantial portion of ??; in ?? more cases, we can at least obtain an upper bound. This is a
 significant improvement over state of the art maximum common subgraph solvers, which cannot even fit
 many of these instances in RAM.
+\begin{figure}
+    \begin{center}
+        \begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm,node distance=10mm,fill=black}]
+            \node[fill=uofgcobalt] (a) {};
+            \node (a1) [below left of = a] {};
+            \node (b1) [below right of = a] {};
+            \node (aa) [below right of = a1] {};
 
+            \node (a2) [below left of = aa,node distance=13mm,xshift=2mm] {};
+            \node (aa2) [above left of = a2,node distance=13mm,xshift=-2mm] {};
+            \node (ab2) [below left of = a2,node distance=13mm,xshift=-2mm] {};
+            \node (ac2) [fill=gray!70,above left of = ab2,node distance=13mm,xshift=-2mm] {};
+            \node (b2) [below right of = aa,node distance=13mm,xshift=-2mm] {};
+            \node (ba2) [above right of = b2,node distance=13mm,xshift=2mm] {};
+            \node (bb2) [below right of = b2,node distance=13mm,xshift=2mm] {};
+            \node (bc2) [fill=gray!70,above right of = bb2,node distance=13mm,xshift=2mm] {};
+
+            \node (aaa) [below of =aa, node distance=20mm] {};
+
+            \path[dotted] (a) edge (a1) edge (b1);
+            \path (aa) edge (a1) edge (b1) edge (a2) edge (b2)
+                (a1) edge (b1)
+                (aaa) edge (a2) edge (b2)
+                (a2) edge (aa2) edge (ab2)
+                (b2) edge (ba2) edge (bb2);
+            \path[color=gray!70] (ac2) edge (ab2) edge (aa2)
+                (bc2) edge (bb2) edge (ba2);
+
+            \node [cross] {};
+        \end{tikzpicture}
+        \caption{Example of  ``as much of the pattern'' as possible.}
+        \label{fig:subgraphexample}
+    \end{center}
+\end{figure}
 \subsection{Definitions and Notations}
 
 A non-induced subgraph isomorphism from a graph $P$ to a graph $T$ is an injective mapping $P
@@ -180,7 +216,75 @@ problem instead. However, this is not what we will be discussing in this paper: 
 subgraph problems are symmetric in their inputs, but when discussing the non-induced case we are
 allowing extra edges only in the target graph, not in the pattern.
 
-\todo{is this example graph still needed?? yes, Patrick likes pictures}
+\begin{figure}
+    \begin{center}
+        \begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm}]
+            \node[fill=black] (p) {};
+            \node[fill=black] (b) [above of = p,node distance=10mm] {};
+            \node[fill=black] (a) [left of = b] {};
+            \node[fill=black] (c) [right of = b] {};
+            \node[fill=black] (d) [above of = b,node distance=10mm] {};
+
+            \node[draw=none,right of = p,node distance=3mm,yshift=-1mm] {$p$};
+            \node[draw=none,left of = a,node distance=3mm,yshift=-1mm] {$a$};
+            \node[draw=none,left of = b,node distance=3mm,yshift=-1mm] {$b$};
+            \node[draw=none,right of = c,node distance=3mm,yshift= 1mm] {$c$};
+            \node[draw=none,above of = d,node distance=3mm,yshift=1mm] {$d$};
+
+            \node[draw=none, below of = p, node distance=6mm] {$P$};
+
+            \path (p) edge (a) edge (b) edge (c)
+                (a) edge (d)
+                (b) edge (c) edge (d)
+                (c) edge (d);
+        \end{tikzpicture}
+
+        \vspace{5mm}
+
+        \begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm}]
+            \node[fill=black] (a1) {};
+            \node[fill=black] (b1) [right of = a1] {};
+            \node[fill=black] (c1) [right of = b1] {};
+            \node[fill=black] (a2) [below of = a1] {};
+            \node[fill=black] (b2) [right of = a2] {};
+            \node[fill=black] (c2) [right of = b2] {};
+            \node[fill=black] (a3) [below of = a2] {};
+            \node[fill=black] (b3) [right of = a3] {};
+            \node[fill=black] (c3) [right of = b3] {};
+
+            \node[draw=none, below of = b3, node distance=6mm] {$T_{1}$};
+
+            \path[color=gray!70] (a1) edge (b1) edge (a2)
+                (b1) edge (c1)
+                (c1) edge (c2)
+                (a2) edge (b2) edge (a3)
+                (c2) edge (c3)
+                (a3) edge (b3)
+                (b3) edge (c3);
+            \path[line width=0.4mm] (b1) edge (a2) edge (b2) edge (c2)
+                (a2) edge (b3)
+                (b2) edge (c2) edge (b3)
+                (c2) edge (b3);
+        \end{tikzpicture}
+        \hspace{1cm}
+        \begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm}]
+            \node[fill=black] (p) {};
+            \node[draw=none] (b) [above of = p,node distance=10mm] {};
+            \node[fill=black] (a) [left of = b] {};
+            \node[fill=black] (c) [right of = b] {};
+            \node[fill=black] (d) [above of = b,node distance=10mm] {};
+
+            \node[draw=none, below of = p, node distance=6mm] {$T_{2}$};
+
+            \path (p) edge (a) edge (c)
+                (a) edge (d)
+                (c) edge (d);
+        \end{tikzpicture}
+        \caption{$P\rightarrowtail T_{1}$, $P\lessnonind{1} T_{2}$}
+        \label{fig:klessexample}
+    \end{center}
+\end{figure}
+
 
 \subsection{Constraint Models and Algorithms}
 
