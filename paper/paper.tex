@@ -62,6 +62,10 @@
 % cref style
 \crefname{figure}{Figure}{Figures}
 \Crefname{figure}{Figure}{Figures}
+\crefname{section}{Section}{Sections}
+\Crefname{section}{Section}{Sections}
+\crefname{proposition}{Proposition}{Propositions}
+\Crefname{proposition}{Proposition}{Propositions}
 
 \crefname{algocf}{Algorithm}{Algorithms}
 \Crefname{algocf}{Algorithm}{Algorithms}
@@ -111,7 +115,7 @@ anonymous@anonymous}
     vertices from the pattern can be found in the target graph. This allows for the development of
     slightly weakened forms of certain invariants from subgraph isomorphism which are based upon degree and
     number of paths.  We show that when $k$ is small, weakening the invariants still retains much of
-    their effectiveness. We are then able to solve this problem on the standard SIP problem
+    their effectiveness. We are then able to solve this problem on the standard problem
     instances used to benchmark subgraph isomorphism algorithms, despite these instances being
     too large for current maximum common subgraph algorithms to handle. Finally, by iteratively
     increasing $k$, we obtain an algorithm which is also competitive for the maximum common subgraph
@@ -125,7 +129,8 @@ The subgraph isomorphism problem is to find a copy of a small \emph{pattern} gra
 edges, but the target may have ``extra edges'', whilst in the induced variant, non-edges may only be
 mapped to non-edges. When a pattern cannot be found, we may wish to be given a result which maps as
 many vertices of the pattern into the target as possible. In the induced case, this is known as the
-maximum common induced subgraph problem (we discuss the non-induced case below). However, although
+maximum common induced subgraph problem (we discuss the non-induced case in
+\cref{section:definitions}). However, although
 recent subgraph isomorphism algorithms are comfortable working with graphs with thousands of
 vertices, the state of the art for the maximum common subgraph problem
 \citep{DBLP:conf/cp/McCreeshNPS16} becomes computationally infeasible at only 35 vertices when
@@ -232,12 +237,12 @@ problem.
     the central vertex in the diamond is removed, then a subgraph isomorphism exists.}
     \label{fig:subgraphexample}
 \end{figure}
-\subsection{Definitions and Notations}
+\subsection{Definitions and Notations} \label{section:definitions}
 
 A non-induced subgraph isomorphism from a graph $P$ to a graph $T$ is an injective mapping $P
 \rightarrowtail T $ which maps adjacent vertices to adjacent vertices. An induced subgraph
 isomorphism $P \hookrightarrow T$ additionally maps non-adjacent vertices to non-adjacent vertices.
-We define a $k$-less-subgraph isomorphism from $P$ to $T$ to be a subgraph isomorphism from all but
+We define a $k$-less subgraph isomorphism from $P$ to $T$ to be a subgraph isomorphism from all but
 $k$ vertices of $P$ to $T$; this may be non-induced or induced, written $P \lessnonind{k} T$ and $P
 \lessind{k} T$ respectively.
 
@@ -253,16 +258,16 @@ The following proposition follows directly from the definitions.
 \begin{proposition}
     \label{prop:comp}
 Let $i$ be an assignment of $T$ vertices to $P$ vertices.  Then $i$ satisfies the definition of $P
-\hookrightarrow T$ if and only if $i$ satisfies both the definition of $P \rightarrowtail T$ and
-of $\loopcomp{P} \rightarrowtail \loopcomp{T}$.
+\hookrightarrow T$ if and only if $i$ satisfies $P \rightarrowtail T$ and
+$\loopcomp{P} \rightarrowtail \loopcomp{T}$.
 Similarly, $i$ satisfies the definition of $P
-\lessind{k} T$ if and only if $i$ satisfies both the definition of $P \lessnonind{k} T$ and of
+\lessind{k} T$ if and only if $i$ satisfies both $P \lessnonind{k} T$ and
 $\loopcomp{P}
 \lessnonind{k} \loopcomp{T}$.
 \end{proposition}
 
-A common induced subgraph of graphs $G$ and $H$ is a graph $P$, together with two induced subgraph
-isomorphisms to $G$ and $H$; a maximum common induced subgraph is a common induced subgraph with as
+A \emph{common induced subgraph} of graphs $G$ and $H$ is a graph $P$, together with two induced subgraph
+isomorphisms to $G$ and $H$; a \emph{maximum common induced subgraph} is a common induced subgraph with as
 many vertices as possible. An induced $k$-less subgraph isomorphism $P \lessind{k} T$ is equivalent
 to a common induced subgraph of $P$ and $T$ with $\left|\V(P)\right| - k$ vertices.
 
@@ -344,9 +349,9 @@ changes the neighbourhood degree sequence of $p$ in the $k$-less version of $P$ 
             (a) edge (d)
             (c) edge (d);
     \end{tikzpicture}
-    \caption{There is a non-induced isomorphism $P\rightarrowtail T_{1}$ from the first graph to the
+    \caption{There is a non-induced isomorphism $P\rightarrowtail T$ from the first graph to the
     second, using the highlighted vertices. No such isomorphism exists to the third graph, but there
-    is a $1$-less isomorphism $P\lessnonind{1} T_{2}$ omitting vertex $b$.}\label{fig:klessexample}
+    is a $1$-less isomorphism $P\lessnonind{1} U$ omitting vertex $b$.}\label{fig:klessexample}
 \end{figure}
 \end{example}
 
@@ -361,12 +366,12 @@ in the pattern graph (the smaller graph, in the case of maximum common subgraph)
 ranging over the vertices in the target graph (the larger graph). For maximum common subgraph, each
 domain is given an additional $\bot$ value, meaning ``unmapped''.
 
-Constraints are used to ensure that adjacency pairs of vertices are mapped to adjacenct pairs of
+Constraints are used to ensure that adjacent pairs of vertices are mapped to adjacenct pairs of
 vertices. For the maximum common subgraph case, any pair of assignments with $\bot$ as either value
-is also permitted.  To handle the induced case, rather than the more usual approach of directly
+is also permitted.  To handle the induced case, rather than the usual approach of directly
 having constraints for non-adjacent pairs of vertices, we will make use of \cref{prop:comp} by
-seeking an $i$ which simultaneously satisfies $P \rightarrowtail T$ and $\loopcomp{P}
-\rightarrowtail \loopcomp{T}$. Finally, an all different except $\bot$ constraint ensures
+seeking a mapping $i$ which simultaneously satisfies $P \rightarrowtail T$ and $\loopcomp{P}
+\rightarrowtail \loopcomp{T}$. Finally, an ``all different except $\bot$ constraint'' ensures
 injectivity.
 
 For subgraph isomorphism, this model can be enhanced with domain filtering at the top of search, to
@@ -377,18 +382,20 @@ problem.
 
 \subsection{Algorithms for the $k$-Less Problem}
 
-A non-induced $k$-less-subgraph isomorphism from $P$ to $T$ is equivalent to a subgraph isomorphism
-between $P$ and $T$, with $k$ extra universally-adjacent vertices added to $T$. However, using such
-an approach is not ideal, because it would introduce symmetries; for induced $k$-less-subgraph
+There are three easy ways we might try to approach this problem.
+A non-induced $k$-less subgraph isomorphism from $P$ to $T$ is equivalent to a subgraph isomorphism
+between $P$ and $T$, with $k$ extra universally-adjacent vertices added to $T$, and so we could try
+solving subgraph isomorphism with a modified target graph. However, using such
+an approach is not ideal, because it would introduce symmetries; for induced $k$-less subgraph
 isomorphisms, an approach based around adding vertices to $T$ cannot work at all.
 Another algorithmic approach could be to try each way of removing $k$ vertices from the pattern
-graph, and solving the subgraph isomorphism problem in turn. This approach might be feasible for $k
+graph, and solving each subgraph isomorphism problem in turn. This approach might be feasible for $k
 = 1$, although it would involve a lot of duplication of search effort, but for larger values of $k$
 the number of searches which would have to be made would grow very quickly.
 Finally, for the induced case we could try adapting maximum common subgraph algorithms to solve the
 decision problem. However, both the maximum common subgraph algorithm and the clique encoding
-require $O(\left|\V(P)\right|^2\left|\V(T)\right|^2)$ memory, which is extremely problematic on the
-instances we wish to work with.
+require $O(\left|\V(P)\right|^2\left|\V(T)\right|^2)$ memory \citep{DBLP:conf/cp/McCreeshNPS16},
+which is extremely problematic on the instances we wish to work with.
 
 Instead, we introduce a new algorithm, inspired by a state of the art subgraph isomorphism algorithm
 \citep{DBLP:conf/cp/McCreeshP15}. The approach we discuss requires only
@@ -414,17 +421,15 @@ graphs \cite{constraints10}, an assortment of real-world graphs of varying sizes
 randomly generated graph pairs (using bounded degree, regular mesh, and uniform models; all are
 satisfiable), segmented images~\cite{pr15,cviu11}, meshes from modelling 3D objects \cite{cviu11},
 and graphs close to the satisfiable-unsatisfiable phase transition
-\cite{DBLP:conf/ijcai/McCreeshPT16}; all these instances are available in a simple text
+\cite{DBLP:conf/ijcai/McCreeshPT16}. All of these instances are available in a simple text
 format\footnote{\texttt{http://liris.cnrs.fr/csolnon/SIP.html}}.  Note that many of these instances
 are \emph{much} larger than were used in the recent comparison of maximum common subgraph algorithms
 by \citet{DBLP:conf/cp/McCreeshNPS16}: for unlabelled graphs, they used pairs of graphs with up to
 35 vertices in each, whilst our dataset contains graphs with up to 6,671 vertices. For the CP
 algorithm, 1,560 of the instances cannot fit in the amount of RAM we have available---we treat these
 instances as having timed out. The situation for the clique encoding is even worse, and 3,653 of
-these instances do not fit in RAM. In contrast, for our algorithm, every instance fits comfortably
-(at least on modern server-class hardware).
-
-\section{Domain Filtering using Degrees}\label{section:degreefiltering}
+these instances do not fit in 64GBytes of RAM. In contrast, for our algorithm, every instance fits
+comfortably.  \section{Domain Filtering using Degrees}\label{section:degreefiltering}
 
 Let $p$ be a vertex in a graph $P$. The \emph{degree} of $p$, $\deg(p)$, is the number of vertices
 to which it is adjacent. The degree of vertices gives us an invariant, which may be used to
@@ -432,20 +437,20 @@ eliminate some infeasible values from domains.
 
 \begin{restatable}{proposition}{propdeg}\label{prop:deg}
     Let $p$ be a vertex in $P$ and $t$ a vertex in $T$. For both non-induced and induced
-    $k$-less-subgraph isomorphisms, if $p \lessmap{k} t$ then
+    $k$-less subgraph isomorphisms, if $p \lessmap{k} t$ then
     $\deg(p) - k \le \deg(t)$.
 \end{restatable}
 
 A vertex $q$ which is adjacent to $p$ is called its \emph{neighbour}.  Let $\N(p) = \{ q \in \V(P) :
- p \text{ and } q \text{ are adjacent }\}$ be the set of neighbours of $p$.  The \emph{neighbourhood
+ p~\textnormal{and}~q~\textnormal{are adjacent}\}$ be the set of neighbours of $p$.  The \emph{neighbourhood
 degree sequence} (NDS) of $p$, $\nds(p)$, is the (non-ascending) sequence of degrees of its
 neighbours.
 
 Let $S = ( s_1 , \ldots , s_n )$ and $T = ( t_1 , \ldots , t_m)$ be two sequences.  We say that $S
 \preceq T$ if $n \leq m$ and $\forall s_i \in S$ there exists a distinct $t_j \in T$ with $s_i \leq
-t_j$.  When considering a $k$-less-subgraph isomorphism we say that $S \lesspreceq{k}
-T$ if $n - k \leq m$ and $\forall s_i \in S \setminus S_k$, where $S_k$ is a subsequence of $S$
-containing up to $k$ members of $S$, there exists a distinct $t_j \in T$ with $s_i - k \leq t_j$.
+t_j$.  When considering a $k$-less subgraph isomorphism we say that $S \lesspreceq{k} T$ if $n - k
+\leq m$, and if there exists some subsequence $S_k$ of $S$ containing up to $k$ members such that
+$\forall s_i \in S \setminus S_k$, there exists a distinct $t_j \in T$ with $s_i - k \leq t_j$.
 
 
 \begin{restatable}{proposition}{propnds}\label{prop:nds}
@@ -459,7 +464,8 @@ middle layer causes both the size of $\nds(p)$ to be reduced and an entry in $\n
 
 \begin{corollary}
 Since both $\nds(p)$ and $\nds(t)$ are non-ascending, without loss of generality we can replace
-$S \setminus S_k$ from the definition of $S \lesspreceq{k} T$ with $S[k, n]$.
+$S \setminus S_k$ from the definition of $S \lesspreceq{k} T$ with the subsequence consisting of all
+    but the first $k$ members of $S$.
 \end{corollary}
 
 
@@ -482,13 +488,13 @@ $S \setminus S_k$ from the definition of $S \lesspreceq{k} T$ with $S[k, n]$.
 %     \end{center}
 % \end{figure}
 
-In \cref{figure:ids} we show that this is effective in practice: we show the amount of domain reduction
-we can achieve at the top of search by using invariants and a fixed $k$, compared to the search
-space size for the maximum common induced subgraph problem. (The results on the non-induced version
-show a similar but slightly weaker trend.)
+\Cref{figure:ids} demonstrates that this is effective in practice: we show the amount of domain
+reduction we can achieve at the top of search by using invariants and a fixed $k$, compared to the
+search space size for the maximum common induced subgraph problem. (The results on the non-induced
+version show a similar but slightly weaker trend.)
 
 Some other invariants do not translate. For example, another rule which can be effective on regular
-graphs involves count the number of neighbours of a vertex which are present in a triangle
+graphs involves counting the number of neighbours of a vertex which are present in a triangle
 \cite{mckay2014practical}. Removing a single vertex can alter this count arbitrarily, so we cannot
 make use of this fact.
 
@@ -528,9 +534,9 @@ $\paths(p,q,n)$ to be the number of paths of length $n$ between the vertices $p$
 
 \begin{corollary}
     For a graph $G$, let $G^{n, \ell}$ be the graph with vertex set $\V(G)$. The
-    vertices $p$ and $q$ in $G^{n, \ell}$ are adjacent, if there are at least $n$ simple paths of
-    length exactly $\ell$ between $p$ and $q$ in $G$. Then any $k$-less-subgraph isomorphism
-    $P \lessnonind{k} T$ induces a new $k$-less-subgraph isomorphism
+    vertices $p$ and $q$ in $G^{n, \ell}$ are adjacent if there are at least $n$ simple paths of
+    length exactly $\ell$ between $p$ and $q$ in $G$. Then any $k$-less subgraph isomorphism
+    $P \lessnonind{k} T$ induces a new $k$-less subgraph isomorphism
     $P^{n+k, 2}\lessnonind{k} T^{n, 2}$.
 \end{corollary}
 
@@ -542,19 +548,19 @@ too expensive to be beneficial in practice.
 To allow for fast propagation, rather than calculating paths dynamically like
 \citet{DBLP:conf/cp/AudemardLMGP14}, we follow the approach of \citet{DBLP:conf/cp/McCreeshP15} and
 construct \emph{supplemental graphs}, and find a mapping which is simultaneously a non-induced subgraph
-isomorphism between every supplemental graph pair. We use paths of length 2, looking at counts of 1,
-2, and 3 in the target graph (and so counts of $1 + k$ up to $3 + k$ in the pattern).  We then
+isomorphism between every supplemental graph pair. We use paths of length 2, looking at path counts
+of 1, 2, and 3 in the target graph (and so counts of $1 + k$ up to $3 + k$ in the pattern).  We then
 investigate whether this leads to new constraints being generated.
 
 By an assignment, we mean considering mapping a pattern vertex $p$ to a target vertex $t$ (and not
 $\bot$) which does not violate any loop constraints. An assignment pair is two assignments with
 distinct $p$ and distinct $t$, which we say is permitted if it does not violate any adjacency
 constraint. We define the permitted assignment pair ratio to be the proportion of assignment pairs
-which are permitted.  Finally, we scatter plot the permitted assignment pair ratio with and without
-supplemental graphs\footnote{Because of the large sizes of the domains, we randomly sample one
-million pairs rather than considering every pair. In some cases, we have nearly a thousand domains,
-each with nearly ten thousand values---a complete quadratic calculation involving even a trivial
-arithmetic operation on this would take many hours.}.
+which are permitted.  Finally, in \cref{figure:constraints} we scatter plot the permitted assignment
+pair ratio with and without supplemental graphs\footnote{Because of the large sizes of the domains,
+we randomly sample one million pairs rather than considering every pair. In some cases, we have
+nearly a thousand domains, each with nearly ten thousand values---a complete quadratic calculation
+involving even a trivial arithmetic operation on this would take many hours.}.
 
 For $k = 0$, we see many points above the $x-y$ diagonal, which shows that for many instances, we
 are able to create a substantial number of new constraints at the top of search; on the other hand,
@@ -613,8 +619,8 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
 \nl $\FuncSty{propagate}$ (GraphPairs $L$, Domains $D$) $\rightarrow$ Bool \;
 \nl \Begin{
     \nl \While{\KwSty{true}}{
-        \nl \If{\textnormal{no effectively-unit domains (treating all wildcard~values as a single
-            value) remain\label{line:effect}}}{
+        \nl \If{\textnormal{no effectively-unit domains remain (treating all wildcard~values as a single
+            value)\label{line:effect}}}{
             \nl \If{$\KwSty{not}~\FuncSty{allDifferent}(D)$}{
                 \nl $\KwSty{return}~\KwSty{false}$ \;
             }
@@ -639,7 +645,7 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
 \bigskip
 \nl $\FuncSty{allDifferent}$ (Domains $D$) $\rightarrow$ Bool \;
 \nl \Begin{
-\nl $(H,\,A,\,n) \gets (\emptyset,\,\emptyset,\,\emptyset,\,0)$ \;
+\nl $(H,\,A,\,n) \gets (\emptyset,\,\emptyset,\,0)$ \;
 \nl \ForEach{$D_v \in D$ \textnormal{from smallest to largest\label{line:eachdomain}}}{
     \nl $D_v \gets D_v \setminus H$ \label{line:elimhall} \;
     \nl $(A,\,n) \gets (A \cup D_v,\,n + 1)$ \label{line:acc} \;
@@ -654,14 +660,15 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
 \label{algorithm:sip}
 \end{algorithm*}
 
-We bring these techniques into a full algorithm, listed as \cref{algorithm:sip}. This is derived
-from a subgraph isomorphism due to \citet{DBLP:conf/cp/McCreeshP15}, which in a recent evaluation of
-algorithm portfolios \citep{thelionpaper} was the single strongest solver. As well as the
-modifications to solve $k$-less and induced problems, we have made two simplifications: we do not
-use conflict-directed backjumping, and we do not use iterated label filtering to recalculate
-neighbourhood degree sequences if vertices are not present in any target domain after
-construction---in preliminary experiments, these techniques were not beneficial for $k > 0$. We also
-do not strip isolated vertices, as this is not a valid simplification in the induced case.
+\Cref{algorithm:sip} integrates these techniques into a full algorithm. This is derived from an
+algorithm due to \citet{DBLP:conf/cp/McCreeshP15}, which in a recent evaluation of using portfolios
+of subgraph isomorphism algorithms was the single strongest solver portfolios \citep{thelionpaper}.
+As well as the modifications to solve $k$-less and induced problems, we have made two
+simplifications: we do not use conflict-directed backjumping, and we do not use iterated label
+filtering to recalculate neighbourhood degree sequences if vertices are not present in any target
+domain after construction---in preliminary experiments, these techniques were not beneficial for $k
+> 0$. We also do not strip isolated vertices, as this is not a valid simplification in the induced
+case.
 
 To handle wildcards, we include $k$ additional $\bot$ values in domains, rather than a single value
 which may be used $k$ times. These are treated as having degree zero, in an attempt to maximising
@@ -681,11 +688,11 @@ benefit in practice on the instances we considered.
 \begin{figure*}[tb]
     \centering
     \includegraphics*{gen-graph-runtimes.pdf}
-    \caption{In the first two plots, the cumulative number of instances solved over time, for the
+    \caption{In the first two plots we show the cumulative number of instances solved over time, for the
         induced and non-induced problems, with different values of $k$. We also show the results of
         iteratively increasing $k$ until a solution is found, and in the induced case, the
-        performance of two leading maximum common subgraph algorithms. In the third plot, results
-        comparing our algorithm with iteratively increasing $k$ to other approaches on maximum
+        performance of two leading maximum common subgraph algorithms. In the third plot we show results
+        comparing iteratively increasing $k$ with our algorithm to other approaches on maximum
         common induced subgraph instances.}\label{figure:runtimes}
 \end{figure*}
 
@@ -693,16 +700,16 @@ benefit in practice on the instances we considered.
     \centering
     \includegraphics*{gen-graph-which-k-by-family.pdf}
     \caption{The proportion of instances, in different families, which become satisfiable for
-    increasing values of $k$. The larger instances are those where we can prove unsatisfiability for
+    increasing values of $k$. The ``larger'' instances are those where we can prove unsatisfiability for
     $k = 5$, whilst the gap between the top of the bar and the top of the graph is the fraction of
     instances where a timeout was reached for at least one value of $k$.}\label{figure:which-k}
 \end{figure*}
 
 We now evaluate our algorithm and show that it is effective in practice, even on the larger subgraph
-isomorphism instances. In \cref{figure:runtimes} we give cumulative distribution plots for the
-induced and non-induced problems, with $k$ ranging from $0$ to $5$ (we discuss the dotted lines in
-this plot below). The results are strong: with $k = 0$ we may solve nearly every instance, whilst
-even at $k = 5$ we can solve over $4,000$ instances in both variants.
+isomorphism instances. In the first two plots of \cref{figure:runtimes} we give cumulative
+distributions for the induced and non-induced problems, with $k$ ranging from $0$ to $5$ (we
+discuss the dotted lines in this plot below). The results are strong: with $k = 0$ we may solve
+nearly every instance, whilst even at $k = 5$ we can solve over $4,000$ instances in both variants.
 
 But are we learning anything about the results---that is, are there instances for which $k = 0$ is
 unsatisfiable, but that are satisfiable for small $k$? For the problem families which do not consist
@@ -710,10 +717,10 @@ entirely of satisfiable instances, we plot this in \cref{figure:which-k}. In the
 which consists of instances crafted to be extremely difficult to solve, we are not able to answer
 this question, and in the ``scalefree'' family we see no satisfiable instances with low but not zero
 $k$ (this is simply due to there being many vertices with loops in some pattern graphs, but no loops
-at all in the targets). However, in several of the remaining families we can over double the number
-of instances for which exact solutions are known, and gain upper bounds on many more. This is
-particularly interesting for the ``images-CVIU11'' family, where the size of the solution has a
-direct real-world interpretation in terms of closeness of image matching.
+at all in the targets). However, in several of the remaining families we can more than double the
+number of instances for which exact solutions are known, and gain upper bounds on many more. This is
+particularly interesting for the ``images-CVIU11'' family due to \citet{cviu11}, where the size of
+the solution has a direct real-world interpretation in terms of closeness of image matching.
 
 \subsection{Solving from the Top Down}
 
@@ -722,10 +729,11 @@ simply start at $k = 0$, and increase $k$ until a solution is found. This would 
 problem in the opposite direction from existing approaches, which work by attempting to construct
 larger and larger solutions. The dotted lines in \cref{figure:runtimes} show this approach: the $k
 \downarrow$ is our algorithm, whilst ``FC'' and ``clique'' are the two algorithms discussed by
-\citet{DBLP:conf/cp/McCreeshNPS16}.  Bearing in mind the disclaimer in \cref{section:setup}
-regarding instances not fitting in RAM, we see that our approach is able to close over twice as many
-of these instances as the previous state of the art. (The same conclusion holds even if every
-instance which is satisfiable with $k = 0$ is removed from the dataset.)
+\citet{DBLP:conf/cp/McCreeshNPS16}.  Recalling the disclaimer in \cref{section:setup}
+regarding instances not fitting in the 64GBytes of RAM we have available, we see that our approach is
+able to close over twice as many of these instances as the previous state of the art. (The same
+conclusion holds even if every instance which is satisfiable with $k = 0$ is removed from the
+dataset.)
 
 What about if we use instances designed for the maximum common subgraph problem? In the third plot
 in \cref{figure:runtimes} we again compare these approaches, but using the first ten instances from
@@ -747,7 +755,7 @@ possible. We saw that some invariants from the subgraph isomorphism problem can 
 albeit in a weakened form, with considerable effect when a small number of vertices can be removed.
 We have by no means cracked the problem completely---our results are still far from where we
 would like them to be for use in real-world applications, and many instances remain open. However,
-for many of the open instances cases we are at least able to get upper bounds on the result for the
+for many of the open instances we are at least able to get upper bounds on the result for the
 first time.
 
 In future work, we will combine this approach with existing lower bounding construction methods, to
@@ -789,7 +797,7 @@ Let $p \lessmap{k} t$.  Then $\deg(p) - k \leq \deg(q)$, by \cref{prop:deg}, whi
 implies that $\left|\nds(p)\right| -k \leq \left| \nds(t) \right| $.
 
 Also, $p \lessmap{k} t$ implies that for each $q \in N(p) \setminus P_k$, where $P_k$
-is some subset of $P$ with $\left| P_k \right| \leq k$, $q \lessmap{k} u$, where $u \in N(t)$ and
+is some subset of $P$ with $\left| P_k \right| \leq k$, we have $q \lessmap{k} u$, where $u \in N(t)$ and
 each $u$ is distinct.  Then $\deg(q) - k \leq \deg(u)$, by \cref{prop:deg}.  Hence $\nds(p)
 \lesspreceq{k} \nds(t)$.
 \end{proof}
@@ -798,13 +806,16 @@ each $u$ is distinct.  Then $\deg(q) - k \leq \deg(u)$, by \cref{prop:deg}.  Hen
 
 \proppaths*
 \begin{proof}
-Let $P_{2}$ be the set of all paths of length two between $p$ and $q$,
-$P_{2} = \{((p,x),(x,q)) : (p,x),(x,q)\in E(P) \}$. As we are looking at paths of length 2, the
-intermediate vertices lie in both neigbour vertex sets of $p$ and $q$. We can rewrite $P_{2}$ as
-$P_{2} = \{((p,x),(x,q)) : x\in \N(p) \text{ and } x\in \N(q) \}$, in other words the intermediate vertices lie in the intersection of the neighbour sets of $p$ and $q$,
-$P_{2}=\{((p,x),(x,q)) : x\in \N(p)\cap \N(q) \}$. So $\paths(p,q,2) = \left| \N(p)\cap \N(q) \right|  \leq \deg(p)$.
+Let $P_{2}$ be the set of all paths of length two between $p$ and $q$, \[P_{2} = \{((p,x),(x,q)) :
+(p,x),(x,q)\in \operatorname{E}(P) \}\textnormal{.}\] As we are looking at paths of length 2,
+the intermediate vertices lie in both neighbour vertex sets of $p$ and $q$. We can rewrite
+$P_{2}$ as \[P_{2} = \{((p,x),(x,q)) : x\in \N(p) \text{ and } x\in \N(q) \}\textnormal{,}\] in
+other words the intermediate vertices lie in the intersection of the neighbour sets of $p$ and
+$q$, \[ P_{2}=\{((p,x),(x,q)) : x\in \N(p)\cap \N(q) \} \textnormal{.}\] Therefore
+$\paths(p,q,2) = \left| \N(p)\cap \N(q) \right|  \leq \deg(p)$.
 
-If we remove up to $k$ vertices from the neighbourhood of $p$, it will impact the intersection of the neighbourhoods of $p$ and $q$, and by Proposition~\ref{prop:deg}, as $p\lessmap{k}t$
+If we remove up to $k$ vertices from the neighbourhood of $p$, it will impact the intersection of
+    the neighbourhoods of $p$ and $q$, and by Proposition~\ref{prop:deg}, as $p\lessmap{k}t$,
 \[
 \left| \N(p)\cap \N(q)\right| - k \leq \deg(p) - k \leq \deg(t).
 \]
@@ -814,7 +825,7 @@ As $\left|\N(p)\cap \N(q)\right|\leq \deg(p) \leq \left|\N(t)\cap \N(u)\right|\l
  & \leq \left|\N(t)\cap \N(u)\right|\\
  & \leq \deg(t)
 \end{align*}
-which is
+which tells us
 \[
 \paths(p, q, 2) - k \leq \paths(t, u, 2). \qedhere
 \]
