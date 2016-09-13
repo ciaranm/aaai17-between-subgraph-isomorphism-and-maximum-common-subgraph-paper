@@ -654,9 +654,10 @@ benefit in practice on the instances we considered.
 
 We now evaluate our algorithm and show that it is effective in practice, even on the larger subgraph
 isomorphism instances. In the first two plots of \cref{figure:runtimes} we give cumulative
-distributions for the induced and non-induced problems, with $k$ ranging from $0$ to $5$ (we
-discuss the dotted lines in this plot below). The results are strong: with $k = 0$ we may solve
-nearly every instance, whilst even at $k = 5$ we can solve over $4,000$ instances in both variants.
+distributions for the induced and non-induced problems, with $k$ ranging from $0$ to $5$ (we discuss
+the dotted lines in this plot in \cref{section:topdown}). The results are strong: with $k = 0$ we
+may solve nearly every instance, whilst even at $k = 5$ we can solve over $4,000$ instances in both
+variants.
 
 But are we learning anything about the results---that is, are there instances for which $k = 0$ is
 unsatisfiable, but that are satisfiable for small $k$? For the problem families which do not consist
@@ -669,7 +670,7 @@ number of instances for which exact solutions are known, and gain upper bounds o
 particularly interesting for the ``images-CVIU11'' family due to \citet{cviu11}, where the size of
 the solution has a direct real-world interpretation in terms of closeness of image matching.
 
-\subsection{Solving from the Top Down}
+\subsection{Solving from the Top Down}\label{section:topdown}
 
 What would happen if we used our approach to solve the maximum common induced problem? We could
 simply start at $k = 0$, and increase $k$ until a solution is found. This would be tackling the
