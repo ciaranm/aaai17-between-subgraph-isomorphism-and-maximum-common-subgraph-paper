@@ -297,9 +297,8 @@ vertices. For the maximum common subgraph case, any pair of assignments with $\b
 is also permitted.  To handle the induced case, rather than the more usual approach of directly
 having constraints for non-adjacent pairs of vertices, we will make use of \cref{prop:comp} by
 seeking an $i$ which simultaneously satisfies $P \rightarrowtail T$ and $\loopcomp{P}
-\rightarrowtail \loopcomp{T}$.
-
-?? All different.
+\rightarrowtail \loopcomp{T}$. Finally, an all different except $\bot$ constraint ensures
+injectivity.
 
 For subgraph isomorphism, we can do domain filtering at the top of search, to reduce the initial
 sizes of domains---we discuss this in \cref{section:degreefiltering}. Subgraph isomorphism also
