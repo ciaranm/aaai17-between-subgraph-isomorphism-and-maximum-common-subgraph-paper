@@ -340,7 +340,7 @@ about degrees and paths in the $k$-less setting.
 
 ?? Explain effectively-unit domain, multiple $\bot$ values.
 
-\subsection{Experimental Setup}
+\subsection{Experimental Setup} \label{section:setup}
 
 We perform our experiments on systems with dual Intel Xeon CPU E5-2640 processors with 64GBytes of
 RAM, running Ubuntu 14.04. Our algorithm was implemented in C++\footnote{URL removed for anonymous
@@ -664,10 +664,6 @@ expensive to calculate and provides little benefit in practice on the instances 
     subgraph algorithm.}\label{figure:runtimes}
 \end{figure}
 
-\subsection{Induced}
-
-What proportion of instances are actually satisfiable as $k$ increases?
-
 \begin{figure}[tb]
     \includegraphics*{gen-graph-which-k-by-family.pdf}
     \caption{The proportion of instances, in different families, which become satisfiable for
@@ -676,11 +672,35 @@ What proportion of instances are actually satisfiable as $k$ increases?
     instances where a timeout was reached for at least one value of $k$.}\label{figure:which-k}
 \end{figure}
 
-\subsection{Non-Induced}
+We now evaluate our algorithm and show that it is effective in practice, even on the larger subgraph
+isomorphism instances. In \cref{figure:runtimes} we give cumulative distribution plots for the
+induced and non-induced problems, with $k$ ranging from $0$ to $5$ (we discuss the dotted lines in
+this plot below). The results are strong: with $k = 0$ we may solve nearly every instance, whilst
+even at $k = 5$ we can solve over $4,000$ instances in both variants.
 
-What proportion of instances are actually satisfiable as $k$ increases?
+But are we learning anything about the results---that is, are there instances for which $k = 0$ is
+unsatisfiable, but that are satisfiable for small $k$? For the problem families which do not consist
+entirely of satisfiable instances, we plot this in \cref{figure:which-k}. In the ``phase'' family,
+which consists of instances crafted to be extremely difficult to solve, we are not able to answer
+this question, and in the ``scalefree'' family we see no satisfiable instances with low but not zero
+$k$ (this is simply due to there being many vertices with loops in some pattern graphs, but no loops
+at all in the targets). However, in several of the remaining families we can over double the number
+of instances for which exact solutions are known, and gain upper bounds on many more. This is
+particularly interesting for the ``images-CVIU11'' family, where the size of the solution has a
+direct real-world interpretation in terms of closeness of image matching.
 
 \subsection{Solving from the Top Down}
+
+What would happen if we used our approach to solve the maximum common induced problem? We could
+simply start at $k = 0$, and increase $k$ until a solution is found. This would be tackling the
+problem in the opposite direction from existing approaches, which work by attempting to construct
+larger and larger solutions. The dotted lines in \cref{figure:runtimes} show this approach: the $k
+\downarrrow$ is our algorithm, whilst ``MCS'' and ``clique'' are the two algorithms discussed in ??.
+Bearing in mind the disclaimer in \cref{section:setup} regarding instances not fitting in RAM, we
+see that our approach is able to close over twice as many of these instances as the previous state
+of the art. (The same conclusion holds even if every instance which is satisfiable with $k = 0$ is
+removed from the dataset.)
+
 \section{Conclusion}
 
 We looked at . We saw that we could modify invariants, and that doing so still provided additional
