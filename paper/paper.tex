@@ -695,11 +695,30 @@ What would happen if we used our approach to solve the maximum common induced pr
 simply start at $k = 0$, and increase $k$ until a solution is found. This would be tackling the
 problem in the opposite direction from existing approaches, which work by attempting to construct
 larger and larger solutions. The dotted lines in \cref{figure:runtimes} show this approach: the $k
-\downarrrow$ is our algorithm, whilst ``MCS'' and ``clique'' are the two algorithms discussed in ??.
+\downarrow$ is our algorithm, whilst ``FC'' and ``clique'' are the two algorithms discussed in ??.
 Bearing in mind the disclaimer in \cref{section:setup} regarding instances not fitting in RAM, we
 see that our approach is able to close over twice as many of these instances as the previous state
 of the art. (The same conclusion holds even if every instance which is satisfiable with $k = 0$ is
 removed from the dataset.)
+
+\begin{figure}[tb]
+    \includegraphics*{gen-graph-mcsruntimes.pdf}
+    \caption{The cumulative number of maximum common induced subgraph instances solved over time,
+    comparing our decreasing $k$ approach with two state of the art
+    solvers.}\label{figure:mcsruntimes}
+\end{figure}
+
+What about if we use instances designed for the maximum common subgraph problem? In
+\cref{figure:mcsruntimes} we again compare these approaches, but using the first ten instances from
+each family of a standard benchmark set
+\citep{DBLP:journals/prl/SantoFSV03,DBLP:journals/jgaa/ConteFV07}, selecting undirected, unlabelled
+graphs with up to 50 vertices---this gives us a total of 4,110 instances. In these instances the
+number of vertices in the pattern and target graphs is the same, which is not ideal for our
+algorithm (although our invariants are still effective in many cases). Nonetheless, we are by a
+small margin the single strongest solver. Interestingly, our algorithm tends to have complementary
+performance to the other two approaches (which are much more correlated), which suggests that there
+is scope for an algorithm which runs both an upper bound and a constructive, lower bound approach
+simultaneously or in parallel, stopping when the two bounds meet in the middle.
 
 \section{Conclusion}
 
