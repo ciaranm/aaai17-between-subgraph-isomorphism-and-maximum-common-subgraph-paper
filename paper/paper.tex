@@ -125,14 +125,18 @@ anonymous@anonymous}
 \section{Introduction}
 
 The subgraph isomorphism problem is to find a copy of a small \emph{pattern} graph inside a larger
-\emph{target} graph. It comes in two forms: in the non-induced variant, edges must be mapped to
-edges, but the target may have ``extra edges'', whilst in the induced variant, non-edges may only be
-mapped to non-edges. When a pattern cannot be found, we may wish to be given a result which maps as
-many vertices of the pattern into the target as possible. In the induced case, this is known as the
-maximum common induced subgraph problem (we discuss the non-induced case in
-\cref{section:definitions}). However, although
-recent subgraph isomorphism algorithms are comfortable working with graphs with thousands of
-vertices, the state of the art for the maximum common subgraph problem
+\emph{target} graph. This is used in many areas, including bioinformatics \citep{Bonnici:2013},
+computer vision \citep{cviu11,pr15}, malware detection \citep{DBLP:conf/dimva/BruschiMM06},
+compilers \citep{DBLP:conf/cgo/MurrayF12,DBLP:conf/cp/BlindellLCS15}, and pattern recognition
+\citep{Conte:2004}.  The problem comes in two forms: in the non-induced variant, edges must be
+mapped to edges, but the target may have ``extra edges'', whilst in the induced variant, non-edges
+may only be mapped to non-edges.
+
+When a pattern cannot be found, we may wish to be given a result which maps as many vertices of the
+pattern into the target as possible. In the induced case, this is known as the maximum common
+induced subgraph problem (we discuss the non-induced case in \cref{section:definitions}). However,
+although recent subgraph isomorphism algorithms are comfortable working with graphs with thousands
+of vertices, the state of the art for the maximum common subgraph problem
 \citep{DBLP:conf/cp/McCreeshNPS16} becomes computationally infeasible at only 35 vertices when
 working with unlabelled graphs. This is largely because strong inference, based upon the degrees of
 vertices \citep{DBLP:journals/ai/Solnon10} and the distances or paths between them
