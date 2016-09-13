@@ -594,7 +594,7 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
         }
         \nl $D_v \gets D_v \cup k~\textnormal{distinct wildcard values}$
     }
-    \nl \lIf{\FuncSty{propagate}(D)}{$\KwSty{return}~\FuncSty{search}(L, D, k)$}
+    \nl \lIf{\FuncSty{propagate}(L, D)}{$\KwSty{return}~\FuncSty{search}(L, D, k)$}
     \nl \lElse{$\KwSty{return}~\KwSty{false}$}
 }
 \bigskip
@@ -608,7 +608,7 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
         }
         \nl $D' \gets \FuncSty{clone}(D)$ \;
         \nl $D'_v \gets \{ v' \} $ \;
-        \nl \If{\FuncSty{propagate}(D')}{
+        \nl \If{\FuncSty{propagate}(L, D')}{
             \nl \If{$\FuncSty{search}(L, \{ D \in D' : \left|D\right| > 1 \}, k)$}{
                 \nl $\KwSty{return}~\KwSty{true}$ \;
             }
