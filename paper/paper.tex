@@ -692,13 +692,19 @@ simultaneously or in parallel, stopping when the two bounds meet in the middle.
 
 \section{Conclusion}
 
-We looked at . We saw that we could modify invariants, and that doing so still provided additional
-domain reduction and filtering power.
+By considering a restricted variation of the problem, we have been able to go some of the way
+towards tackling the maximum common subgraph problem on much larger graphs than have previously been
+possible. We saw that some invariants from the subgraph isomorphism problem can still be used,
+albeit in a weakened form, with considerable effect when a small number of vertices can be removed.
+We have by no means cracked the problem completely---our results are still far from where we
+would like them to be for use in real-world applications, and many instances remain open. However,
+for many of the open instances cases we are at least able to get upper bounds on the result for the
+first time.
 
-Relaxed form of the problem which is easier to solve. Far from making maximum common subgraph scale
-as well as subgraph isomorphism, but we can at least get somewhere.
-
-Future work.
+In future work, we will combine this approach with existing lower bounding construction methods, to
+deliver a hybrid algorithm. We also intend to allow restrictions on which vertices may or may not be
+removed, similar to the approach of \citet{DBLP:conf/cp/ZampelliDD05}, but with much stronger
+filtering now being possible.
 
 \section*{Acknowledgements}
 
