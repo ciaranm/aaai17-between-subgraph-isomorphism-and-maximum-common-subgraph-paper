@@ -151,11 +151,11 @@ many of these instances in RAM.
             \node (a2) [below left of = aa,node distance=13mm,xshift=2mm] {};
             \node (aa2) [above left of = a2,node distance=13mm,xshift=-2mm] {};
             \node (ab2) [below left of = a2,node distance=13mm,xshift=-2mm] {};
-            \node (ac2) [fill=gray!70,above left of = ab2,node distance=13mm,xshift=-2mm] {};
+            \node (ac2) [fill=gray!50,above left of = ab2,node distance=13mm,xshift=-2mm] {};
             \node (b2) [below right of = aa,node distance=13mm,xshift=-2mm] {};
             \node (ba2) [above right of = b2,node distance=13mm,xshift=2mm] {};
             \node (bb2) [below right of = b2,node distance=13mm,xshift=2mm] {};
-            \node (bc2) [fill=gray!70,above right of = bb2,node distance=13mm,xshift=2mm] {};
+            \node (bc2) [fill=gray!50,above right of = bb2,node distance=13mm,xshift=2mm] {};
 
             \node (aaa) [below of =aa, node distance=20mm] {};
 
@@ -165,7 +165,7 @@ many of these instances in RAM.
                 (aaa) edge (a2) edge (b2)
                 (a2) edge (aa2) edge (ab2)
                 (b2) edge (ba2) edge (bb2);
-            \path[color=gray!70] (ac2) edge (ab2) edge (aa2)
+            \path[color=gray!50] (ac2) edge (ab2) edge (aa2)
                 (bc2) edge (bb2) edge (ba2);
 
             \node [cross] {};
@@ -242,19 +242,19 @@ allowing extra edges only in the target graph, not in the pattern.
         \vspace{5mm}
 
         \begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm}]
-            \node[fill=black] (a1) {};
+            \node[fill=gray!50] (a1) {};
             \node[fill=black] (b1) [right of = a1] {};
-            \node[fill=black] (c1) [right of = b1] {};
+            \node[fill=gray!50] (c1) [right of = b1] {};
             \node[fill=black] (a2) [below of = a1] {};
             \node[fill=black] (b2) [right of = a2] {};
             \node[fill=black] (c2) [right of = b2] {};
-            \node[fill=black] (a3) [below of = a2] {};
+            \node[fill=gray!50] (a3) [below of = a2] {};
             \node[fill=black] (b3) [right of = a3] {};
-            \node[fill=black] (c3) [right of = b3] {};
+            \node[fill=gray!50] (c3) [right of = b3] {};
 
             \node[draw=none, below of = b3, node distance=6mm] {$T_{1}$};
 
-            \path[color=gray!70] (a1) edge (b1) edge (a2)
+            \path[color=gray!50] (a1) edge (b1) edge (a2)
                 (b1) edge (c1)
                 (c1) edge (c2)
                 (a2) edge (b2) edge (a3)
@@ -412,7 +412,7 @@ each $u$ is distinct.  Then $\deg(q) - k \leq \deg(u)$, by \cref{prop:deg}.  Hen
 \lesspreceq{k} \nds(t)$.
 \end{proof}
 
-Figure\ref{fig:nds} illustrates the three cases possible when filtering by neighbourhood degree
+Figure\ref{fig:klessexample} illustrates the three cases possible when filtering by neighbourhood degree
 sequence.  Removing the top node causes each entry in $\nds(p)$ to be reduced; removing the
 left-middle node removes an entry from $\nds(p)$; and removing either of the connected nodes in the
 middle layer causes both the size of $\nds(p)$ to be reduced and an entry in $\nds(p)$ to be reduced.
@@ -427,24 +427,24 @@ $S \setminus S_k$ from the definition of $S \lesspreceq{k} T$ with $S[k, n]$.
 \end{proof}
 
 
-\begin{figure}
-    \begin{center}
-        \begin{tikzpicture}[every node/.style={circle, inner sep=1mm}]
-            \node[fill=black] (p) {};
-            \node[draw=none,right of = p,node distance=3mm,yshift=-1mm] {$p$};
-            \node[fill=uofglawn] (n2) [above of = p,node distance=12mm] {};
-            \node[fill=uofgpumpkin] (n1) [left of = n2] {};
-            \node[fill=uofglawn] (n3) [right of = n2] {};
-            \node[fill=uofgcobalt] (q) [above of = n2,node distance=12mm] {};
-            \path (p) edge (n1) edge (n2) edge (n3)
-                (n1) edge (q)
-                (n2) edge (n3) edge (q)
-                (n3) edge (q);
-        \end{tikzpicture}
-        \caption{Example of neighbourhood degree filtering cases}
-        \label{fig:nds}
-    \end{center}
-\end{figure}
+% \begin{figure}
+%     \begin{center}
+%         \begin{tikzpicture}[every node/.style={circle, inner sep=1mm}]
+%             \node[fill=black] (p) {};
+%             \node[draw=none,right of = p,node distance=3mm,yshift=-1mm] {$p$};
+%             \node[fill=uofglawn] (n2) [above of = p,node distance=12mm] {};
+%             \node[fill=uofgpumpkin] (n1) [left of = n2] {};
+%             \node[fill=uofglawn] (n3) [right of = n2] {};
+%             \node[fill=uofgcobalt] (q) [above of = n2,node distance=12mm] {};
+%             \path (p) edge (n1) edge (n2) edge (n3)
+%                 (n1) edge (q)
+%                 (n2) edge (n3) edge (q)
+%                 (n3) edge (q);
+%         \end{tikzpicture}
+%         \caption{Example of neighbourhood degree filtering cases}
+%         \label{fig:nds}
+%     \end{center}
+% \end{figure}
 
 ?? Talk about iterating, what to do when a vertex disappears from all target graphs.
 
