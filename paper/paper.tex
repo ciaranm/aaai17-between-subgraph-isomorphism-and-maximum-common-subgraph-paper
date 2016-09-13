@@ -111,7 +111,7 @@ anonymous@anonymous}
     their effectiveness. We are then able to solve this problem on the standard SIP problem
     instances used to benchmark subgraph isomorphism algorithms, despite these instances being
     too large for current maximum common subgraph algorithms to handle. Finally, by iteratively
-    decreasing $k$, we obtain an algorithm which is also competitive for the maximum common subgraph
+    increasing $k$, we obtain an algorithm which is also competitive for the maximum common subgraph
     problem.
 \end{abstract}
 
@@ -138,10 +138,12 @@ pattern graph into the target. We show that if $k$ is reasonably small (say, bet
 weakened forms of degree and path based filterings are still effective in pruning the initial search
 space and in providing additional constraints respectively. We then show that combining these
 techniques leads to a practical algorithm which can scale to work with the families of graphs
-commonly used to benchmark subgraph isomorphism algorithms: depending upon the benchmark family, in
-a substantial portion of ??; in ?? more cases, we can at least obtain an upper bound. This is a
-significant improvement over state of the art maximum common subgraph solvers, which cannot even fit
-many of these instances in RAM.
+commonly used to benchmark subgraph isomorphism algorithms: depending upon the benchmark family, we
+can close a substantial portion of the instances, and in many more cases, we can at least obtain an
+upper bound. This is a significant improvement over state of the art maximum common subgraph
+solvers, which cannot even fit many of these instances in RAM. Finally, we show that iteratively
+increasing $k$ gives a competitive algorithm for the maximum common induced subgraph problem.
+
 \begin{figure}
     \begin{center}
         \begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm,node distance=10mm,fill=black}]
