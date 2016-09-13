@@ -29,8 +29,9 @@ plot \
     "../experiments/faster-gpgnode-results/runtime-sequential-d2-induced.data" u 6:($6>=1e6?1e-10:1) smooth cumulative w steps ti "$k=3$" at end lc 4, \
     "../experiments/faster-gpgnode-results/runtime-sequential-d2-induced.data" u 7:($7>=1e6?1e-10:1) smooth cumulative w steps ti "$k=4$" at end lc 5, \
     "../experiments/faster-gpgnode-results/runtime-sequential-d2-induced.data" u 8:($8>=1e6?1e-10:1) smooth cumulative w steps ti "$k=5$" at end lc 6, \
-    "../experiments/new-gpgnode-results/runtime-mcis-fc-induced.data" u ($3*1000):($3>=1e3?1e-10:1) smooth cumulative w steps ti "FC" at end lc 7 dt '.', \
-    "../experiments/faster-gpgnode-results/runtime-sequentialix-d2-induced.data" u 3:($3>=1e6?1e-10:1) smooth cumulative w steps ti "$k\\downarrow$" at end lc 8 dt '.'
+    "../experiments/new-gpgnode-results/runtime-mcis-fc-induced.data" u ($3*1000):($3>=1e3?1e-10:1) smooth cumulative w steps ti "FC" at end lc 2 dt '.', \
+    "../experiments/faster-gpgnode-results/runtime-clique.data" u 3:($3>=1e6?1e-10:1) smooth cumulative w steps ti "Clique" at end lc 3 dt '.', \
+    "../experiments/faster-gpgnode-results/runtime-sequentialix-d2-induced.data" u 3:($3>=1e6?1e-10:1) smooth cumulative w steps ti "$k\\downarrow$" at end lc 1 dt '.'
 
 set title "Non-Induced"
 
