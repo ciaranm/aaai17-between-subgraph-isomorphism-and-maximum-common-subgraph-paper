@@ -15,7 +15,7 @@ set logscale x
 set border 3
 set grid x y
 set xtics nomirror
-set ytics nomirror add ('5725' 5725)
+set ytics nomirror add ('$5725$' 5725)
 set key off
 
 set format x '$10^{%T}$'

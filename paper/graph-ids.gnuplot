@@ -14,7 +14,7 @@ set border 1
 set grid x y2
 set xtics nomirror
 set noytics
-set y2tics nomirror add ('5725' 5725)
+set y2tics nomirror add ('$5725$' 5725)
 set key off
 
 set format x '$10^{%T}$'
