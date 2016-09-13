@@ -367,10 +367,10 @@ eliminate some infeasible values from domains.
     \centering
     \begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm}]
         \node[fill=black] (p) {};
-        \node[fill=black] (b) [above of = p,node distance=10mm] {};
+        \node[fill=black] (b) [above of = p,node distance=5mm] {};
         \node[fill=black] (a) [left of = b] {};
         \node[fill=black] (c) [right of = b] {};
-        \node[fill=black] (d) [above of = b,node distance=10mm] {};
+        \node[fill=black] (d) [above of = b,node distance=5mm] {};
 
         \node[draw=none,right of = p,node distance=3mm,yshift=-1mm] {$p$};
         \node[draw=none,left of = a,node distance=3mm,yshift=-1mm] {$a$};
@@ -388,10 +388,10 @@ eliminate some infeasible values from domains.
         \node[fill=gray!50] (a1) [right of = d, node distance = 2cm] {};
         \node[fill=black] (b1) [right of = a1] {};
         \node[fill=gray!50] (c1) [right of = b1] {};
-        \node[fill=black] (a2) [below of = a1] {};
+        \node[fill=black] (a2) [below of = a1, node distance=6mm] {};
         \node[fill=black] (b2) [right of = a2] {};
         \node[fill=black] (c2) [right of = b2] {};
-        \node[fill=gray!50] (a3) [below of = a2] {};
+        \node[fill=gray!50] (a3) [below of = a2, node distance=6mm] {};
         \node[fill=black] (b3) [right of = a3] {};
         \node[fill=gray!50] (c3) [right of = b3] {};
 
@@ -412,10 +412,10 @@ eliminate some infeasible values from domains.
             (c2) edge (b3);
     \end{tikzpicture}\hspace{0.5cm}\begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm}]
         \node[fill=black] (p) {};
-        \node[draw=none] (b) [above of = p,node distance=10mm] {};
+        \node[draw=none] (b) [above of = p,node distance=5mm] {};
         \node[fill=black] (a) [left of = b] {};
         \node[fill=black] (c) [right of = b] {};
-        \node[fill=black] (d) [above of = b,node distance=10mm] {};
+        \node[fill=black] (d) [above of = b,node distance=5mm] {};
 
         \node[draw=none, below of = p, node distance=6mm] {$U$};
 
@@ -470,25 +470,14 @@ $S \setminus S_k$ from the definition of $S \lesspreceq{k} T$ with the subsequen
     but the first $k$ members of $S$.
 \end{corollary}
 
-
-% \begin{figure}
-%     \begin{center}
-%         \begin{tikzpicture}[every node/.style={circle, inner sep=1mm}]
-%             \node[fill=black] (p) {};
-%             \node[draw=none,right of = p,node distance=3mm,yshift=-1mm] {$p$};
-%             \node[fill=uofglawn] (n2) [above of = p,node distance=12mm] {};
-%             \node[fill=uofgpumpkin] (n1) [left of = n2] {};
-%             \node[fill=uofglawn] (n3) [right of = n2] {};
-%             \node[fill=uofgcobalt] (q) [above of = n2,node distance=12mm] {};
-%             \path (p) edge (n1) edge (n2) edge (n3)
-%                 (n1) edge (q)
-%                 (n2) edge (n3) edge (q)
-%                 (n3) edge (q);
-%         \end{tikzpicture}
-%         \caption{Example of neighbourhood degree filtering cases}
-%         \label{fig:nds}
-%     \end{center}
-% \end{figure}
+\begin{figure}
+    \centering
+    \includegraphics*{gen-graph-ids.pdf}
+    \caption{The amount of domain reduction achieved for the induced problem, with increasing
+    $k$. The $y$ value shows for how many instances we may reduce the initial search space to be
+    at most the $x$ proportion of the size the search space would be for the maximum common subgraph
+    problem.}\label{figure:ids}
+\end{figure}
 
 \Cref{figure:ids} demonstrates that this is effective in practice: we show the amount of domain
 reduction we can achieve at the top of search by using invariants and a fixed $k$, compared to the
@@ -500,18 +489,7 @@ graphs involves counting the number of neighbours of a vertex which are present 
 \citep{mckay2014practical}. Removing a single vertex can alter this count arbitrarily, so we cannot
 make use of this fact.
 
-\begin{figure}
-    \centering
-    \includegraphics*{gen-graph-ids.pdf}
-    \caption{The amount of domain reduction achieved for the induced problem, with increasing values
-    of $k$. The $y$ value shows for how many instances we may reduce the initial search space to be
-    at most the $x$ proportion of the size the search space would be for the maximum common subgraph
-    problem.}\label{figure:ids}
-\end{figure}
-
-\section{Filtering During Search Using Paths}\label{section:pathfiltering}
-
-\begin{figure*}[tb]
+\begin{figure*}[t]
     \centering
     \includegraphics*{gen-graph-constraints-induced-0.pdf}
     \includegraphics*{gen-graph-constraints-induced-1.pdf}
@@ -524,6 +502,8 @@ make use of this fact.
     domains which are not permitted simultaneously, without path constraints on the $x$-axis and
     with path constraints on the $y$-axis, for increasing values of $k$.}\label{figure:constraints}
 \end{figure*}
+
+\section{Filtering During Search Using Paths}\label{section:pathfiltering}
 
 As well as reasoning about degrees, we can also reason about paths.  A \emph{path} between two
 vertices $p$ and $q$ is a sequence of edges which can be traversed from $p$ to reach $q$. We define
@@ -698,14 +678,14 @@ benefit in practice on the instances we considered.
         common induced subgraph instances.}\label{figure:runtimes}
 \end{figure*}
 
-\begin{figure*}[tb]
+\begin{figure}[h!]
     \centering
     \includegraphics*{gen-graph-which-k-by-family.pdf}
     \caption{The proportion of instances, in different families, which become satisfiable for
     increasing values of $k$. The ``larger'' instances are those where we can prove unsatisfiability for
     $k = 5$, whilst the gap between the top of the bar and the top of the graph is the fraction of
     instances where a timeout was reached for at least one value of $k$.}\label{figure:which-k}
-\end{figure*}
+\end{figure}
 
 We now evaluate our algorithm and show that it is effective in practice, even on the larger subgraph
 isomorphism instances. In the first two plots of \cref{figure:runtimes} we give cumulative
