@@ -500,11 +500,11 @@ isomorphism between every supplemental graph pair. We use paths of length 2, loo
 of 1, 2, and 3 in the target graph (and so counts of $1 + k$ up to $3 + k$ in the pattern).  We then
 investigate whether this leads to new constraints being generated.
 
-By an assignment, we mean considering mapping a pattern vertex $p$ to a target vertex $t$ (and not
-$\bot$) which does not violate any loop constraints. An assignment pair is two assignments with
+By an \emph{assignment}, we mean considering mapping a pattern vertex $p$ to a target vertex $t$ (and not
+$\bot$) which does not violate any loop constraints. An \emph{assignment pair} is two assignments with
 distinct $p$ and distinct $t$, which we say is permitted if it does not violate any adjacency
-constraint. We define the permitted assignment pair ratio to be the proportion of assignment pairs
-which are permitted.  Finally, in \cref{figure:constraints} we scatter plot the permitted assignment
+constraint. We define the \emph{permitted assignment pair ratio} to be the proportion of assignment pairs
+which are permitted.  Given this, in \cref{figure:constraints} we scatter plot the permitted assignment
 pair ratio with and without supplemental graphs\footnote{Because of the large sizes of the domains,
 we randomly sample one million pairs rather than considering every pair. In some cases, we have
 nearly a thousand domains, each with nearly ten thousand values---a complete quadratic calculation
