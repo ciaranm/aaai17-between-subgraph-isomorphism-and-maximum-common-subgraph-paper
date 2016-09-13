@@ -136,15 +136,17 @@ but not maximum common subgraph, and so the state space in the former is much mo
 whilst filtering during search is vastly stronger.
 
 In this work we discuss an intermediate problem, where we must map all but $k$ vertices of the
-pattern graph into the target. We show that if $k$ is reasonably small (say, between 1 and 5), then
-weakened forms of degree and path based filterings are still effective in pruning the initial search
-space and in providing additional constraints respectively. We then show that combining these
-techniques leads to a practical algorithm which can scale to work with the families of graphs
-commonly used to benchmark subgraph isomorphism algorithms: depending upon the benchmark family, we
-can close a substantial portion of the instances, and in many more cases, we can at least obtain an
-upper bound. This is a significant improvement over state of the art maximum common subgraph
-solvers, which cannot even fit many of these instances in RAM. Finally, we show that iteratively
-increasing $k$ gives a competitive algorithm for the maximum common induced subgraph problem.
+pattern graph into the target. (This in some ways resembles the approximate subgraph matching model
+of \citet{DBLP:conf/cp/ZampelliDD05}, although we allow any vertex to be removed.) We show that if
+$k$ is reasonably small (say, between 1 and 5), then weakened forms of degree and path based
+filterings are still effective in pruning the initial search space and in providing additional
+constraints respectively. We then show that combining these techniques leads to a practical
+algorithm which can scale to work with the families of graphs commonly used to benchmark subgraph
+isomorphism algorithms: depending upon the benchmark family, we can close a substantial portion of
+the instances, and in many more cases, we can at least obtain an upper bound. This is a significant
+improvement over state of the art maximum common subgraph solvers, which cannot even fit many of
+these instances in RAM. Finally, we show that iteratively increasing $k$ gives a competitive
+algorithm for the maximum common induced subgraph problem.
 
 \begin{figure}
     \begin{center}
