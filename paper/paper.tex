@@ -146,36 +146,84 @@ algorithm for the maximum common induced subgraph problem.
 
 \begin{figure}
     \begin{center}
-        \begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm,node
-            distance=10mm,fill=black}, scale=0.2]
-            \node[fill=uofgcobalt] (a) {};
-            \node (a1) [below left of = a] {};
-            \node (b1) [below right of = a] {};
-            \node (aa) [below right of = a1] {};
+        \begin{tikzpicture}[scale=0.6]%[every node/.style={circle, inner sep=0.5mm,node
+            %distance=10mm,fill=black}, scale=0.2]
 
-            \node (a2) [below left of = aa,node distance=13mm,xshift=2mm] {};
-            \node (aa2) [above left of = a2,node distance=13mm,xshift=-2mm] {};
-            \node (ab2) [below left of = a2,node distance=13mm,xshift=-2mm] {};
-            \node (ac2) [fill=gray!50,above left of = ab2,node distance=13mm,xshift=-2mm] {};
-            \node (b2) [below right of = aa,node distance=13mm,xshift=-2mm] {};
-            \node (ba2) [above right of = b2,node distance=13mm,xshift=2mm] {};
-            \node (bb2) [below right of = b2,node distance=13mm,xshift=2mm] {};
-            \node (bc2) [fill=gray!50,above right of = bb2,node distance=13mm,xshift=2mm] {};
+            \begin{scope}[xshift=-1cm, yshift=-3cm, color=black]
+            \node at (0, -0.5) {$P$};
+            \node [fill, circle, inner sep=1.5pt] (a) at (0,0) {};
+            \node [fill, circle, inner sep=1.5pt] (b) at (-1,1) {};
+            \node [fill, circle, inner sep=1.5pt] (c) at (0,1) {};
+            \node [fill, circle, inner sep=1.5pt] (d) at (1,1) {};
+            \node [fill, circle, inner sep=1.5pt] (e) at (0,2) {};
 
-            \node (aaa) [below of =aa, node distance=20mm] {};
+            \path[solid] (a) edge (b) edge (c) edge (d)
+                (e) edge (b) edge (c) edge (d);
+            % \node (a2) [below left of = aa,node distance=13mm,xshift=2mm] {};
+            % \node (aa2) [above left of = a2,node distance=13mm,xshift=-2mm] {};
+            % \node (ab2) [below left of = a2,node distance=13mm,xshift=-2mm] {};
+            % \node (ac2) [fill=gray!50,above left of = ab2,node distance=13mm,xshift=-2mm] {};
+            % \node (b2) [below right of = aa,node distance=13mm,xshift=-2mm] {};
+            % \node (ba2) [above right of = b2,node distance=13mm,xshift=2mm] {};
+            % \node (bb2) [below right of = b2,node distance=13mm,xshift=2mm] {};
+            % \node (bc2) [fill=gray!50,above right of = bb2,node distance=13mm,xshift=2mm] {};
 
-            \path[dotted] (a) edge (a1) edge (b1);
-            \path (aa) edge (a1) edge (b1) edge (a2) edge (b2)
-                (a1) edge (b1)
-                (aaa) edge (a2) edge (b2)
-                (a2) edge (aa2) edge (ab2)
-                (b2) edge (ba2) edge (bb2);
-            \path[color=gray!50] (ac2) edge (ab2) edge (aa2)
-                (bc2) edge (bb2) edge (ba2);
+            % \node (aaa) [below of =aa, node distance=20mm] {};
+            %
+            % \path[dotted] (a) edge (a1) edge (b1);
+            % \path (aa) edge (a1) edge (b1) edge (a2) edge (b2)
+            %     (a1) edge (b1)
+            %     (aaa) edge (a2) edge (b2)
+            %     (a2) edge (aa2) edge (ab2)
+            %     (b2) edge (ba2) edge (bb2);
+            % \path[color=gray!50] (ac2) edge (ab2) edge (aa2)
+            %     (bc2) edge (bb2) edge (ba2);
+            %
+            % \node [cross] {};
+            \end{scope}
 
-            \node [cross] {};
+            \begin{scope}[xshift=2cm, yshift=-3cm, color=black]
+            \node at (0, -0.5) {$T$};
+            \node [fill, circle, inner sep=1.5pt] (a) at (0,0) {};
+            \node [fill, circle, inner sep=1.5pt] (b) at (-1,1) {};
+            \node [fill, circle, inner sep=1.5pt] (c) at (1,2) {};
+            \node [fill, circle, inner sep=1.5pt] (d) at (1,1) {};
+            \node [fill, circle, inner sep=1.5pt] (e) at (0,2) {};
+            \node [fill, circle, inner sep=1.5pt] (f) at (1,0) {};
+            \node [fill, circle, inner sep=1.5pt] (g) at (2,0) {};
+            \node [fill, circle, inner sep=1.5pt] (h) at (2,2) {};
+
+            \path[solid] (a) edge (b) edge (d)
+                (e) edge (b) edge (d)
+                (d) edge (c) edge (f)
+                (c) edge (h)
+                (f) edge (g);
+
+            % \node (a2) [below left of = aa,node distance=13mm,xshift=2mm] {};
+            % \node (aa2) [above left of = a2,node distance=13mm,xshift=-2mm] {};
+            % \node (ab2) [below left of = a2,node distance=13mm,xshift=-2mm] {};
+            % \node (ac2) [fill=gray!50,above left of = ab2,node distance=13mm,xshift=-2mm] {};
+            % \node (b2) [below right of = aa,node distance=13mm,xshift=-2mm] {};
+            % \node (ba2) [above right of = b2,node distance=13mm,xshift=2mm] {};
+            % \node (bb2) [below right of = b2,node distance=13mm,xshift=2mm] {};
+            % \node (bc2) [fill=gray!50,above right of = bb2,node distance=13mm,xshift=2mm] {};
+
+            % \node (aaa) [below of =aa, node distance=20mm] {};
+            %
+            % \path[dotted] (a) edge (a1) edge (b1);
+            % \path (aa) edge (a1) edge (b1) edge (a2) edge (b2)
+            %     (a1) edge (b1)
+            %     (aaa) edge (a2) edge (b2)
+            %     (a2) edge (aa2) edge (ab2)
+            %     (b2) edge (ba2) edge (bb2);
+            % \path[color=gray!50] (ac2) edge (ab2) edge (aa2)
+            %     (bc2) edge (bb2) edge (ba2);
+            %
+            % \node [cross] {};
+            \end{scope}
+
         \end{tikzpicture}
-        \caption{Example of  ``as much of the pattern'' as possible.}
+        \caption{Notice that $P$ would be isormorphic to a subgraph of $T$ if the middle vertex in the diamond is removed.}
         \label{fig:subgraphexample}
     \end{center}
 \end{figure}
