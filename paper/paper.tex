@@ -18,6 +18,11 @@
 \usepackage{multicol}
 \usepackage[ruled,vlined]{algorithm2e}
 
+% to restate the propostions
+\usepackage{thmtools,thm-restate}
+
+\declaretheorem[name=Proposition,style=definition]{proposition}
+
 % \usepackage{showframe}
 
 \makeatletter\@ifpackageloaded{showframe}{
@@ -51,7 +56,6 @@
 
 
 \theoremstyle{definition}
-\newtheorem{proposition}{Proposition}
 \newtheorem{corollary}{Corollary}
 \newtheorem{example}{Example}
 
@@ -197,7 +201,8 @@ induced subgraph isomorphism problem we make use of the loop complement; we care
 vertices with loops to vertices with loops, and vertices without loops to vertices without loops.
 The following proposition follows directly from the definitions.
 
-\begin{proposition}\label{prop:comp}
+\begin{proposition}
+    \label{prop:comp}
 Let $i$ be an assignment of $T$ vertices to $P$ vertices.  Then $i$ satisfies the definition of $P
 \hookrightarrow T$ if and only if $i$ satisfies both the definition of $P \rightarrowtail T$ and
 of $\loopcomp{P} \rightarrowtail \loopcomp{T}$.
@@ -376,12 +381,11 @@ Let $p$ be a vertex in a graph $P$. The \emph{degree} of $p$, $\deg(p)$, is the 
 to which it is adjacent. The degree of vertices gives us an invariant, which may be used to
 eliminate some infeasible values from domains.
 
-\begin{proposition}
-    \label{prop:deg}
+\begin{restatable}{proposition}{propdeg}\label{prop:deg}
     Let $p$ be a vertex in $P$ and $t$ a vertex in $T$. For both non-induced and induced
     $k$-less-subgraph isomorphisms, if $p \lessmap{k} t$ then
     $\deg(p) - k \le \deg(t)$.
-\end{proposition}
+\end{restatable}
 
 A vertex $q$ which is adjacent to $p$ is called its \emph{neighbour}.  Let $\N(p) = \{ q \in \V(P) :
  p \text{ and } q \text{ are adjacent }\}$ be the set of neighbours of $p$.  The \emph{neighbourhood
@@ -395,9 +399,9 @@ T$ if $n - k \leq m$ and $\forall s_i \in S \setminus S_k$, where $S_k$ is a sub
 containing up to $k$ members of $S$, there exists a distinct $t_j \in T$ with $s_i - k \leq t_j$.
 
 
-\begin{proposition}\label{prop:nds}
+\begin{restatable}{proposition}{propnds}\label{prop:nds}
 If $p \lessmap{k} t$, then $\nds(p) \lesspreceq{k} \nds(t)$.
-\end{proposition}
+\end{restatable}
 
 \Cref{fig:klessexample} illustrates the three cases possible when filtering by neighbourhood degree
 sequence.  Removing the top node causes each entry in $\nds(p)$ to be reduced; removing the
@@ -468,10 +472,10 @@ As well as reasoning about degrees, we can also reason about paths.  A \emph{pat
 vertices $p$ and $q$ is a sequence of edges which can be traversed from $p$ to reach $q$. We define
 $\paths(p,q,n)$ to be the number of paths of length $n$ between the vertices $p$ and $q$.
 
-\begin{proposition}\label{prop:paths}
+\begin{restatable}{proposition}{proppaths}\label{prop:paths}
     Let $p,q \in \V(P)$ and $t,u\in \V(T)$. If $p \lessmap{k} t$ and $q \lessmap{k} u$ then
      $\paths(p, q, 2) - k \le \paths(t, u, 2)$.
-\end{proposition}
+\end{restatable}
 
 \begin{corollary}
     For a graph $G$, let $G^{n, \ell}$ be the graph with vertex set $\V(G)$. The
@@ -708,15 +712,16 @@ source code and problem instances, and someone at one of our institutions for in
 \appendix
 
 \section{Proofs Omitted From Main Text}
-
-\begin{proof}[Proof of \cref{prop:deg}]
+\propdeg*
+\begin{proof}
 Let $p$ be a vertex in $P$, and $t$ a vertex in $T$, with $p\mapsto t$. Then by the definition of subgraph isomorphisms, $\deg(p) \le \deg(t)$. Let $P'$ be $P$ less $k$ vertices and $p$ a vertex in $P'$. Then
 \[
 \deg_{P}(p)-k \le \deg_{P'}(p) \le \deg_{P}(p) \le \deg(t). \qedhere
 \]
 \end{proof}
 
-\begin{proof}[Proof of \cref{prop:nds}]
+\propnds*
+\begin{proof}
 Let $p \lessmap{k} t$.  Then $\deg(p) - k \leq \deg(q)$, by \cref{prop:deg}, which
 implies that $\left|\nds(p)\right| -k \leq \left| \nds(t) \right| $.
 
@@ -726,7 +731,8 @@ each $u$ is distinct.  Then $\deg(q) - k \leq \deg(u)$, by \cref{prop:deg}.  Hen
 \lesspreceq{k} \nds(t)$.
 \end{proof}
 
-\begin{proof}[Proof of \cref{prop:paths}]
+\proppaths*
+\begin{proof}
 Let $P_{2}$ be the set of all paths of length two between $p$ and $q$,
 $P_{2} = \{((p,x),(x,q)) : (p,x),(x,q)\in E(P) \}$. As we are looking at paths of length 2, the
 intermediate vertices lie in both neigbour vertex sets of $p$ and $q$. We can rewrite $P_{2}$ as
