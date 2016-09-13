@@ -475,12 +475,12 @@ length three: removing a single vertex can delete arbitrarily many such paths. W
 instead count paths of any length which are vertex disjoint, although calculating this appears to be
 too expensive to be beneficial in practice.
 
-To allow for fast propagation, rather than calculating paths dynamically, we follow the approach of
-\citet{DBLP:conf/cp/McCreeshP15} and construct supplemental graphs, and find a mapping which is
-simultaneously a non-induced subgraph isomorphism between every supplemental graph pair. We use
-paths of length 2, looking at counts of 1, 2, and 3 in the target graph (and so counts of $1 + k$ up
-to $3 + k$ in the pattern).  We then investigate whether this leads to new constraints being
-generated.
+To allow for fast propagation, rather than calculating paths dynamically like
+\citet{DBLP:conf/cp/AudemardLMGP14}, we follow the approach of \citet{DBLP:conf/cp/McCreeshP15} and
+construct supplemental graphs, and find a mapping which is simultaneously a non-induced subgraph
+isomorphism between every supplemental graph pair. We use paths of length 2, looking at counts of 1,
+2, and 3 in the target graph (and so counts of $1 + k$ up to $3 + k$ in the pattern).  We then
+investigate whether this leads to new constraints being generated.
 
 By an assignment, we mean considering mapping a pattern vertex $p$ to a target vertex $t$ (and not
 $\bot$) which does not violate any loop constraints. An assignment pair is two assignments with
