@@ -308,9 +308,7 @@ isomorphism also allows us to generate additional implied constraints, which we 
 \cref{section:pathfiltering}. However, neither of these techniques are valid for the maximum common
 subgraph problem.
 
-\subsection{Algorithms for the $k$-Less Problem}
-
-There are three easy ways we might try to approach this problem.
+There are three easy ways we might try to extend existing algorithms for this problem.
 A non-induced $k$-less subgraph isomorphism from $P$ to $T$ is equivalent to a subgraph isomorphism
 between $P$ and $T$, with $k$ extra universally-adjacent vertices added to $T$, and so we could try
 solving subgraph isomorphism with a modified target graph. However, using such
@@ -325,15 +323,11 @@ decision problem. However, both the maximum common subgraph algorithm and the cl
 require $O(\left|\V(P)\right|^2\left|\V(T)\right|^2)$ memory \citep{DBLP:conf/cp/McCreeshNPS16},
 which is extremely problematic on the instances we wish to work with.
 
-Instead, we introduce a new algorithm, inspired by a state of the art subgraph isomorphism algorithm
-\citep{DBLP:conf/cp/McCreeshP15}. The approach we discuss requires only
+Instead, this paper introduces a new algorithm, inspired by a state of the art subgraph isomorphism
+algorithm \citep{DBLP:conf/cp/McCreeshP15}. The approach we discuss requires only
 $O(\left|\V(P)\right|^2\left|\V(T)\right|)$ space (this can be thousands of times less than maximum
-    common subgraph approaches, once the constant factors and orders of $T$ in our instances are
-considered). We list the algorithm in \cref{algorithm:sip}, explain it fully in
-\cref{section:algorithm}, and evaluate it in \cref{section:evaluation}, but first we will discuss
-our experimental setup, and then detail some experiments to verify that we can gain effective domain
-filtering (\cref{section:degreefiltering}) and implied constraints (\cref{section:pathfiltering}) by
-using subgraph isomorphism style reasoning about degrees and paths in the $k$-less setting.
+common subgraph approaches, once the constant factors and orders of $T$ in our instances are
+considered).
 
 \subsection{Experimental Setup} \label{section:setup}
 
@@ -362,23 +356,6 @@ comfortably.  \section{Domain Filtering using Degrees}\label{section:degreefilte
 Let $p$ be a vertex in a graph $P$. The \emph{degree} of $p$, $\deg(p)$, is the number of vertices
 to which it is adjacent. The degree of vertices gives us an invariant, which may be used to
 eliminate some infeasible values from domains.
-
-\begin{restatable}{proposition}{propdeg}\label{prop:deg}
-    Let $p$ be a vertex in $P$ and $t$ a vertex in $T$. For both non-induced and induced
-    $k$-less subgraph isomorphisms, if $p \lessmap{k} t$ then
-    $\deg(p) - k \le \deg(t)$.
-\end{restatable}
-
-A vertex $q$ which is adjacent to $p$ is called its \emph{neighbour}.  Let $\N(p) = \{ q \in \V(P) :
- p~\textnormal{and}~q~\textnormal{are adjacent}\}$ be the set of neighbours of $p$.  The \emph{neighbourhood
-degree sequence} (NDS) of $p$, $\nds(p)$, is the (non-ascending) sequence of degrees of its
-neighbours.
-
-Let $S = ( s_1 , \ldots , s_n )$ and $T = ( t_1 , \ldots , t_m)$ be two sequences.  We say that $S
-\preceq T$ if $n \leq m$ and $\forall s_i \in S$ there exists a distinct $t_j \in T$ with $s_i \leq
-t_j$.  When considering a $k$-less subgraph isomorphism we say that $S \lesspreceq{k} T$ if $n - k
-\leq m$, and if there exists some subsequence $S_k$ of $S$ containing up to $k$ members such that
-$\forall s_i \in S \setminus S_k$, there exists a distinct $t_j \in T$ with $s_i - k \leq t_j$.
 
 \begin{figure}[t]
     \centering
@@ -444,6 +421,23 @@ $\forall s_i \in S \setminus S_k$, there exists a distinct $t_j \in T$ with $s_i
     second, using the highlighted vertices. No such isomorphism exists to the third graph, but there
     is a $1$-less isomorphism $P\lessnonind{1} U$ omitting vertex $b$.}\label{fig:klessexample}
 \end{figure}
+
+\begin{restatable}{proposition}{propdeg}\label{prop:deg}
+    Let $p$ be a vertex in $P$ and $t$ a vertex in $T$. For both non-induced and induced
+    $k$-less subgraph isomorphisms, if $p \lessmap{k} t$ then
+    $\deg(p) - k \le \deg(t)$.
+\end{restatable}
+
+A vertex $q$ which is adjacent to $p$ is called its \emph{neighbour}.  Let $\N(p) = \{ q \in \V(P) :
+ p~\textnormal{and}~q~\textnormal{are adjacent}\}$ be the set of neighbours of $p$.  The \emph{neighbourhood
+degree sequence} (NDS) of $p$, $\nds(p)$, is the (non-ascending) sequence of degrees of its
+neighbours.
+
+Let $S = ( s_1 , \ldots , s_n )$ and $T = ( t_1 , \ldots , t_m)$ be two sequences.  We say that $S
+\preceq T$ if $n \leq m$ and $\forall s_i \in S$ there exists a distinct $t_j \in T$ with $s_i \leq
+t_j$.  When considering a $k$-less subgraph isomorphism we say that $S \lesspreceq{k} T$ if $n - k
+\leq m$, and if there exists some subsequence $S_k$ of $S$ containing up to $k$ members such that
+$\forall s_i \in S \setminus S_k$, there exists a distinct $t_j \in T$ with $s_i - k \leq t_j$.
 
 \begin{restatable}{proposition}{propnds}\label{prop:nds}
 If $p \lessmap{k} t$, then $\nds(p) \lesspreceq{k} \nds(t)$.
