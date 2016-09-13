@@ -222,13 +222,13 @@ subgraph problems are symmetric in their inputs, but when discussing the non-ind
 allowing extra edges only in the target graph, not in the pattern.
 
 \begin{example}
-Consider the pattern graph $P$ and the two target graphs $T_1$ and $T_2$ shown in
+Consider the pattern graph $P$ and the two target graphs $T$ and $U$ shown in
 \cref{fig:klessexample}. The neighbourhood degree sequence of pattern vertex $p$ is
 $\nds(p)=(3,3,2)$.
 
-We highlight a subgraph in $T_{1}$ which is non-induced isomorphic to $P$. The vertex $p$ can be
-mapped to $t_{1}$ in the target graph $T_{1}$, as $\nds(t_{1})=(5,5,4,2,2)$.  There is a non-induced
-mapping of the pattern graph $P$ into $T_{2}$ by removing the central vertex of $P$.  This removal
+We highlight a subgraph in $T$ which is non-induced isomorphic to $P$. The vertex $p$ can be
+mapped to $q$ in the target graph $T$, as $\nds(q)=(5,5,4,2,2)$.  There is a non-induced
+mapping of the pattern graph $P$ into $U$ by removing $b$ of $P$.  This removal
 changes the neighbourhood degree sequence of $p$ in the $k$-less version of $P$ to $\nds(p)=(2,2)$.
 
 \begin{figure}
@@ -253,7 +253,7 @@ changes the neighbourhood degree sequence of $p$ in the $k$-less version of $P$ 
             (b) edge (c) edge (d)
             (c) edge (d);
         \end{tikzpicture}\hspace{0.5cm}\begin{tikzpicture}[every node/.style={circle, inner sep=0.5mm}]
-        \node[fill=gray!50] (a1) {};
+        \node[fill=gray!50] (a1) [right of = d, node distance = 2cm] {};
         \node[fill=black] (b1) [right of = a1] {};
         \node[fill=gray!50] (c1) [right of = b1] {};
         \node[fill=black] (a2) [below of = a1] {};
@@ -263,9 +263,9 @@ changes the neighbourhood degree sequence of $p$ in the $k$-less version of $P$ 
         \node[fill=black] (b3) [right of = a3] {};
         \node[fill=gray!50] (c3) [right of = b3] {};
 
-        \node[draw=none,right of = b3,node distance=1mm, yshift=-2mm] {$t_{1}$};
+        \node[draw=none,right of = b3,node distance=1mm, yshift=-2mm] {$q$};
 
-        \node[draw=none, below of = b3, node distance=6mm] {$T_{1}$};
+        \node[draw=none, below of = b3, node distance=6mm] {$T$};
 
         \path[color=gray!50] (a1) edge (b1) edge (a2)
             (b1) edge (c1)
@@ -285,13 +285,13 @@ changes the neighbourhood degree sequence of $p$ in the $k$-less version of $P$ 
         \node[fill=black] (c) [right of = b] {};
         \node[fill=black] (d) [above of = b,node distance=10mm] {};
 
-        \node[draw=none, below of = p, node distance=6mm] {$T_{2}$};
+        \node[draw=none, below of = p, node distance=6mm] {$U$};
 
         \path (p) edge (a) edge (c)
             (a) edge (d)
             (c) edge (d);
     \end{tikzpicture}
-    \caption{$P\rightarrowtail T_{1}$, $P\lessnonind{1} T_{2}$}
+    \caption{$P\rightarrowtail T$, $P\lessnonind{1} U$}
     \label{fig:klessexample}
 \end{figure}
 \end{example}
@@ -730,9 +730,9 @@ each $u$ is distinct.  Then $\deg(q) - k \leq \deg(u)$, by \cref{prop:deg}.  Hen
 \end{proof}
 
 \begin{proof}[Proof of \cref{prop:paths}]
-Let $P_{2}$ be the set of all paths of length two between $p$ and $q$,
+Let $P_{2}$ be the set of all paths of length two between $p$ and $q$, $P_{2} = \{((p,x),(x,q)) : (p,x),(x,q)\in E(P) \}$. As we are looking at paths of length 2, the end vertex on the
 \begin{align*}
-P_{2} = & \{((p,x),(x,q)) : (p,x),(x,q)\in E(P) \} \\
+ \\
  = & \{((p,x),(x,q)) : x\in \N(p) \text{ and } x\in \N(q) \} \\
  = & \{((p,x),(x,q)) : x\in \N(p)\cap \N(q) \} .
 \end{align*}
