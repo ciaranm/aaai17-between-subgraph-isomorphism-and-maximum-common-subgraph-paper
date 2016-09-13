@@ -24,8 +24,8 @@ set nocolorbox
 
 set yrange [0:1]
 
-set title "Non-Induced"
-plot for [COL=3:9] "../experiments/faster-gpgnode-results/family-which-k-sequential-d2.data" u (column(COL)/$2):xticlabels(1) ti columnheader lt palette frac ((COL-3)/8.0)
-
 set title "Induced"
 plot for [COL=3:9] "../experiments/faster-gpgnode-results/family-which-k-sequential-d2-induced.data" u (column(COL)/$2):xticlabels(1) ti columnheader lt palette frac ((COL-3)/8.0)
+
+set title "Non-Induced"
+plot for [COL=3:9] "../experiments/faster-gpgnode-results/family-which-k-sequential-d2.data" u (column(COL)/$2):xticlabels(1) ti columnheader lt palette frac ((COL-3)/8.0)
