@@ -136,15 +136,17 @@ but not maximum common subgraph, and so the state space in the former is much mo
 whilst filtering during search is vastly stronger.
 
 In this work we discuss an intermediate problem, where we must map all but $k$ vertices of the
-pattern graph into the target. We show that if $k$ is reasonably small (say, between 1 and 5), then
-weakened forms of degree and path based filterings are still effective in pruning the initial search
-space and in providing additional constraints respectively. We then show that combining these
-techniques leads to a practical algorithm which can scale to work with the families of graphs
-commonly used to benchmark subgraph isomorphism algorithms: depending upon the benchmark family, we
-can close a substantial portion of the instances, and in many more cases, we can at least obtain an
-upper bound. This is a significant improvement over state of the art maximum common subgraph
-solvers, which cannot even fit many of these instances in RAM. Finally, we show that iteratively
-increasing $k$ gives a competitive algorithm for the maximum common induced subgraph problem.
+pattern graph into the target. (This in some ways resembles the approximate subgraph matching model
+of \citet{DBLP:conf/cp/ZampelliDD05}, although we allow any vertex to be removed.) We show that if
+$k$ is reasonably small (say, between 1 and 5), then weakened forms of degree and path based
+filterings are still effective in pruning the initial search space and in providing additional
+constraints respectively. We then show that combining these techniques leads to a practical
+algorithm which can scale to work with the families of graphs commonly used to benchmark subgraph
+isomorphism algorithms: depending upon the benchmark family, we can close a substantial portion of
+the instances, and in many more cases, we can at least obtain an upper bound. This is a significant
+improvement over state of the art maximum common subgraph solvers, which cannot even fit many of
+these instances in RAM. Finally, we show that iteratively increasing $k$ gives a competitive
+algorithm for the maximum common induced subgraph problem.
 
 \begin{figure}
     \begin{center}
@@ -291,8 +293,9 @@ changes the neighbourhood degree sequence of $p$ in the $k$-less version of $P$ 
             (a) edge (d)
             (c) edge (d);
     \end{tikzpicture}
-    \caption{$P\rightarrowtail T$, $P\lessnonind{1} U$}
-    \label{fig:klessexample}
+    \caption{There is a non-induced isomorphism $P\rightarrowtail T_{1}$ from the first graph to the
+    second, using the highlighted vertices. No such isomorphism exists to the third graph, but there
+    is a $1$-less isomorphism $P\lessnonind{1} T_{2}$ omitting vertex $b$.}\label{fig:klessexample}
 \end{figure}
 \end{example}
 
@@ -301,10 +304,11 @@ changes the neighbourhood degree sequence of $p$ in the $k$-less version of $P$ 
 For both subgraph isomorphism and maximum common subgraph, constraint programming is the best known
 approach\footnote{Note that toolkits are not used in state of the art implementations, to facilitate
 better memory layouts and propagation queues, although the algorithms are heavily inspired by
-constraint programming.}. For both problems, we create a variable for each vertex in the
-pattern graph (the smaller graph, in the case of maximum common subgraph), with domains ranging over
-the vertices in the target graph (the larger graph). For maximum common subgraph, each domain is
-given an additional $\bot$ value, meaning ``unmapped''.
+constraint programming.}, although a reduction to maximum clique is better when edge labels are
+present \citep{DBLP:conf/cp/NdiayeS11,DBLP:conf/cp/McCreeshNPS16}. For both problems, we create a variable for each vertex
+in the pattern graph (the smaller graph, in the case of maximum common subgraph), with domains
+ranging over the vertices in the target graph (the larger graph). For maximum common subgraph, each
+domain is given an additional $\bot$ value, meaning ``unmapped''.
 
 Constraints are used to ensure that adjacency pairs of vertices are mapped to adjacenct pairs of
 vertices. For the maximum common subgraph case, any pair of assignments with $\bot$ as either value
@@ -319,8 +323,6 @@ reduce the initial sizes of domains---we discuss this in \cref{section:degreefil
 isomorphism also allows us to generate additional implied constraints, which we discuss in
 \cref{section:pathfiltering}. Neither of these techniques are valid for the maximum common subgraph
 problem.
-
-?? Also the clique encoding.
 
 \subsection{Algorithms for the $k$-Less Problem}
 
