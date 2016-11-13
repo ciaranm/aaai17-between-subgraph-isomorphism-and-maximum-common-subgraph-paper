@@ -23,9 +23,9 @@
 \usepackage[vlined]{algorithm2e}
 
 % to restate the propostions
-\usepackage{thmtools,thm-restate}
+%\usepackage{thmtools,thm-restate}
 
-\declaretheorem[name=Proposition,style=definition]{proposition}
+%\declaretheorem[name=Proposition,style=definition]{proposition}
 
 \setcounter{secnumdepth}{2}
 
@@ -64,6 +64,7 @@
 \theoremstyle{definition}
 \newtheorem{corollary}{Corollary}
 \newtheorem{example}{Example}
+\newtheorem{proposition}{Proposition}
 
 % cref style
 \crefname{figure}{Figure}{Figures}
@@ -394,11 +395,17 @@ eliminate some infeasible values from domains.
     is a $1$-less isomorphism $P\lessnonind{1} U$ omitting vertex $b$.}\label{figure:klessexample}
 \end{figure}
 
-\begin{restatable}{proposition}{propdeg}\label{prop:deg}
+\begin{proposition}\label{prop:deg}
     Let $p$ be a vertex in $P$ and $t$ a vertex in $T$. For both non-induced and induced
     $k$-less subgraph isomorphisms, if $p \lessmap{k} t$ then
     $\deg(p) - k \le \deg(t)$.
-\end{restatable}
+\end{proposition}
+\begin{proof}
+Let $p$ be a vertex in $P$, and $t$ a vertex in $T$, with $p\mapsto t$. Then by the definition of subgraph isomorphisms, $\deg(p) \le \deg(t)$. Let $P'$ be $P$ less $k$ vertices and $p$ a vertex in $P'$. Then
+\[
+\deg_{P}(p)-k \le \deg_{P'}(p) \le \deg_{P}(p) \le \deg(t). \qedhere
+\]
+\end{proof}
 
 A vertex $q$ which is adjacent to $p$ is called its \emph{neighbour}.  Let $\N(p) = \{ q \in \V(P) :
  p~\textnormal{and}~q~\textnormal{are adjacent}\}$ be the \emph{set of neighbours} of $p$.  The \emph{neighbourhood
@@ -411,9 +418,18 @@ t_j$.  When considering a $k$-less subgraph isomorphism we say that $S \lessprec
 \leq m$, and if there exists some subsequence $S_k$ of $S$ containing up to $k$ members such that
 $\forall s_i \in S \setminus S_k$, there exists a distinct $t_j \in T$ with $s_i - k \leq t_j$.
 
-\begin{restatable}{proposition}{propnds}\label{prop:nds}
+\begin{proposition}\label{prop:nds}
 If $p \lessmap{k} t$, then $\nds(p) \lesspreceq{k} \nds(t)$.
-\end{restatable}
+\end{proposition}
+\begin{proof}
+Let $p \lessmap{k} t$.  Then $\deg(p) - k \leq \deg(q)$, by \cref{prop:deg}, which
+implies that $\left|\nds(p)\right| -k \leq \left| \nds(t) \right| $.
+
+Also, $p \lessmap{k} t$ implies that for each $q \in N(p) \setminus P_k$, where $P_k$
+is some subset of $P$ with $\left| P_k \right| \leq k$, we have $q \lessmap{k} u$, where $u \in N(t)$ and
+each $u$ is distinct.  Then $\deg(q) - k \leq \deg(u)$, by \cref{prop:deg}.  Hence $\nds(p)
+\lesspreceq{k} \nds(t)$.
+\end{proof}
 
 \begin{example}
 Consider the pattern graph $P$ and the two target graphs $T$ and $U$ shown in
@@ -475,14 +491,38 @@ As well as reasoning about degrees, we can also reason about paths.  A \emph{pat
 vertices $p$ and $q$ is a sequence of edges which can be traversed from $p$ to reach $q$. We define
 $\paths(p,q,n)$ to be the \emph{number of paths of length $n$} between the vertices $p$ and $q$.
 
-\begin{restatable}{proposition}{proppaths}\label{prop:paths}
+\begin{proposition}\label{prop:paths}
     Let $p,q \in \V(P)$ and $t,u\in \V(T)$. If $p \lessmap{k} t$ and $q \lessmap{k} u$ then
      $\paths(p, q, 2) - k \le \paths(t, u, 2)$.
-\end{restatable}
+\end{proposition}
+\begin{proof}
+Let $P_{2}$ be the set of all paths of length two between $p$ and $q$, \[P_{2} = \{((p,x),(x,q)) :
+(p,x),(x,q)\in \operatorname{E}(P) \}\textnormal{.}\] As we are looking at paths of length 2,
+the intermediate vertices lie in both neighbour vertex sets of $p$ and $q$. We can rewrite
+$P_{2}$ as \[P_{2} = \{((p,x),(x,q)) : x\in \N(p) \text{ and } x\in \N(q) \}\textnormal{,}\] in
+other words the intermediate vertices lie in the intersection of the neighbour sets of $p$ and
+$q$, \[ P_{2}=\{((p,x),(x,q)) : x\in \N(p)\cap \N(q) \} \textnormal{.}\] Therefore
+$\paths(p,q,2) = \left| \N(p)\cap \N(q) \right|  \leq \deg(p)$.
+
+If we remove up to $k$ vertices from the neighbourhood of $p$, it will impact the intersection of
+    the neighbourhoods of $p$ and $q$, and by Proposition~\ref{prop:deg}, as $p\lessmap{k}t$,
+\[
+\left| \N(p)\cap \N(q)\right| - k \leq \deg(p) - k \leq \deg(t).
+\]
+As $\left|\N(p)\cap \N(q)\right|\leq \deg(p) \leq \left|\N(t)\cap \N(u)\right|\leq \deg(t)$, we have
+\begin{align*}
+\left|\N(p)\cap \N(q)\right| - k & \leq \deg(p) - k \\
+ & \leq \left|\N(t)\cap \N(u)\right|\\
+ & \leq \deg(t)
+\end{align*}
+which tells us
+\[
+\paths(p, q, 2) - k \leq \paths(t, u, 2). \qedhere
+\]
+\end{proof}
 
 \begin{corollary}
-    For a graph $G$, let $G^{n, \ell}$ be the graph with vertex set $\V(G)$. The
-    vertices $p$ and $q$ in $G^{n, \ell}$ are adjacent if there are at least $n$ simple paths of
+    For a graph $G$, let $G^{n, \ell}$ be the graph with vertex set $\V(G)$, and edges between vertices $p$ and $q$ if there are at least $n$ simple paths of
     length exactly $\ell$ between $p$ and $q$ in $G$. Then any $k$-less subgraph isomorphism
     $P \lessnonind{k} T$ induces a new $k$-less subgraph isomorphism
     $P^{n+k, 2}\lessnonind{k} T^{n, 2}$.
@@ -718,64 +758,5 @@ filtering now being possible.
 \bibliographystyle{aaai}
 \bibliography{paper}
 
-\clearpage
-\appendix
-
-\section{Proofs Omitted From Main Text}
-
-The following proofs have been omitted from the main text. If the reviewers feel they are helpful
-and not obvious, we will pay for an extra page to include them.
-
-\bigskip
-
-\propdeg*
-\begin{proof}
-Let $p$ be a vertex in $P$, and $t$ a vertex in $T$, with $p\mapsto t$. Then by the definition of subgraph isomorphisms, $\deg(p) \le \deg(t)$. Let $P'$ be $P$ less $k$ vertices and $p$ a vertex in $P'$. Then
-\[
-\deg_{P}(p)-k \le \deg_{P'}(p) \le \deg_{P}(p) \le \deg(t). \qedhere
-\]
-\end{proof}
-
-\bigskip
-
-\propnds*
-\begin{proof}
-Let $p \lessmap{k} t$.  Then $\deg(p) - k \leq \deg(q)$, by \cref{prop:deg}, which
-implies that $\left|\nds(p)\right| -k \leq \left| \nds(t) \right| $.
-
-Also, $p \lessmap{k} t$ implies that for each $q \in N(p) \setminus P_k$, where $P_k$
-is some subset of $P$ with $\left| P_k \right| \leq k$, we have $q \lessmap{k} u$, where $u \in N(t)$ and
-each $u$ is distinct.  Then $\deg(q) - k \leq \deg(u)$, by \cref{prop:deg}.  Hence $\nds(p)
-\lesspreceq{k} \nds(t)$.
-\end{proof}
-
-\bigskip
-
-\proppaths*
-\begin{proof}
-Let $P_{2}$ be the set of all paths of length two between $p$ and $q$, \[P_{2} = \{((p,x),(x,q)) :
-(p,x),(x,q)\in \operatorname{E}(P) \}\textnormal{.}\] As we are looking at paths of length 2,
-the intermediate vertices lie in both neighbour vertex sets of $p$ and $q$. We can rewrite
-$P_{2}$ as \[P_{2} = \{((p,x),(x,q)) : x\in \N(p) \text{ and } x\in \N(q) \}\textnormal{,}\] in
-other words the intermediate vertices lie in the intersection of the neighbour sets of $p$ and
-$q$, \[ P_{2}=\{((p,x),(x,q)) : x\in \N(p)\cap \N(q) \} \textnormal{.}\] Therefore
-$\paths(p,q,2) = \left| \N(p)\cap \N(q) \right|  \leq \deg(p)$.
-
-If we remove up to $k$ vertices from the neighbourhood of $p$, it will impact the intersection of
-    the neighbourhoods of $p$ and $q$, and by Proposition~\ref{prop:deg}, as $p\lessmap{k}t$,
-\[
-\left| \N(p)\cap \N(q)\right| - k \leq \deg(p) - k \leq \deg(t).
-\]
-As $\left|\N(p)\cap \N(q)\right|\leq \deg(p) \leq \left|\N(t)\cap \N(u)\right|\leq \deg(t)$, we have
-\begin{align*}
-\left|\N(p)\cap \N(q)\right| - k & \leq \deg(p) - k \\
- & \leq \left|\N(t)\cap \N(u)\right|\\
- & \leq \deg(t)
-\end{align*}
-which tells us
-\[
-\paths(p, q, 2) - k \leq \paths(t, u, 2). \qedhere
-\]
-\end{proof}
 
 \end{document}
