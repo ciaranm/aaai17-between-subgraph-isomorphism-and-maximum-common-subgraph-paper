@@ -533,6 +533,52 @@ length three: removing a single vertex can delete arbitrarily many such paths. W
 instead count paths of any length which are vertex disjoint, although calculating this appears to be
 too expensive to be beneficial in practice.
 
+\begin{figure}[b]
+    \centering
+    \begin{tikzpicture}[scale=0.5]%[every node/.style={circle, inner sep=0.5mm,node
+        %distance=10mm,fill=black}, scale=0.2]
+
+        \begin{scope}[xshift=-1cm, yshift=-3cm, color=black]
+        \node at (-1,0) {$P$:};
+        \node [fill, circle, inner sep=1.5pt] (a) at (0,0) {};
+        \node [fill, circle, inner sep=1.5pt] (b) at (1,-1) {};
+        \node [fill, circle, inner sep=1.5pt] (c) at (1,0) {};
+        \node [fill, circle, inner sep=1.5pt] (d) at (1,1) {};
+        \node [fill, circle, inner sep=1.5pt] (e) at (2,0) {};
+        \node [fill, circle, inner sep=1.5pt] (f) at (3,0) {};
+        \node[draw=none,below of = e,node distance=3mm,anchor=base] {$p$};
+
+        \path[solid] (a) edge (b) edge (c) edge (d)
+            (b) edge (e)
+            (c) edge (e)
+            (d) edge (e)
+            (e) edge (f);
+        \end{scope}
+
+        \begin{scope}[xshift=6cm, yshift=-3cm, color=black]
+        \node at (-1,0) {$T$:};
+        \node [fill, circle, inner sep=1.5pt] (a) at (0,0) {};
+        \node [fill, circle, inner sep=1.5pt] (b) at (1,-1) {};
+        \node [fill, circle, inner sep=1.5pt] (c) at (1,0) {};
+        \node [fill, circle, inner sep=1.5pt] (d) at (1,1) {};
+        %\node [fill, circle, inner sep=1.5pt] (e) at (2,0) {};
+        \node [fill, circle, inner sep=1.5pt] (f) at (3,0) {};
+
+        \path[solid] (a) edge (b) edge (c) edge (d);
+        %    (b) edge (e)
+        %    (c) edge (e)
+        %    (d) edge (e)
+        %    (e) edge (f);
+        \end{scope}
+
+    \end{tikzpicture}
+    \caption{The pattern graph $P$ on the left cannot be found in the target graph $T$, but if
+    the vertex $p$ in $P$ is removed, then a subgraph isomorphism exists.}
+    \label{figure:pathlength3example}
+\end{figure}
+
+
+
 To allow for fast propagation, rather than calculating paths dynamically like
 \citet{DBLP:conf/cp/AudemardLMGP14}, we follow the approach of \citet{DBLP:conf/cp/McCreeshP15} and
 construct \emph{supplemental graphs}, and find a mapping which is simultaneously a non-induced subgraph
