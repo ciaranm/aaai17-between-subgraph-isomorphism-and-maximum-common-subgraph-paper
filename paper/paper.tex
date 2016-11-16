@@ -473,20 +473,6 @@ graphs involves counting the number of neighbours of a vertex which are present 
 \citep{mckay2014practical}. Removing a single vertex can alter this count arbitrarily, so we cannot
 make use of this fact.
 
-\begin{figure*}[t]
-    \centering
-    \includegraphics*{gen-graph-constraints-induced-0.pdf}
-    \includegraphics*{gen-graph-constraints-induced-1.pdf}
-    \includegraphics*{gen-graph-constraints-induced-2.pdf}
-    \includegraphics*{gen-graph-constraints-induced-3.pdf}
-    \includegraphics*{gen-graph-constraints-induced-4.pdf}
-    \includegraphics*{gen-graph-constraints-induced-5.pdf}
-
-    \caption{For the induced problem, the proportion of pairs of assignments from the filtered
-    domains which are not permitted simultaneously, without path constraints on the $x$-axis and
-    with path constraints on the $y$-axis, for increasing values of $k$.}\label{figure:constraints}
-\end{figure*}
-
 \section{Filtering During Search Using Paths}\label{section:pathfiltering}
 
 As well as reasoning about degrees, we can also reason about paths.  A \emph{path} between two
@@ -531,11 +517,11 @@ which tells us
 \end{corollary}
 
 Unlike in conventional subgraph isomorphism, we cannot extend this filtering to look at paths of
-length three: removing a single vertex can delete arbitrarily many such paths. We \emph{could}
-instead count paths of any length which are vertex disjoint, although calculating this appears to be
-too expensive to be beneficial in practice.
+length three: as the example in \cref{figure:pathlength3example} shows, removing a single vertex can
+delete arbitrarily many such paths. We \emph{could} instead count paths of any length which are
+vertex disjoint, although calculating this appears to be too expensive to be beneficial in practice.
 
-\begin{figure}[b]
+\begin{figure}[tb]
     \centering
     \begin{tikzpicture}[scale=0.5]%[every node/.style={circle, inner sep=0.5mm,node
         %distance=10mm,fill=black}, scale=0.2]
@@ -579,7 +565,19 @@ too expensive to be beneficial in practice.
     \label{figure:pathlength3example}
 \end{figure}
 
+\begin{figure*}[tb]
+    \centering
+    \includegraphics*{gen-graph-constraints-induced-0.pdf}
+    \includegraphics*{gen-graph-constraints-induced-1.pdf}
+    \includegraphics*{gen-graph-constraints-induced-2.pdf}
+    \includegraphics*{gen-graph-constraints-induced-3.pdf}
+    \includegraphics*{gen-graph-constraints-induced-4.pdf}
+    \includegraphics*{gen-graph-constraints-induced-5.pdf}
 
+    \caption{For the induced problem, the proportion of pairs of assignments from the filtered
+    domains which are not permitted simultaneously, without path constraints on the $x$-axis and
+    with path constraints on the $y$-axis, for increasing values of $k$.}\label{figure:constraints}
+\end{figure*}
 
 To allow for fast propagation, rather than calculating paths dynamically like
 \citet{DBLP:conf/cp/AudemardLMGP14}, we follow the approach of \citet{DBLP:conf/cp/McCreeshP15} and
