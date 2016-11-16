@@ -22,5 +22,5 @@ set title "$k = 1$"
 
 plot \
     x w l lc 0, \
-    "../experiments/new-gpgnode-results/constraints-sequential-d2-induced.data" u ($8/$7):($10/$9) ps 0.2 pt 1 lc 2
+    "../experiments/new-gpgnode-results/constraints-sequential-d2-induced.data" u ($8/$7):($10/$9) ps 0.2 pt 1 lc 1
 
