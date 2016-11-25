@@ -696,25 +696,45 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
 \Cref{algorithm:sip} integrates these techniques into a full algorithm. This is derived from an
 algorithm due to \citet{DBLP:conf/cp/McCreeshP15}, which in a recent evaluation of using portfolios
 of subgraph isomorphism algorithms was the single strongest solver \citep{thelionpaper}.
-As well as the modifications to solve $k$-less and induced problems, we have made two
-simplifications: we do not use conflict-directed backjumping, and we do not use iterated label
-filtering to recalculate neighbourhood degree sequences if vertices are not present in any target
-domain after construction---in preliminary experiments, these techniques were not beneficial for $k
-> 0$. We also do not strip isolated vertices, as this is not a valid simplification in the induced
-case.
 
-To handle wildcards, we include $k$ additional $\bot$ values in domains, rather than a single value
-which may be used $k$ times. These are treated as having degree zero, in an attempt to maximising
-the expected number of solutions remaining during search \citep{DBLP:conf/ijcai/McCreeshPT16}. This
-technique allows us to retain the bit-parallel all different propagator used in the original
-algorithm. However, we must be careful to treat domains containing multiple wildcard values (which
-we call ``effectively unit'') specially during unit propagation (line~\ref{line:effect}), and we
-introduce a symmetry break (line~\ref{line:sym}) to try only a single wildcard value for each
-variable.
+The algorithm performs a constraint-based search. We have a variable $D_v$ for each vertex $v$ in
+the pattern graph, each of which has a domain containing one value for every vertex in the target
+graph.
+
+In lines ?? we use the reasoning from section ?? to eliminate infeasible initial values from the
+domains. We do not use iterated label filtering ?? cite to recalculate neighbourhood degree
+sequences if any vertices are not present in any target domain after construction: preliminary
+experiments indicated that this happened very rarely.
+
+To handle unmapped vertices, on line ?? we include $k$ additional wildcard $\bot$ values in each
+domain (rather than a single value which may be used $k$ times).
+
+?? Constraints and unit propagation
+
+?? Supplemental graphs. These are also used for eliminating infeasible values.
+
+?? All different
+
+We must be careful to treat domains containing multiple wildcard values (which we call ``effectively
+unit'') specially during unit propagation (line~\ref{line:effect}), and we introduce a symmetry
+break (line~\ref{line:sym}) to try only a single wildcard value for each variable.
+
+?? Search. No backjumping.
+
+?? Heuristics
+
+Wildcards are treated as having degree zero, in an attempt to maximising the expected number of
+solutions remaining during search \citep{DBLP:conf/ijcai/McCreeshPT16}. This technique allows us to
+retain the bit-parallel all different propagator used in the original algorithm.
+
+?? As well as the modifications to solve $k$-less and induced problems, we have made two
+simplifications: we do not use conflict-directed backjumping, and in preliminary experiments, these
+techniques were not beneficial for $k > 0$.
 
 To handle the induced case, we make use of \cref{prop:comp} (line~\ref{line:comp}). We also tested
 using path reasoning on complement graphs, but this is expensive to calculate and provides little
-benefit in practice on the instances we considered.
+benefit in practice on the instances we considered.  We also do not strip isolated vertices as
+cite?? did, as this is not a valid simplification in the induced case.
 
 \section{Empirical Evaluation}\label{section:evaluation}
 
