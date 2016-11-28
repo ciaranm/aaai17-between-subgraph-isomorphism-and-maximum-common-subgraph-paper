@@ -729,16 +729,15 @@ guarantees generalised arc consistency. ?? a bit more on how it works. It can ea
 this propagator will always find Hall sets or failed Hall sets of size zero or one, but it may miss
 larger sets. This propagation could create new effectively-unit domains; if so, we loop.
 
-?? Search
+?? This technique allows us to retain the bit-parallel all different propagator used in the original
+algorithm.
 
-we introduce a symmetry
-break (line~\ref{line:sym}) to try only a single wildcard value for each variable.
-
-?? Heuristics
-
-Wildcards are treated as having degree zero, in an attempt to maximising the expected number of
-solutions remaining during search \citep{DBLP:conf/ijcai/McCreeshPT16}. This technique allows us to
-retain the bit-parallel all different propagator used in the original algorithm.
+If propagation is unable to prove unsatisfiability, we search. We pick the smallest domain (line
+??), and try giving it each of its remaining values in turn. We use the value the ordering heuristic
+from the original algorithm; wildcards are treated as having degree zero, in an attempt to
+maximising the expected number of solutions remaining during search
+\citep{DBLP:conf/ijcai/McCreeshPT16}.  We introduce a symmetry break (line~\ref{line:sym}) to try
+only a single wildcard value for each variable.
 
 ?? As well as the modifications to solve $k$-less and induced problems, we have made two
 simplifications: we do not use conflict-directed backjumping, and in preliminary experiments, these
