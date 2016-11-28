@@ -29,7 +29,7 @@ plot \
     "../experiments/faster-gpgnode-results/runtime-sequential-d2-induced.data" u 4:($4>=1e6?1e-10:1) smooth cumulative w steps ti "\\raisebox{0.5mm}{$k=1$}" at end lc 2, \
     "../experiments/faster-gpgnode-results/runtime-sequential-d2-induced.data" u 5:($5>=1e6?1e-10:1) smooth cumulative w steps ti "\\raisebox{0mm}{$k=2$}" at end lc 3, \
     "../experiments/faster-gpgnode-results/runtime-sequential-d2-induced.data" u 6:($6>=1e6?1e-10:1) smooth cumulative w steps ti "\\raisebox{0mm}{$k=3$}" at end lc 4, \
-    "../experiments/faster-gpgnode-results/runtime-sequential-d2-induced.data" u 7:($7>=1e6?1e-10:1) smooth cumulative w steps ti "\\raisebox{-0.3mm}{$k=4$}" at end lc 5, \
+    "../experiments/faster-gpgnode-results/runtime-sequential-d2-induced.data" u 7:($7>=1e6?1e-10:1) smooth cumulative w steps ti "\\raisebox{-0.3mm}{$k=4$}" at end lc rgb '#88cc00', \
     "../experiments/faster-gpgnode-results/runtime-sequential-d2-induced.data" u 8:($8>=1e6?1e-10:1) smooth cumulative w steps ti "\\raisebox{-1.2mm}{$k=5$}" at end lc 6, \
     "../experiments/new-gpgnode-results/runtime-mcis-fc-induced.data" u ($3*1000):($3>=1e3?1e-10:1) smooth cumulative w steps ti "FC" at end lc 2 dt '.', \
     "../experiments/faster-gpgnode-results/runtime-clique.data" u 3:($3>=1e6?1e-10:1) smooth cumulative w steps ti "Clique" at end lc 3 dt '.', \
@@ -42,7 +42,7 @@ plot \
     "../experiments/faster-gpgnode-results/runtime-sequential-d2.data" u 4:($4>=1e6?1e-10:1) smooth cumulative w steps ti "\\raisebox{0.8mm}{$k=1$}" at end lc 2, \
     "../experiments/faster-gpgnode-results/runtime-sequential-d2.data" u 5:($5>=1e6?1e-10:1) smooth cumulative w steps ti "\\raisebox{0.0mm}{$k=2$}" at end lc 3, \
     "../experiments/faster-gpgnode-results/runtime-sequential-d2.data" u 6:($6>=1e6?1e-10:1) smooth cumulative w steps ti "\\raisebox{0.0mm}{$k=3$}" at end lc 4, \
-    "../experiments/faster-gpgnode-results/runtime-sequential-d2.data" u 7:($7>=1e6?1e-10:1) smooth cumulative w steps ti "\\raisebox{-0.5mm}{$k=4$}" at end lc 5, \
+    "../experiments/faster-gpgnode-results/runtime-sequential-d2.data" u 7:($7>=1e6?1e-10:1) smooth cumulative w steps ti "\\raisebox{-0.5mm}{$k=4$}" at end lc rgb '#88cc00', \
     "../experiments/faster-gpgnode-results/runtime-sequential-d2.data" u 8:($8>=1e6?1e-10:1) smooth cumulative w steps ti "\\raisebox{-1.5mm}{$k=5$}" at end lc 6, \
     "../experiments/faster-gpgnode-results/runtime-sequentialix-d2.data" u 3:($3>=1e6?1e-10:1) smooth cumulative w steps ti "$k\\downarrow$" at end lc 8 dt '.'
 

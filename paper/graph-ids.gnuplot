@@ -24,6 +24,6 @@ plot \
     "../experiments/new-gpgnode-results/ids-sequential-induced.data" u 4:(1) smooth cumulative w steps axes x1y2 ti "$k=1$" at beginning, \
     "../experiments/new-gpgnode-results/ids-sequential-induced.data" u 5:(1) smooth cumulative w steps axes x1y2 ti "\\raisebox{1mm}{$k=2\\kern0.2mm$}" at beginning, \
     "../experiments/new-gpgnode-results/ids-sequential-induced.data" u 6:(1) smooth cumulative w steps axes x1y2 ti "\\raisebox{1mm}{$k=3$}" at beginning, \
-    "../experiments/new-gpgnode-results/ids-sequential-induced.data" u 7:(1) smooth cumulative w steps axes x1y2 ti "\\raisebox{0mm}{$k=4\\kern0.1mm$}" at beginning, \
+    "../experiments/new-gpgnode-results/ids-sequential-induced.data" u 7:(1) smooth cumulative w steps axes x1y2 ti "\\raisebox{0mm}{$k=4\\kern0.1mm$}" at beginning lc rgb '#88cc00', \
     "../experiments/new-gpgnode-results/ids-sequential-induced.data" u 8:(1) smooth cumulative w steps axes x1y2 ti "\\raisebox{-1mm}{$k=5$}" at beginning
 
