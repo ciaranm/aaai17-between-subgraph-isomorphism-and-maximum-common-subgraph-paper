@@ -691,7 +691,9 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
 \nl $\KwSty{return}~\KwSty{true}$ \;
 }
 \end{multicols}
-\caption{An algorithm for the $k$-less subgraph isomorphism problem.}
+\vspace{0.5cm}% Do not remove! Otherwise, the caption overlaps the algorithm due to algorithm2e and
+% multicol[vlined] not being entirely happy with each other.
+\caption{A bit-parallel algorithm for the $k$-less subgraph isomorphism problem.}
 \label{algorithm:sip}
 \end{algorithm*}
 
@@ -713,20 +715,26 @@ experiments indicated that this happened very rarely.
 To handle unmapped vertices, on line ?? we include $k$ additional wildcard $\bot$ values in each
 domain (rather than a single value which may be used $k$ times).
 
-We begin by trying to infer domain deletions.
-
-?? Constraints and unit propagation
+We begin by trying to infer domain deletions. The ?? function looks for domains which contains
+either only a single value, or only wildcards---we call such a domain ``effectively-unit''. If such
+a domain $D_v$ exists, we eliminate its value from every other domain, and then propagate adjacency:
+for each domain corresponding to a vertex adjacent to $v$, we eliminate any value from its domain
+which is not adjacent to $v$ (treating wildcards as being adjacent to all vertices). If a domain
+wipeout occurs, we return failure.
 
 ?? Supplemental graphs. These are also used for eliminating infeasible values.
 
-?? All different. Note that this will definitely find domains of size 0 or 1, but may fail for
-larger domains.
+If no effectively-unit domains remain, we attempt stronger propagation for the all-different
+constraint. Our ?? function is the bit-parallel propagator taken from
+\citet{DBLP:conf/cp/McCreeshP15}, and is \emph{not} the usual matching-based propagator ?? which
+guarantees generalised arc consistency. ?? a bit more on how it works. It can easily be seen that
+this propagator will always find Hall sets or failed Hall sets of size zero or one, but it may miss
+larger sets. This propagation could create new effectively-unit domains; if so, we loop.
 
-We must be careful to treat domains containing multiple wildcard values (which we call ``effectively
-unit'') specially during unit propagation (line~\ref{line:effect}), and we introduce a symmetry
+?? Search
+
+we introduce a symmetry
 break (line~\ref{line:sym}) to try only a single wildcard value for each variable.
-
-?? Search. No backjumping.
 
 ?? Heuristics
 
