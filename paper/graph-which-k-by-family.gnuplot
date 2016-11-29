@@ -18,7 +18,7 @@ set key outside right top
 set boxwidth 0.8 absolute
 set style data histogram
 set style histogram rowstacked
-set style fill solid border
+set style fill solid border -1
 
 set nocolorbox
 
