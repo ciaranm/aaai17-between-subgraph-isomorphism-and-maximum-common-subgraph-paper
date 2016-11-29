@@ -318,11 +318,13 @@ and graphs close to the satisfiable-unsatisfiable phase transition
 format\footnote{http://liris.cnrs.fr/csolnon/SIP.html}.  Note that many of these instances
 are \emph{much} larger than were used in the recent comparison of maximum common subgraph algorithms
 by \citet{DBLP:conf/cp/McCreeshNPS16}: for unlabelled graphs, they used pairs of graphs with up to
-35 vertices in each, whilst our dataset contains graphs with up to 6,671 vertices. For the CP
-algorithm, 1,560 of the instances cannot fit in the amount of RAM we have available---we treat these
-instances as having timed out. The situation for the clique encoding is even worse, and 3,653 of
-these instances do not fit in 64GBytes of RAM. In contrast, for our algorithm, every instance fits
-comfortably.  \section{Domain Filtering using Degrees}\label{section:degreefiltering}
+35 vertices in each, whilst our dataset contains graphs with up to 6,671 vertices. For the
+forward checking algorithm described by \citet{DBLP:conf/cp/NdiayeS11}, 1,560 of the instances
+cannot fit in the amount of RAM we have available---we treat these instances as having timed out.
+The situation for the clique encoding is even worse, and 3,653 of these instances do not fit in
+64GBytes of RAM. In contrast, for our algorithm, every instance fits comfortably.
+
+\section{Domain Filtering using Degrees}\label{section:degreefiltering}
 
 Let $p$ be a vertex in a graph $P$. The \emph{degree} of $p$, $\deg(p)$, is the number of vertices
 to which it is adjacent. The degree of vertices gives us an invariant, which may be used to
