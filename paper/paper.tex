@@ -710,10 +710,10 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
 algorithm due to \citet{DBLP:conf/cp/McCreeshP15}, which in a recent evaluation of using portfolios
 of subgraph isomorphism algorithms was the single strongest solver \citep{thelionpaper}.
 
-The algorithm performs a constraint-based search. We have a variable $D_v$ for each vertex $v$ in
-the pattern graph, each of which has a domain containing one value for every vertex in the target
-graph. The algorithm is bit-parallel: each $D_v$ is a bitset, and all graphs are stored as adjacency
-matrices.
+The algorithm performs a constraint-based search. We have a set $D$ containing a variable $D_v$ for
+each vertex $v$ in the pattern graph. Each variable has a domain containing one value for every
+vertex in the target graph. The algorithm is bit-parallel: each $D_v$ is stored using bitset, and
+all graphs are stored as adjacency matrices.
 
 In line~\ref{line:degreefiltering} we use the reasoning from \cref{section:degreefiltering} to
 eliminate infeasible initial values from the domains. We do not use iterated label filtering
