@@ -739,9 +739,7 @@ constraint. Our $\FuncSty{allDifferent}$ function is the bit-parallel propagator
 \citet{DBLP:conf/cp/McCreeshP15}, and is \emph{not} the usual matching-based propagator
 \citep{DBLP:conf/aaai/Regin94} which guarantees generalised arc consistency. Because we use multiple
 wildcard values, we do not need to modify the algorithm to allow a single wildcard value to be used
-more than once. ?? A few sentences on how this works. It can easily be seen that this propagator
-will always find Hall sets or failed Hall sets of size zero or one, but it may miss larger sets.
-This propagation could create new effectively-unit domains; if so, we loop.
+more than once. This propagation could create new effectively-unit domains; if so, we loop.
 
 If propagation is unable to prove unsatisfiability, we search. We pick the smallest domain
 (line~\ref{line:pickd}) and try giving it each of its remaining values in turn. We use the value the
