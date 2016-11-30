@@ -583,7 +583,7 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
 
 \section{A New Algorithm}\label{section:algorithm}
 
-\begin{algorithm*}[tb]
+\begin{algorithm*}[p]
 \DontPrintSemicolon
     \begin{minipage}[t]{\dimexpr.5\textwidth-.5\columnsep}
 \nl $\FuncSty{klessSubgraphIsomorphism}$ (\\\hspace*{2em}Graph $\mathcal{P}$, Graph $\mathcal{T}$, Int $k$) $\rightarrow$ Bool \;
@@ -670,6 +670,17 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
 \label{algorithm:sip}
 \end{algorithm*}
 
+\begin{figure*}[p]
+    \centering
+    \includegraphics*{gen-graph-runtimes.pdf}
+    \caption{In the first two plots we show the cumulative number of instances solved over time, for the
+        induced and non-induced problems, with different values of $k$. We also show the results of
+        iteratively increasing $k$ until a solution is found, and in the induced case, the
+        performance of two leading maximum common subgraph algorithms. In the third plot we show results
+        comparing iteratively increasing $k$ with our algorithm to other approaches on maximum
+        common induced subgraph instances.}\label{figure:runtimes}
+\end{figure*}
+
 \Cref{algorithm:sip} integrates these techniques into a full algorithm. This is derived from an
 algorithm due to \citet{DBLP:conf/cp/McCreeshP15}, which in a recent evaluation of using portfolios
 of subgraph isomorphism algorithms was the single strongest solver \citep{thelionpaper}.
@@ -725,19 +736,7 @@ conflict-directed backjumping as in our experiments it had very little effect fo
 
 \section{Empirical Evaluation}\label{section:evaluation}
 
-\begin{figure*}[tb]
-    \centering
-    \includegraphics*{gen-graph-runtimes.pdf}
-    \caption{In the first two plots we show the cumulative number of instances solved over time, for the
-        induced and non-induced problems, with different values of $k$. We also show the results of
-        iteratively increasing $k$ until a solution is found, and in the induced case, the
-        performance of two leading maximum common subgraph algorithms. In the third plot we show results
-        comparing iteratively increasing $k$ with our algorithm to other approaches on maximum
-        common induced subgraph instances.}\label{figure:runtimes}
-\end{figure*}
-
-\begin{figure}[ht!] % This is necessary to avoid really awful figure placement midway through the
-    % references...
+\begin{figure}[t]
     \centering
     \includegraphics*{gen-graph-which-k-by-family.pdf}
     \caption{The proportion of instances, in different families, which become satisfiable for
