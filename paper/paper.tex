@@ -707,32 +707,31 @@ the pattern graph, each of which has a domain containing one value for every ver
 graph. The algorithm is bit-parallel: each $D_v$ is a bitset, and all graphs are stored as adjacency
 matrices.
 
-In lines ?? we use the reasoning from section ?? to eliminate infeasible initial values from the
-domains. We do not use iterated label filtering ?? cite to recalculate neighbourhood degree
-sequences if any vertices are not present in any target domain after construction: preliminary
-experiments indicated that this happened very rarely.
+In lines ?? we use the reasoning from \cref{section:degreefiltering} to eliminate infeasible initial
+values from the domains. We do not use iterated label filtering \citep{constraints10} to recalculate
+neighbourhood degree sequences if any vertices are not present in any target domain after
+construction: preliminary experiments indicated that this happened very rarely on our instances.
 
 To handle unmapped vertices, on line ?? we include $k$ additional wildcard $\bot$ values in each
 domain (rather than a single value which may be used $k$ times).
 
-We begin by trying to infer domain deletions. The ?? function looks for domains which contains
-either only a single value, or only wildcards---we call such a domain ``effectively-unit''. If such
-a domain $D_v$ exists, we eliminate its value from every other domain, and then propagate adjacency:
-for each domain corresponding to a vertex adjacent to $v$, we eliminate any value from its domain
-which is not adjacent to $v$ (treating wildcards as being adjacent to all vertices). If a domain
-wipeout occurs, we return failure.
+We begin by trying to infer domain deletions. The $\FuncSty{propagate}$ function looks for domains
+which contains either only a single value, or only wildcards---we call such a domain
+``effectively-unit''. If such a domain $D_v$ exists, we eliminate its value from every other domain,
+and then propagate adjacency: for each domain corresponding to a vertex adjacent to $v$, we
+eliminate any value from its domain which is not adjacent to $v$ (treating wildcards as being
+adjacent to all vertices). If a domain wipeout occurs, we return failure.
 
-?? Supplemental graphs. These are also used for eliminating infeasible values.
+?? Describe supplemental graphs. These are also used for eliminating infeasible values.
 
 If no effectively-unit domains remain, we attempt stronger propagation for the all-different
-constraint. Our ?? function is the bit-parallel propagator taken from
-\citet{DBLP:conf/cp/McCreeshP15}, and is \emph{not} the usual matching-based propagator ?? which
-guarantees generalised arc consistency. ?? a bit more on how it works. It can easily be seen that
-this propagator will always find Hall sets or failed Hall sets of size zero or one, but it may miss
-larger sets. This propagation could create new effectively-unit domains; if so, we loop.
-
-?? This technique allows us to retain the bit-parallel all different propagator used in the original
-algorithm.
+constraint. Our $\FuncSty{allDifferent}$ function is the bit-parallel propagator taken from
+\citet{DBLP:conf/cp/McCreeshP15}, and is \emph{not} the usual matching-based propagator ?? cite
+which guarantees generalised arc consistency. Because we use multiple wildcard values, we do not
+need to modify the algorithm to allow a single wildcard value to be used more than once. ?? a bit
+more on how it works?. It can easily be seen that this propagator will always find Hall sets or
+failed Hall sets of size zero or one, but it may miss larger sets. This propagation could create new
+effectively-unit domains; if so, we loop.
 
 If propagation is unable to prove unsatisfiability, we search. We pick the smallest domain (line
 ??), and try giving it each of its remaining values in turn. We use the value the ordering heuristic
@@ -741,14 +740,11 @@ maximising the expected number of solutions remaining during search
 \citep{DBLP:conf/ijcai/McCreeshPT16}.  We introduce a symmetry break (line~\ref{line:sym}) to try
 only a single wildcard value for each variable.
 
-?? As well as the modifications to solve $k$-less and induced problems, we have made two
-simplifications: we do not use conflict-directed backjumping, and in preliminary experiments, these
-techniques were not beneficial for $k > 0$.
-
 To handle the induced case, we make use of \cref{prop:comp} (line~\ref{line:comp}). We also tested
 using path reasoning on complement graphs, but this is expensive to calculate and provides little
-benefit in practice on the instances we considered.  We also do not strip isolated vertices as
-cite?? did, as this is not a valid simplification in the induced case.
+benefit in practice on the instances we considered.  We also do not strip isolated vertices as the
+original algorithm did, as this is not a valid simplification in the induced case, and we do not use
+conflict-directed backjumping as in our experiments it had very little effect for $k > 0$.
 
 \section{Empirical Evaluation}\label{section:evaluation}
 
