@@ -88,6 +88,7 @@
 \newcommand{\lessmap}[1]{\prescript{}{#1}{\mapsto}\ }
 \newcommand{\lesspreceq}[1]{\prescript{}{#1}{\preceq}\ }
 \newcommand{\V}{\operatorname{V}}
+\newcommand{\EdgeSet}{\operatorname{E}}
 \newcommand{\N}{\operatorname{N}}
 \newcommand{\nds}{\operatorname{S}}
 \newcommand{\loopcomp}[1]{\tset{\multimap}{#1}}
@@ -214,13 +215,18 @@ competitive algorithm for the maximum common induced subgraph problem.
 
 \subsection{Definitions and Notations} \label{section:definitions}
 
-A \emph{non-induced subgraph isomorphism} from a graph $P$ to a graph $T$ is an injective mapping $P
-\rightarrowtail T $ which maps adjacent vertices to adjacent vertices. An \emph{induced subgraph
+Throughout, our graphs are undirected, but may have loops.  We write $\V(G)$ for the vertex set of a
+graph $G$, and $\EdgeSet(G)$ for its set of edges. We write $\N_G(v)$ for the \emph{neighbourhood}
+of a vertex $v$ in $G$, and $v \sim_G w$ to mean $v$ is adjacent to $w$; where the graph is clear
+from the context, the subscript is omitted.
+
+A \emph{non-induced subgraph isomorphism} from a graph $P$ to a graph $T$ is an injective mapping
+$\V(P) \rightarrowtail \V(T) $ which maps adjacent vertices to adjacent vertices. An \emph{induced subgraph
 isomorphism} $P \hookrightarrow T$ additionally maps non-adjacent vertices to non-adjacent vertices.
 We define a \emph{$k$-less subgraph isomorphism} from $P$ to $T$ to be a subgraph isomorphism from all but
 $k$ vertices of $P$ to $T$; this may be non-induced or induced, written $P \lessnonind{k} T$ and $P
 \lessind{k} T$ respectively. We write $p \lessmap{k} t$ to mean that the pattern vertex p is mapped
-to the target vertex v.
+to the target vertex v under either kind of mapping.
 
 The \emph{complement} of a (simple) graph $P$ is the graph $\shortoverline{P}~$.  Adjacent distinct
 vertices in $P$ are non-adjacent in $\shortoverline{P}$ while non-adjacent vertices in $P$ are
@@ -410,10 +416,8 @@ Let $p$ be a vertex in $P$, and $t$ a vertex in $T$, with $p\mapsto t$. Then by 
 \]
 \end{proof}
 
-A vertex $q$ which is adjacent to $p$ is called its \emph{neighbour}.  Let $\N(p) = \{ q \in \V(P) :
- p~\textnormal{and}~q~\textnormal{are adjacent}\}$ be the \emph{set of neighbours} of $p$.  The \emph{neighbourhood
-degree sequence} (NDS) of $p$, $\nds(p)$, is the (non-ascending) sequence of degrees of its
-neighbours.
+The \emph{neighbourhood degree sequence} (NDS) of a vertex $p$, $\nds(p)$, is the (non-ascending)
+sequence of degrees of its neighbours.
 
 Let $S = ( s_1 , \ldots , s_n )$ and $T = ( t_1 , \ldots , t_m)$ be two sequences.  We say that $S
 \preceq T$ if $n \leq m$ and $\forall s_i \in S$ there exists a distinct $t_j \in T$ with $s_i \leq
@@ -486,7 +490,7 @@ $\paths(p,q,n)$ to be the \emph{number of paths of length $n$} between the verti
 \end{proposition}
 \begin{proof}
 Let $P_{2}$ be the set of all paths of length two between $p$ and $q$, \[P_{2} = \{((p,x),(x,q)) :
-(p,x),(x,q)\in \operatorname{E}(P) \}\textnormal{.}\] As we are looking at paths of length 2,
+(p,x),(x,q)\in \EdgeSet(P) \}\textnormal{.}\] As we are looking at paths of length 2,
 the intermediate vertices lie in both neighbour vertex sets of $p$ and $q$. We can rewrite
 $P_{2}$ as \[P_{2} = \{((p,x),(x,q)) : x\in \N(p) \text{ and } x\in \N(q) \}\textnormal{,}\] in
 other words the intermediate vertices lie in the intersection of the neighbour sets of $p$ and
