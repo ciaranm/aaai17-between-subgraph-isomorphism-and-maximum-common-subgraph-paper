@@ -19,7 +19,6 @@
 \usepackage{tikz}
 \usepackage{mathtools}
 \usepackage{graphicx}
-\usepackage{multicol}
 \usepackage[vlined]{algorithm2e}
 
 \setcounter{secnumdepth}{2}
@@ -587,7 +586,7 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
 
 \begin{algorithm*}[tb]
 \DontPrintSemicolon
-\begin{multicols}{2}
+    \begin{minipage}[t]{\dimexpr.5\textwidth-.5\columnsep}
 \nl $\FuncSty{klessSubgraphIsomorphism}$ (\\\hspace*{2em}Graph $\mathcal{P}$, Graph $\mathcal{T}$, Int $k$) $\rightarrow$ Bool \;
 \nl \Begin{
     \nl \lIf{$\left|\V(\mathcal{P})\right| + k > \left|\V(\mathcal{T})\right|$}{$\KwSty{return}~\KwSty{false}$\label{line:enough}}
@@ -627,7 +626,8 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
         }
     }
 }
-\bigskip
+\end{minipage}\hfill%
+    \begin{minipage}[t]{\dimexpr.5\textwidth-.5\columnsep}
 \nl $\FuncSty{propagate}$ (GraphPairs $L$, Domains $D$) $\rightarrow$ Bool \;
 \nl \Begin{
     \nl \While{\KwSty{true}}{
@@ -666,11 +666,7 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
 }
 \nl $\KwSty{return}~\KwSty{true}$ \;
 }
-\end{multicols}
-\vspace{0.5cm}% Be careful if you remove this! Something weird happens where the caption overlaps
-% the algorithm due to algorithm2e and multicol[vlined] not being entirely happy with each other.
-% If you take this out, please check the space between the algorithm and the caption very very
-% carefully.
+\end{minipage}
 \caption{A bit-parallel algorithm for the $k$-less subgraph isomorphism problem.}
 \label{algorithm:sip}
 \end{algorithm*}
@@ -741,7 +737,8 @@ conflict-directed backjumping as in our experiments it had very little effect fo
         common induced subgraph instances.}\label{figure:runtimes}
 \end{figure*}
 
-\begin{figure}[h!]% The ! is needed to avoid this being bumped forward a page
+\begin{figure}[ht!] % This is necessary to avoid really awful figure placement midway through the
+    % references...
     \centering
     \includegraphics*{gen-graph-which-k-by-family.pdf}
     \caption{The proportion of instances, in different families, which become satisfiable for
