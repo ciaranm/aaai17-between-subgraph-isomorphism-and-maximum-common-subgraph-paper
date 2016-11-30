@@ -471,7 +471,9 @@ $S \setminus S_k$ from the definition of $S \lesspreceq{k} T$ with the subsequen
 \Cref{figure:ids} demonstrates that this is effective in practice: we show the amount of domain
 reduction we can achieve at the top of search by using invariants and a fixed $k$, compared to the
 search space size for the maximum common induced subgraph problem. (The results on the non-induced
-version show a similar but slightly weaker trend.)
+version show a similar but slightly weaker trend.) We look at the product of the domain sizes,
+rather than the number of eliminations, as this better reflects the number of combinations remaining
+to be considered.
 
 Some other invariants do not translate. For example, another rule which can be effective on regular
 graphs involves counting the number of neighbours of a vertex which are present in a triangle
