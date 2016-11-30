@@ -73,6 +73,8 @@
 \Crefname{section}{Section}{Sections}
 \crefname{proposition}{Proposition}{Propositions}
 \Crefname{proposition}{Proposition}{Propositions}
+\crefname{corollary}{Corollary}{Corollaries}
+\Crefname{corollary}{Corollary}{Corollaries}
 
 \crefname{algocf}{Algorithm}{Algorithms}
 \Crefname{algocf}{Algorithm}{Algorithms}
@@ -239,7 +241,7 @@ The following proposition follows directly from the definitions.
 
 \begin{proposition}
     \label{prop:comp}
-Let $i$ be an assignment of $T$ vertices to $P$ vertices.  Then $i$ satisfies the definition of $P
+Let $i$ be an assignment of vertices of $T$ to vertices of $P$.  Then $i$ satisfies the definition of $P
 \hookrightarrow T$ if and only if $i$ satisfies $P \rightarrowtail T$ and
 $\loopcomp{P} \rightarrowtail \loopcomp{T}$.
 Similarly, $i$ satisfies the definition of $P
@@ -265,12 +267,12 @@ non-induced case we are allowing extra edges only in the target graph, not in th
 
 For both subgraph isomorphism and maximum common subgraph, constraint programming is the best known
 approach\footnote{Note that toolkits are not used in state of the art implementations, to facilitate
-better memory layouts and propagation queues, although the algorithms are inspired by
-constraint programming.}, although a reduction to maximum clique is better when edge labels are
-present \citep{DBLP:conf/cp/NdiayeS11,DBLP:conf/cp/McCreeshNPS16}. For both problems, we create a variable for each vertex
-in the pattern graph (the smaller graph, in the case of maximum common subgraph), with domains
-ranging over the vertices in the target graph (the larger graph). For maximum common subgraph, each
-domain is given an additional $\bot$ value, meaning ``unmapped''.
+better memory layouts and propagation queues, although the algorithms are inspired by constraint
+programming.}, although a reduction to the maximum clique problem is better when edge labels are
+present \citep{DBLP:conf/cp/NdiayeS11,DBLP:conf/cp/McCreeshNPS16}. For both problems, we create a
+variable for each vertex in the pattern graph (the smaller graph, in the case of maximum common
+subgraph), with domains ranging over the vertices in the target graph (the larger graph). For
+maximum common subgraph, each domain is given an additional $\bot$ value, meaning ``unmapped''.
 
 Constraints are used to ensure that adjacent pairs of vertices are mapped to adjacenct pairs of
 vertices. For the maximum common subgraph case, any pair of assignments with $\bot$ as either value
@@ -286,7 +288,7 @@ isomorphism also allows us to generate additional implied constraints, which we 
 \cref{section:pathfiltering}. However, neither of these techniques are valid for the maximum common
 subgraph problem.
 
-There are three easy ways we might try to extend existing algorithms for this problem.
+There are three easy ways we might try to extend existing algorithms to handle the $k$-less problem.
 A non-induced $k$-less subgraph isomorphism from $P$ to $T$ is equivalent to a subgraph isomorphism
 between $P$ and $T$, with $k$ extra universally-adjacent vertices added to $T$, and so we could try
 solving subgraph isomorphism with a modified target graph. However, using such
@@ -400,8 +402,8 @@ eliminate some infeasible values from domains.
         \end{scope}
     \end{tikzpicture}
     \caption{There is a non-induced isomorphism $P\rightarrowtail T$ from the first graph to the
-    second, using the highlighted vertices. No such isomorphism exists to the third graph, but there
-    is a $1$-less isomorphism $P\lessnonind{1} U$ omitting vertex $b$.}\label{figure:klessexample}
+    second, using the highlighted vertices. No such isomorphism exists between $P$ and $U$, but there
+    is a $1$-less isomorphism $P\lessnonind{1} U$ which omits vertex $b$.}\label{figure:klessexample}
 \end{figure}
 
 \begin{proposition}\label{prop:deg}
@@ -450,8 +452,8 @@ changes the neighbourhood degree sequence of $p$ in the $k$-less version of $P$ 
 
 \Cref{figure:klessexample} also illustrates the three cases possible when filtering by neighbourhood
 degree sequence.  Removing vertex $d$ causes each entry in $\nds(p)$ to be reduced; removing vertex
-$a$ removes an entry from $\nds(p)$; and removing either of vertex $b$ or $c$ in the middle layer
-causes both the size of $\nds(p)$ to be reduced and an entry in $\nds(p)$ to be reduced.
+$a$ removes an entry from $\nds(p)$; and removing either of vertex $b$ or $c$ causes both the size
+of $\nds(p)$ to be reduced and an entry in $\nds(p)$ to be reduced.
 
 \begin{corollary}
 Since both $\nds(p)$ and $\nds(t)$ are non-ascending, without loss of generality we can replace
@@ -468,12 +470,12 @@ $S \setminus S_k$ from the definition of $S \lesspreceq{k} T$ with the subsequen
     problem.}\label{figure:ids}
 \end{figure}
 
-\Cref{figure:ids} demonstrates that this is effective in practice: we show the amount of domain
-reduction we can achieve at the top of search by using invariants and a fixed $k$, compared to the
-search space size for the maximum common induced subgraph problem. (The results on the non-induced
-version show a similar but slightly weaker trend.) We look at the product of the domain sizes,
-rather than the number of eliminations, as this better reflects the number of combinations remaining
-to be considered.
+\Cref{figure:ids} demonstrates that \cref{prop:nds} is effective in practice: we show the amount of
+domain reduction we can achieve at the top of search by using invariants and a fixed $k$, compared
+to the search space size for the maximum common induced subgraph problem. (The results on the
+non-induced version show a similar but slightly weaker trend.) We look at the product of the domain
+sizes, rather than the number of eliminations, as this better reflects the number of combinations
+remaining to be considered.
 
 Some other invariants do not translate. For example, another rule which can be effective on regular
 graphs involves counting the number of neighbours of a vertex which are present in a triangle
@@ -724,7 +726,7 @@ values in each domain (rather than a single value which may be used $k$ times).
 
 We begin by trying to infer domain deletions. The $\FuncSty{propagate}$ function looks for domains
 which contains either only a single value, or only wildcards---we call such a domain
-``effectively-unit''. If such a domain $D_v$ exists, we eliminate its value from every other domain,
+\emph{effectively-unit}. If such a domain $D_v$ exists, we eliminate its value from every other domain,
 and then propagate adjacency: for each domain corresponding to a vertex adjacent to $v$, we
 eliminate any value from its domain which is not adjacent to $v$ (treating wildcards as being
 adjacent to all vertices). If a domain wipeout occurs, we return failure.
@@ -741,7 +743,8 @@ constraint. Our $\FuncSty{allDifferent}$ function is the bit-parallel propagator
 \citet{DBLP:conf/cp/McCreeshP15}, and is \emph{not} the usual matching-based propagator
 \citep{DBLP:conf/aaai/Regin94} which guarantees generalised arc consistency. Because we use multiple
 wildcard values, we do not need to modify the algorithm to allow a single wildcard value to be used
-more than once. This propagation could create new effectively-unit domains; if so, we loop.
+more than once. This propagation could create new effectively-unit domains; if so, we repeat the
+process.
 
 If propagation is unable to prove unsatisfiability, we search. We pick the smallest domain
 (line~\ref{line:pickd}) and try giving it each of its remaining values in turn. We use the value the
