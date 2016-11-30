@@ -22,44 +22,12 @@
 \usepackage{multicol}
 \usepackage[vlined]{algorithm2e}
 
-% to restate the propostions
-%\usepackage{thmtools,thm-restate}
-
-%\declaretheorem[name=Proposition,style=definition]{proposition}
-
 \setcounter{secnumdepth}{2}
 
-% \usepackage{showframe}
-
-\makeatletter\@ifpackageloaded{showframe}{
-    % show lines down the middle columns too
-    % http://tex.stackexchange.com/questions/16199/test-if-a-package-or-package-option-is-loaded
-\newlength\Fcolumnseprule\setlength\Fcolumnseprule{0.4pt}\def\@outputdblcol{%
-  \if@firstcolumn\global \@firstcolumnfalse \global \setbox\@leftcolumn \box\@outputbox
-  \else
-    \global \@firstcolumntrue
-    \setbox\@outputbox \vbox{\hb@xt@\textwidth{\hb@xt@\columnwidth{\box\@leftcolumn \hss}%
-    \vrule \@width\Fcolumnseprule\hfil{\normalcolor\vrule \@width\columnseprule}
-    \hfil\vrule \@width\Fcolumnseprule\hb@xt@\columnwidth {\box\@outputbox \hss}}}\@combinedblfloats\@outputpage
-    \begingroup\@dblfloatplacement\@startdblcolumn\@whilesw\if@fcolmade \fi{\@outputpage\@startdblcolumn}\endgroup
-  \fi
-}}{}
-\makeatother
-
-\usetikzlibrary{decorations, decorations.pathreplacing, calc, backgrounds,shapes.misc}
-%cross
-\tikzset{cross/.style={cross out, draw=uofgcobalt, minimum size=2*(#1-\pgflinewidth), inner sep=0pt, outer sep=0pt},cross/.default={1.5mm}}
-
-
-\definecolor{uofgsandstone}{rgb}{0.321569, 0.278431, 0.231373}
-\definecolor{uofglawn}{rgb}{0.517647, 0.741176, 0}
-\definecolor{uofgcobalt}{rgb}{0, 0.615686, 0.92549}
-\definecolor{uofgpumpkin}{rgb}{1.0, 0.72549, 0.282353}
-\definecolor{uofgthistle}{rgb}{0.584314, 0.070588, 0.447059}
+\usetikzlibrary{decorations, decorations.pathreplacing, calc}
 
 \newcommand{\citet}[1]{\citeauthor{#1} \shortcite{#1}}
 \newcommand{\citep}[1]{\cite{#1}}
-
 
 \theoremstyle{definition}
 \newtheorem{corollary}{Corollary}
@@ -81,7 +49,6 @@
 
 % http://tex.stackexchange.com/questions/22100/the-bar-and-overline-commands
 \newcommand{\shortoverline}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
-
 
 % Maths operators
 \newcommand{\paths}{\operatorname{paths}}
@@ -333,7 +300,7 @@ cannot fit in the amount of RAM we have available---we treat these instances as 
 The situation for the clique encoding is even worse, and 3,653 of these instances do not fit in
 64GBytes of RAM. In contrast, for our algorithm, every instance fits comfortably.
 
-\section{Domain Filtering using Degrees}\label{section:degreefiltering}
+\section{Domain Filtering Using Degrees}\label{section:degreefiltering}
 
 Let $p$ be a vertex in a graph $P$. The \emph{degree} of $p$, $\deg(p)$, is the number of vertices
 to which it is adjacent. The degree of vertices gives us an invariant, which may be used to
@@ -700,8 +667,10 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
 \nl $\KwSty{return}~\KwSty{true}$ \;
 }
 \end{multicols}
-\vspace{0.5cm}% Do not remove! Otherwise, the caption overlaps the algorithm due to algorithm2e and
-% multicol[vlined] not being entirely happy with each other.
+\vspace{0.5cm}% Be careful if you remove this! Something weird happens where the caption overlaps
+% the algorithm due to algorithm2e and multicol[vlined] not being entirely happy with each other.
+% If you take this out, please check the space between the algorithm and the caption very very
+% carefully.
 \caption{A bit-parallel algorithm for the $k$-less subgraph isomorphism problem.}
 \label{algorithm:sip}
 \end{algorithm*}
@@ -772,7 +741,7 @@ conflict-directed backjumping as in our experiments it had very little effect fo
         common induced subgraph instances.}\label{figure:runtimes}
 \end{figure*}
 
-\begin{figure}[h!]
+\begin{figure}[h!]% The ! is needed to avoid this being bumped forward a page
     \centering
     \includegraphics*{gen-graph-which-k-by-family.pdf}
     \caption{The proportion of instances, in different families, which become satisfiable for
@@ -844,10 +813,7 @@ filtering now being possible.
 
 We would like to thank Frances Cooper for her comments.
 
-% Other stuff to stick back in: example of paths of length 3, correlation heatmap
-
 \bibliographystyle{aaai}
 \bibliography{paper}
-
 
 \end{document}
