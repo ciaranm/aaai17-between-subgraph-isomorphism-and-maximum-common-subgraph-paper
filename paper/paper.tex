@@ -510,7 +510,7 @@ which tells us
 \]
 \end{proof}
 
-\begin{corollary}
+\begin{corollary}\label{corollary:supplemental}
     For a graph $G$, let $G^{n, \ell}$ be the graph with vertex set $\V(G)$, and edges between vertices $p$ and $q$ if there are at least $n$ simple paths of
     length exactly $\ell$ between $p$ and $q$ in $G$. Then any $k$-less subgraph isomorphism
     $P \lessnonind{k} T$ induces a new $k$-less subgraph isomorphism
@@ -617,17 +617,17 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
 \nl \Begin{
     \nl \lIf{$\left|\V(\mathcal{P})\right| + k > \left|\V(\mathcal{T})\right|$}{$\KwSty{return}~\KwSty{false}$\label{line:enough}}
     \nl $L \gets \big[ (\mathcal{P},\ \mathcal{T}), (\loopcomp{\mathcal{P}},
-        \loopcomp{\mathcal{T}}) \textnormal{~only if we want induced\label{line:comp}},$
+            \loopcomp{\mathcal{T}}) \textnormal{~only if we want induced\label{line:comp}}, \label{line:supplemental}$
         \\\hspace*{1.0em}$(\mathcal{P}^{1 + k,2},\ \mathcal{T}^{1,2}), (\mathcal{P}^{2 + k,2},\
     \mathcal{T}^{2,2}), (\mathcal{P}^{3 + k,2},\ \mathcal{T}^{3,2}) \big]$ \;
     \nl \ForEach{$v \in \V(\mathcal{P})$}{
         \nl $D_v \gets \V(\mathcal{T})$\;
         \nl \ForEach{$(P,\,T) \in L$}{
-            \nl $D_v \gets \{ w \in D_v : $ \\
+            \nl $D_v \gets \{ w \in D_v : $ \label{line:degreefiltering} \\
             \hspace*{4em}$v \sim_P v \Rightarrow w \sim_T w~\wedge$ \\
             \hspace*{4em}$\nds_P(v) \lesspreceq{k} \nds_T(w)\}$ \;
         }
-        \nl $D_v \gets D_v \cup k~\textnormal{distinct wildcard values}$
+        \nl $D_v \gets D_v \cup k~\textnormal{distinct wildcard values} \label{line:wildcards}$
     }
     \nl \If{\FuncSty{propagate}(L, D)}{
         \nl $\KwSty{return}~\FuncSty{search}(L, \{ E \in D : \left|E\right| > 1 \}, k)$\;
@@ -638,7 +638,7 @@ sometimes adding just one new constrained pair can vastly reduce the search spac
 \nl $\FuncSty{search}$ (GraphPairs $L$, Domains $D$, Int $k$) $\rightarrow$ Bool \;
 \nl \Begin{
     \nl \lIf{$D = \emptyset$}{$\KwSty{return}~\KwSty{true}$}
-    \nl $D_v \gets \textnormal{the smallest domain in}~D$ \;
+    \nl $D_v \gets \textnormal{the smallest domain in}~D$ \label{line:pickd} \;
     \nl \ForEach {$v' \in D_v~\textnormal{ordered by static degree in}~\mathcal{T}$\label{line:parforeach}}{
         \nl \If{$v'$ \textnormal{is not the first wildcard we have tried\label{line:sym}}}{
             \nl \KwSty{continue} \;
@@ -707,13 +707,14 @@ the pattern graph, each of which has a domain containing one value for every ver
 graph. The algorithm is bit-parallel: each $D_v$ is a bitset, and all graphs are stored as adjacency
 matrices.
 
-In lines ?? we use the reasoning from \cref{section:degreefiltering} to eliminate infeasible initial
-values from the domains. We do not use iterated label filtering \citep{constraints10} to recalculate
-neighbourhood degree sequences if any vertices are not present in any target domain after
-construction: preliminary experiments indicated that this happened very rarely on our instances.
+In line~\ref{line:degreefiltering} we use the reasoning from \cref{section:degreefiltering} to
+eliminate infeasible initial values from the domains. We do not use iterated label filtering
+\citep{constraints10} to recalculate neighbourhood degree sequences if any vertices are not present
+in any target domain after construction: preliminary experiments indicated that this happened very
+rarely on our instances.
 
-To handle unmapped vertices, on line ?? we include $k$ additional wildcard $\bot$ values in each
-domain (rather than a single value which may be used $k$ times).
+To handle unmapped vertices, on line~\ref{line:wildcards} we include $k$ additional wildcard $\bot$
+values in each domain (rather than a single value which may be used $k$ times).
 
 We begin by trying to infer domain deletions. The $\FuncSty{propagate}$ function looks for domains
 which contains either only a single value, or only wildcards---we call such a domain
@@ -722,21 +723,26 @@ and then propagate adjacency: for each domain corresponding to a vertex adjacent
 eliminate any value from its domain which is not adjacent to $v$ (treating wildcards as being
 adjacent to all vertices). If a domain wipeout occurs, we return failure.
 
-?? Describe supplemental graphs. These are also used for eliminating infeasible values.
+We deal with the additional constraints discussed in \cref{section:pathfiltering} by constructing
+supplemental graphs, as in the \citet{DBLP:conf/cp/McCreeshP15} algorithm. This is done on
+line~\ref{line:supplemental}: the variable $L$ contains a list of pattern / target pairs, and
+following \cref{corollary:supplemental}, we will search for a mapping which is simultaneously a
+subgraph isomorphism between every pair in this list. We also do degree-based reasoning using each
+of these graph pairs.
 
 If no effectively-unit domains remain, we attempt stronger propagation for the all-different
 constraint. Our $\FuncSty{allDifferent}$ function is the bit-parallel propagator taken from
-\citet{DBLP:conf/cp/McCreeshP15}, and is \emph{not} the usual matching-based propagator ?? cite
-which guarantees generalised arc consistency. Because we use multiple wildcard values, we do not
-need to modify the algorithm to allow a single wildcard value to be used more than once. ?? a bit
-more on how it works?. It can easily be seen that this propagator will always find Hall sets or
-failed Hall sets of size zero or one, but it may miss larger sets. This propagation could create new
-effectively-unit domains; if so, we loop.
+\citet{DBLP:conf/cp/McCreeshP15}, and is \emph{not} the usual matching-based propagator
+\citep{DBLP:conf/aaai/Regin94} which guarantees generalised arc consistency. Because we use multiple
+wildcard values, we do not need to modify the algorithm to allow a single wildcard value to be used
+more than once. ?? A few sentences on how this works. It can easily be seen that this propagator
+will always find Hall sets or failed Hall sets of size zero or one, but it may miss larger sets.
+This propagation could create new effectively-unit domains; if so, we loop.
 
-If propagation is unable to prove unsatisfiability, we search. We pick the smallest domain (line
-??), and try giving it each of its remaining values in turn. We use the value the ordering heuristic
-from the original algorithm; wildcards are treated as having degree zero, in an attempt to
-maximising the expected number of solutions remaining during search
+If propagation is unable to prove unsatisfiability, we search. We pick the smallest domain
+(line~\ref{line:pickd}) and try giving it each of its remaining values in turn. We use the value the
+ordering heuristic from the original algorithm; wildcards are treated as having degree zero, in an
+attempt to maximising the expected number of solutions remaining during search
 \citep{DBLP:conf/ijcai/McCreeshPT16}.  We introduce a symmetry break (line~\ref{line:sym}) to try
 only a single wildcard value for each variable.
 
