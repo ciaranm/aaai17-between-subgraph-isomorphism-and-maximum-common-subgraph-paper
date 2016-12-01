@@ -115,7 +115,7 @@ non-edges.
 
 \begin{figure}[b]
     \centering
-    \begin{tikzpicture}[scale=0.5]%[every node/.style={circle, inner sep=0.5mm,node
+    \begin{tikzpicture}[scale=0.58]%[every node/.style={circle, inner sep=0.5mm,node
         %distance=10mm,fill=black}, scale=0.2]
 
         \begin{scope}[xshift=-1cm, yshift=-3cm, color=black]
@@ -177,23 +177,25 @@ algorithm which can scale to work with the families of graphs commonly used to b
 isomorphism algorithms: depending upon the benchmark family, we can close a substantial portion of
 the instances, and in many more cases, we can at least obtain an upper bound. This is a significant
 improvement over state of the art maximum common subgraph solvers, which cannot even fit many of
-these instances in 64 GBytes of RAM. Finally, we show that iteratively increasing $k$ gives a
-competitive algorithm for the maximum common induced subgraph problem.
+these instances in 64 GBytes of RAM. Finally, we show that starting with $k = 0$ and iteratively
+increasing $k$ gives a competitive algorithm for the maximum common induced subgraph problem.
 
 \subsection{Definitions and Notations} \label{section:definitions}
 
 Throughout, our graphs are undirected, but may have loops.  We write $\V(G)$ for the vertex set of a
 graph $G$, and $\EdgeSet(G)$ for its set of edges. We write $\N_G(v)$ for the \emph{neighbourhood}
-of a vertex $v$ in $G$, and $v \sim_G w$ to mean $v$ is adjacent to $w$; where the graph is clear
-from the context, the subscript is omitted.
+of a vertex $v$ in $G$, and $v \sim_G w$ to mean $v$ is adjacent to $w$. The \emph{degree} of $p$,
+$\deg_G(p)$, is the number of vertices to which it is adjacent. Where the graph is clear from the
+context, the subscripts are omitted.
 
-A \emph{non-induced subgraph isomorphism} from a graph $P$ to a graph $T$ is an injective mapping
-$\V(P) \rightarrowtail \V(T) $ which maps adjacent vertices to adjacent vertices. An \emph{induced subgraph
-isomorphism} $P \hookrightarrow T$ additionally maps non-adjacent vertices to non-adjacent vertices.
-We define a \emph{$k$-less subgraph isomorphism} from $P$ to $T$ to be a subgraph isomorphism from all but
-$k$ vertices of $P$ to $T$; this may be non-induced or induced, written $P \lessnonind{k} T$ and $P
-\lessind{k} T$ respectively. We write $p \lessmap{k} t$ to mean that the pattern vertex p is mapped
-to the target vertex v under either kind of mapping.
+A \emph{non-induced subgraph isomorphism} from a graph $P$ (called the \emph{pattern}) to a graph
+$T$ (the \emph{target}) is an injective mapping $\V(P) \rightarrowtail \V(T) $ which maps adjacent
+vertices to adjacent vertices. An \emph{induced subgraph isomorphism} $P \hookrightarrow T$
+additionally maps non-adjacent vertices to non-adjacent vertices.  We define a \emph{$k$-less
+subgraph isomorphism} from $P$ to $T$ to be a subgraph isomorphism from all but $k$ vertices of $P$
+to $T$; this may be non-induced or induced, written $P \lessnonind{k} T$ and $P \lessind{k} T$
+respectively. We write $p \lessmap{k} t$ to mean that the pattern vertex p is mapped to the target
+vertex v under either kind of mapping.
 
 The \emph{complement} of a (simple) graph $P$ is the graph $\shortoverline{P}~$.  Adjacent distinct
 vertices in $P$ are non-adjacent in $\shortoverline{P}$ while non-adjacent vertices in $P$ are
@@ -208,7 +210,7 @@ The following proposition follows directly from the definitions.
     \label{prop:comp}
 Let $i$ be an assignment of vertices of $T$ to vertices of $P$.  Then $i$ satisfies the definition of $P
 \hookrightarrow T$ if and only if $i$ satisfies $P \rightarrowtail T$ and
-$\loopcomp{P} \rightarrowtail \loopcomp{T}$.
+$\loopcomp{P} \rightarrowtail \loopcomp{T}$ simultaneously.
 Similarly, $i$ satisfies the definition of $P
 \lessind{k} T$ if and only if $i$ satisfies both $P \lessnonind{k} T$ and
 $\loopcomp{P}
@@ -242,7 +244,7 @@ maximum common subgraph, each domain is given an additional $\bot$ value, meanin
 Constraints are used to ensure that adjacent pairs of vertices are mapped to adjacenct pairs of
 vertices. For the maximum common subgraph case, any pair of assignments with $\bot$ as either value
 is also permitted.  To handle the induced case, rather than the usual approach of directly
-having constraints for non-adjacent pairs of vertices, we will make use of \cref{prop:comp} by
+having constraints for non-adjacent pairs of vertices, we will be making use of \cref{prop:comp} by
 seeking a mapping $i$ which simultaneously satisfies $P \rightarrowtail T$ and $\loopcomp{P}
 \rightarrowtail \loopcomp{T}$. Finally, an ``all different except $\bot$ constraint'' ensures
 injectivity.
@@ -280,7 +282,7 @@ We perform our experiments on systems with dual Intel Xeon CPU E5-2640 processor
 RAM, running Ubuntu 14.04. Our algorithm was implemented in
 C++\footnote{https://github.com/ciaranm/aaai17-between-subgraph-isomorphism-and-maximum-common-subgraph-paper},
 and source code was compiled using GCC 5.3.0. We used a timeout of 1,000 seconds for each instance.
-For comparison, we used the implementations of \citet{DBLP:conf/cp/McCreeshNPS16}.
+For comparison, we used the implementations of \citet{DBLP:conf/cp/NdiayeS11} and \citet{DBLP:conf/cp/McCreeshNPS16}.
 
 For datasets, we use the same 5,725 instances used in a recent work on portfolios of algorithms for
 subgraph isomorphism \citep{thelionpaper}. This collection includes randomly generated scale-free
@@ -293,16 +295,15 @@ format\footnote{http://liris.cnrs.fr/csolnon/SIP.html}.  Note that many of these
 are \emph{much} larger than were used in the recent comparison of maximum common subgraph algorithms
 by \citet{DBLP:conf/cp/McCreeshNPS16}: for unlabelled graphs, they used pairs of graphs with up to
 35 vertices in each, whilst our dataset contains graphs with up to 6,671 vertices. For the
-forward checking algorithm described by \citet{DBLP:conf/cp/NdiayeS11}, 1,560 of the instances
+forward-checking algorithm described by \citet{DBLP:conf/cp/NdiayeS11}, 1,560 of the instances
 cannot fit in the amount of RAM we have available---we treat these instances as having timed out.
 The situation for the clique encoding is even worse, and 3,653 of these instances do not fit in
 64GBytes of RAM. In contrast, for our algorithm, every instance fits comfortably.
 
 \section{Domain Filtering Using Degrees}\label{section:degreefiltering}
 
-Let $p$ be a vertex in a graph $P$. The \emph{degree} of $p$, $\deg(p)$, is the number of vertices
-to which it is adjacent. The degree of vertices gives us an invariant, which may be used to
-eliminate some infeasible values from domains.
+Let $p$ be a vertex in a graph $P$. The degree of vertices gives us an invariant, which may be used to
+eliminate some infeasible values from domains as follows.
 
 \begin{figure}[t]
     \centering
@@ -384,7 +385,8 @@ Let $p$ be a vertex in $P$, and $t$ a vertex in $T$, with $p\mapsto t$. Then by 
 \end{proof}
 
 The \emph{neighbourhood degree sequence} (NDS) of a vertex $p$, $\nds(p)$, is the (non-ascending)
-sequence of degrees of its neighbours.
+sequence of degrees of its neighbours. \citet{constraints10} showed how this may be used for
+filtering in subgraph isomorphism. We extend this for the $k$-less setting as follows.
 
 Let $S = ( s_1 , \ldots , s_n )$ and $T = ( t_1 , \ldots , t_m)$ be two sequences.  We say that $S
 \preceq T$ if $n \leq m$ and $\forall s_i \in S$ there exists a distinct $t_j \in T$ with $s_i \leq
@@ -700,7 +702,7 @@ To handle unmapped vertices, on line~\ref{line:wildcards} we include $k$ additio
 values in each domain (rather than a single value which may be used $k$ times).
 
 We begin by trying to infer domain deletions. The $\FuncSty{propagate}$ function looks for domains
-which contains either only a single value, or only wildcards---we call such a domain
+which contain either only a single value, or only wildcards---we call such a domain
 \emph{effectively-unit}. If such a domain $D_v$ exists, we eliminate its value from every other domain,
 and then propagate adjacency: for each domain corresponding to a vertex adjacent to $v$, we
 eliminate any value from its domain which is not adjacent to $v$ (treating wildcards as being
@@ -728,9 +730,9 @@ attempt to maximising the expected number of solutions remaining during search
 \citep{DBLP:conf/ijcai/McCreeshPT16}.  We introduce a symmetry break (line~\ref{line:sym}) to try
 only a single wildcard value for each variable.
 
-To handle the induced case, we make use of \cref{prop:comp} (line~\ref{line:comp}). We also tested
+To handle the induced case, we make use of \cref{prop:comp} (line~\ref{line:comp}). We considered
 using path reasoning on complement graphs, but this is expensive to calculate and provides little
-benefit in practice on the instances we considered.  We also do not strip isolated vertices as the
+benefit in practice on these instances.  We also do not strip isolated vertices as the
 original algorithm did, as this is not a valid simplification in the induced case, and we do not use
 conflict-directed backjumping as in our experiments it had very little effect for $k > 0$.
 
