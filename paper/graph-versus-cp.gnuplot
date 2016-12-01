@@ -23,8 +23,8 @@ set format x '$10^{%T}$'
 set title "Induced"
 
 plot \
-    "../experiments/new-gpgnode-results/runtime-sequentialix-d2-induced.data" u 3:($3>=1e6?1e-10:($2==1||$2==2||$2==8||$2==10||$2==11||$2==12?1:1e-10)) smooth cumulative w steps ti "Iter" at end lc 1, \
-    "../experiments/new-gpgnode-results/runtime-mcis-fc-induced.data" u ($3*1000):($3>=1e3?1e-10:($2==1||$2==2||$2==8||$2==10||$2==11||$2==12?1:1e-10)) smooth cumulative w steps ti "CP" at end lc 2
+    "../experiments/final-gpgnode-results/runtime-sequentialix-d2-induced.data" u 3:($3>=1e6?1e-10:($2==1||$2==2||$2==8||$2==10||$2==11||$2==12?1:1e-10)) smooth cumulative w steps ti "Iter" at end lc 1, \
+    "../experiments/final-gpgnode-results/runtime-mcis-fc-induced.data" u ($3*1000):($3>=1e3?1e-10:($2==1||$2==2||$2==8||$2==10||$2==11||$2==12?1:1e-10)) smooth cumulative w steps ti "CP" at end lc 2
 
 set xrange [1:1e6]
 set yrange [1:1e6]
@@ -46,5 +46,5 @@ set format y '$10^{%T}$'
 set title "Induced"
 
 plot \
-    "< join ../experiments/new-gpgnode-results/runtime-sequentialix-d2-induced.data ../experiments/new-gpgnode-results/runtime-mcis-fc-induced.data" u ($5>=1e3?1e6:($5*1000)):($3>=1e6?1e6:($2==1||$2==2||$2==8||$2==10||$2==11||$2==12?$3:NaN)) w p, x w l lc 0
+    "< join ../experiments/final-gpgnode-results/runtime-sequentialix-d2-induced.data ../experiments/new-gpgnode-results/runtime-mcis-fc-induced.data" u ($5>=1e3?1e6:($5*1000)):($3>=1e6?1e6:($2==1||$2==2||$2==8||$2==10||$2==11||$2==12?$3:NaN)) w p, x w l lc 0
 

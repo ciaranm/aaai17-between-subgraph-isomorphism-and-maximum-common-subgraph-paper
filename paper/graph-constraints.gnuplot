@@ -21,34 +21,34 @@ set title "Non-Induced, $k = 0$"
 
 plot \
     x w l lc 0, \
-    "../experiments/new-gpgnode-results/constraints-sequential-d2.data" u ($4/$3):($6/$5):2 every 10 lc var ps 0.2 pt 1
+    "../experiments/final-gpgnode-results/constraints-sequential-d2.data" u ($4/$3):($6/$5):2 every 10 lc var ps 0.2 pt 1
 
 set title "Non-Induced, $k = 1$"
 
 plot \
     x w l lc 0, \
-    "../experiments/new-gpgnode-results/constraints-sequential-d2.data" u ($8/$7):($10/$9):2 every 10 lc var ps 0.2 pt 1
+    "../experiments/final-gpgnode-results/constraints-sequential-d2.data" u ($8/$7):($10/$9):2 every 10 lc var ps 0.2 pt 1
 
 set title "Non-Induced, $k = 2$"
 
 plot \
     x w l lc 0, \
-    "../experiments/new-gpgnode-results/constraints-sequential-d2.data" u ($12/$11):($14/$13):2 every 10 lc var ps 0.2 pt 1
+    "../experiments/final-gpgnode-results/constraints-sequential-d2.data" u ($12/$11):($14/$13):2 every 10 lc var ps 0.2 pt 1
 
 set title "Non-Induced, $k = 3$"
 
 plot \
     x w l lc 0, \
-    "../experiments/new-gpgnode-results/constraints-sequential-d2.data" u ($16/$15):($18/$17):2 every 10 lc var ps 0.2 pt 1
+    "../experiments/final-gpgnode-results/constraints-sequential-d2.data" u ($16/$15):($18/$17):2 every 10 lc var ps 0.2 pt 1
 
 set title "Non-Induced, $k = 4$"
 
 plot \
     x w l lc 0, \
-    "../experiments/new-gpgnode-results/constraints-sequential-d2.data" u ($20/$19):($22/$21):2 every 10 lc var ps 0.2 pt 1
+    "../experiments/final-gpgnode-results/constraints-sequential-d2.data" u ($20/$19):($22/$21):2 every 10 lc var ps 0.2 pt 1
 
 set title "Non-Induced, $k = 5$"
 
 plot \
     x w l lc 0, \
-    "../experiments/new-gpgnode-results/constraints-sequential-d2.data" u ($24/$23):($26/$25):2 every 10 lc var ps 0.2 pt 1
+    "../experiments/final-gpgnode-results/constraints-sequential-d2.data" u ($24/$23):($26/$25):2 every 10 lc var ps 0.2 pt 1
