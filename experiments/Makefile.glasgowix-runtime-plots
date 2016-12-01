@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-ALGORITHMS := sequentialix-d2 sequentialix-d2-induced sequentialix-d2-hw sequentialix-d2-hw-induced
+ALGORITHMS := sequentialix-d2 sequentialix-d2-induced
 RESULTS := results
 INSTANCES := $(shell cut -d' ' -f1 instances.txt )
 
