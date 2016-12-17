@@ -119,7 +119,7 @@ auto main(int argc, char * argv[]) -> int
             ("except",             po::value<int>(),  "Allow this many pattern vertices to be excluded")
             ("high-wildcards",                        "Treat wildcard vertices as having high degree")
             ("induced",                               "Induced")
-            ("expensive-stats",                       "Calculate expensive stats")
+            ("parallel-for",                          "Use Cilk parallel for instead of spawn")
             ;
 
         po::options_description all_options{ "All options" };
@@ -183,11 +183,11 @@ auto main(int argc, char * argv[]) -> int
         params.degree = options_vars.count("degree");
         params.nds = options_vars.count("nds");
         params.cnds = options_vars.count("cnds");
-        params.expensive_stats = options_vars.count("expensive-stats");
         params.high_wildcards = options_vars.count("high-wildcards");
         params.ilf = options_vars.count("ilf");
         if (options_vars.count("except"))
             params.except = options_vars["except"].as<int>();
+        params.parallel_for = options_vars.count("parallel-for");
 
         auto read_function = read_lad;
 

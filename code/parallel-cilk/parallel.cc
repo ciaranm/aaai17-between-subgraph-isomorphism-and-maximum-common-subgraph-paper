@@ -702,41 +702,85 @@ namespace
                     return target_degrees.at(a) < target_degrees.at(b) || (target_degrees.at(a) == target_degrees.at(b) && a < b);
                     });
 
-            bool already_did_a_wildcard = false;
+            if (params.parallel_for) {
+                unsigned first_wildcard_pos = branch_values.size() + 1;
 
-            for (auto & branch_value : branch_values) {
-                if (*params.abort || success)
-                    break;
-
-                if (already_did_a_wildcard && branch_value >= wildcard_start)
-                    continue;
-
-                if (branch_value >= wildcard_start)
-                    already_did_a_wildcard = true;
-
-                cilk_spawn [&] {
-                    auto new_assignments = assignments;
-                    new_assignments.push_branch(branch_domain->v, branch_value);
-
-                    Domains new_domains;
-                    new_domains.reserve(domains.size());
-                    for (auto & d : domains) {
-                        if (d.fixed)
-                            continue;
-
-                        if (d.v == branch_domain->v) {
-                            Bitset_ just_branch_value = d.values;
-                            just_branch_value.reset();
-                            just_branch_value.set(branch_value);
-                            new_domains.emplace_back(Domain{ unsigned(d.v), false, just_branch_value });
-                        }
-                        else
-                            new_domains.emplace_back(Domain{ unsigned(d.v), false, d.values });
+                for (unsigned branch_value_pos = 0 ;
+                        branch_value_pos != branch_values.size() ;
+                        ++branch_value_pos)
+                    if (branch_values[branch_value_pos] >= wildcard_start) {
+                        first_wildcard_pos = branch_value_pos;
+                        break;
                     }
 
-                    if (unit_propagate(new_domains, new_assignments))
-                        solve(new_domains, new_assignments, nodes);
-                }();
+                cilk_for (unsigned branch_value_pos = 0 ;
+                        branch_value_pos != branch_values.size() ;
+                        ++branch_value_pos) {
+
+                    unsigned branch_value = branch_values[branch_value_pos];
+
+                    if (! (*params.abort || success || (branch_value >= wildcard_start && branch_value_pos > first_wildcard_pos))) {
+                        auto new_assignments = assignments;
+                        new_assignments.push_branch(branch_domain->v, branch_value);
+
+                        Domains new_domains;
+                        new_domains.reserve(domains.size());
+                        for (auto & d : domains) {
+                            if (d.fixed)
+                                continue;
+
+                            if (d.v == branch_domain->v) {
+                                Bitset_ just_branch_value = d.values;
+                                just_branch_value.reset();
+                                just_branch_value.set(branch_value);
+                                new_domains.emplace_back(Domain{ unsigned(d.v), false, just_branch_value });
+                            }
+                            else
+                                new_domains.emplace_back(Domain{ unsigned(d.v), false, d.values });
+                        }
+
+                        if (unit_propagate(new_domains, new_assignments))
+                            solve(new_domains, new_assignments, nodes);
+                    }
+                }
+            }
+            else {
+                bool already_did_a_wildcard = false;
+
+                for (auto & branch_value : branch_values) {
+                    if (*params.abort || success)
+                        break;
+
+                    if (already_did_a_wildcard && branch_value >= wildcard_start)
+                        continue;
+
+                    if (branch_value >= wildcard_start)
+                        already_did_a_wildcard = true;
+
+                    cilk_spawn [&] {
+                        auto new_assignments = assignments;
+                        new_assignments.push_branch(branch_domain->v, branch_value);
+
+                        Domains new_domains;
+                        new_domains.reserve(domains.size());
+                        for (auto & d : domains) {
+                            if (d.fixed)
+                                continue;
+
+                            if (d.v == branch_domain->v) {
+                                Bitset_ just_branch_value = d.values;
+                                just_branch_value.reset();
+                                just_branch_value.set(branch_value);
+                                new_domains.emplace_back(Domain{ unsigned(d.v), false, just_branch_value });
+                            }
+                            else
+                                new_domains.emplace_back(Domain{ unsigned(d.v), false, d.values });
+                        }
+
+                        if (unit_propagate(new_domains, new_assignments))
+                            solve(new_domains, new_assignments, nodes);
+                    }();
+                }
             }
 
             cilk_sync;
