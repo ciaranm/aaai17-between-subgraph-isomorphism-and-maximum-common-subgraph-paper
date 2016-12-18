@@ -1,0 +1,22 @@
+SHELL := /bin/bash
+FILTER := -1
+MODULUS := 1
+CATTER := cat
+INSTANCES := $(shell cut -d' ' -f1 instances.txt | $(CATTER) | if [[ $(FILTER) == -1 ]] ; then cat ; else awk "(NR % $(MODULUS)) == ($(FILTER) % $(MODULUS))" ; fi)
+TIMEOUT := 1000
+ALGORITHMS := cilk-d2 cilk-parfor-d2
+EXCEPTS := 0 1 2 3 4 5 10 20
+STACK_SPACE := 10485760
+RESULTS := results
+THREADS := 40
+
+all : $(foreach i, $(INSTANCES), $(foreach a, $(ALGORITHMS), $(foreach t, $(THREADS), $(foreach x, $(EXCEPTS), $(RESULTS)/$(a)/t$(t)/except-$(x)/$i.out ))))
+
+define ALGORITHM_template
+$(RESULTS)/$(1)/t$(3)/except-$(2)/%.out :
+	mkdir -p $(RESULTS)/$(1)/t$(3)/except-$(2)
+	ulimit -s $$(STACK_SPACE) ; env CILK_NWORKERS=$(3) ../code/parallel-cilk/solve_subgraph_isomorphism $$$$(echo $(1) | sed -e 's.-induced..' -e 's.-nofilter..' -e 's.-d2..' -e 's.-ilf..' -e 's.-hw..' -e 's.-parfor..' ) --except $(2) --timeout $$(TIMEOUT) $$$$(echo $(1) | grep -q induced && echo --induced ) $$$$(echo $(1) | grep -q nofilter || echo --degree --nds )  $$$$(echo $(1) | grep -q d2 && echo --d2graphs ) $$$$(echo $(1) | grep -q ilf && echo --ilf ) $$$$(echo $(1) | grep -q hw && echo --high-wildcards ) $$$$(echo $(1) | grep -q parfor && echo --parallel-for ) $$(shell grep "^`basename $$*` " < instances.txt | cut -d' ' -f2-3 ) > >(tee $$@ )
+endef
+
+$(foreach a,$(ALGORITHMS),$(foreach x,$(EXCEPTS),$(foreach t,$(THREADS),$(eval $(call ALGORITHM_template,$(a),$(x),$(t))))))
+
