@@ -3,7 +3,7 @@ all : tables graphs
 
 TABLES =
 
-GRAPHS = gen-graph-phase-transition.tex gen-graph-non-induced.tex gen-graph-induced.tex
+GRAPHS =
 
 tables : $(TABLES)
 
