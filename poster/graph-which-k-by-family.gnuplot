@@ -25,12 +25,14 @@ set style fill solid border -1
 set nocolorbox
 
 set yrange [0:1]
-set key off
+set key outside right top spacing 5
+#set key horizontal spacing 5 width 5 maxcols 3 #reverse samplen 1 width -4 maxrows 1 maxcols 12 
+#set key at graph 1.3, graph 1.03 top
 set title "Induced" offset 0,1.5
 plot for [COL=3:9] "../experiments/final-gpgnode-results/family-which-k-sequential-d2-induced.data" u (column(COL)/$2):xticlabels(1) ti columnheader lt palette frac ((COL-3)/8.0)
 
 unset ylabel
 set ytics format ""
-set key outside right top spacing 5
+set key off
 set title "Non-Induced" offset 0,1.5
 plot for [COL=3:9] "../experiments/final-gpgnode-results/family-which-k-sequential-d2.data" u (column(COL)/$2):xticlabels(1) ti columnheader lt palette frac ((COL-3)/8.0)

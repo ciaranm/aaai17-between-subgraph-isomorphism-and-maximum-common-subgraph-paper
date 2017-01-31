@@ -222,16 +222,18 @@ example is induced, whereas the bottom example is not, due to the dashed edge.
 
 \bigskip
 
+}
+
+\block{Applications}{
 Despite these problems being \NP-complete, modern practical subgraph isomorphism algorithms can
 handle problem instances with many hundreds of vertices in the pattern graph, and up to \textbf{ten thousand
 vertices} in the target graph, leading to successful application in areas such as \textbf{computer
 vision}, \textbf{malware detection}, \textbf{compilers}, \textbf{model checking}, \textbf{biochemistry}, and \textbf{pattern recognition}.
 }
-
-\vspace*{3cm}
+%\vspace*{3cm}
 
 \block{Maximum Common Subgraph (Comparing Graphs)}{
-\begin{wrapfigure}[11]{r}{0.46\linewidth}
+\begin{wrapfigure}[6]{r}{0.46\linewidth}
     \begin{center}\begin{tikzpicture}[scale=1.1]%{{{
         \node[draw, circle, fill=uofgcobalt, inner sep=5pt, font=\bfseries] (Na) at (0,  0)
         {\vphantom{0}};
@@ -251,16 +253,11 @@ vision}, \textbf{malware detection}, \textbf{compilers}, \textbf{model checking}
         \draw [ledge] (Nb) -- (Ne);
         \draw [ledge] (Nd) -- (Ne);
 
-   \end{tikzpicture}\end{center}
-
-    \vspace*{1.5cm}
-
-    \begin{center}\begin{tikzpicture}[scale=1.1]%{{{
-         \node[draw, circle, fill=uofgcobalt, inner sep=5pt, font=\bfseries] (N1) at (0,  0) {\vphantom{0}};
-        \node[draw, circle, fill=uofgcobalt, inner sep=5pt, font=\bfseries] (N2) at (0,  -4) {\vphantom{0}};
-        \node[draw, circle, fill=white, inner sep=5pt, font=\bfseries] (N3) at (2, -2) {\vphantom{0}};
-        \node[draw, circle, fill=uofgcobalt, inner sep=5pt, font=\bfseries] (N4) at (4, 0) {\vphantom{0}};
-        \node[draw, circle, fill=uofgcobalt, inner sep=5pt, font=\bfseries] (N5) at (4, -4) {\vphantom{0}};
+        \node[draw, circle, fill=uofgcobalt, inner sep=5pt, font=\bfseries] (N1) at (4,  0) {\vphantom{0}};
+        \node[draw, circle, fill=uofgcobalt, inner sep=5pt, font=\bfseries] (N2) at (4,  -4) {\vphantom{0}};
+        \node[draw, circle, fill=white, inner sep=5pt, font=\bfseries] (N3) at (6, -2) {\vphantom{0}};
+        \node[draw, circle, fill=uofgcobalt, inner sep=5pt, font=\bfseries] (N4) at (8, 0) {\vphantom{0}};
+        \node[draw, circle, fill=uofgcobalt, inner sep=5pt, font=\bfseries] (N5) at (8, -4) {\vphantom{0}};
 
         \draw [edge] (N1) -- (N2);
         \draw [ledge] (N1) -- (N3);
@@ -294,7 +291,7 @@ but not maximum common subgraph.}
 
 \column{0.5}
 
-\block{$k$-less Subgraph Isomorphism (Finding Most of a Pattern)}{
+\block{$k$-less Subgraph Isomorphism (Most of a Pattern)}{
 
 A \textbf{$k$-less subgraph isomorphism} between a pattern and target graph, is a subgraph isomorphism
 where we seek a mapping from all but $k$ verticies of the pattern to the target.
