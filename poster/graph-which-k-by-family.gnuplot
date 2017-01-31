@@ -7,6 +7,8 @@ set output "gen-graph-which-k-by-family.tex"
 load "ylgnbu.pal"
 set palette negative
 
+set rmargin 3
+set lmargin 3
 set multiplot layout 1,2
 
 set ylabel "Proportion of Instances Satisfiable" offset -7,0
@@ -27,6 +29,8 @@ set key off
 set title "Induced" offset 0,1.5
 plot for [COL=3:9] "../experiments/final-gpgnode-results/family-which-k-sequential-d2-induced.data" u (column(COL)/$2):xticlabels(1) ti columnheader lt palette frac ((COL-3)/8.0)
 
+unset ylabel
+set ytics format ""
 set key outside right top spacing 5
 set title "Non-Induced" offset 0,1.5
 plot for [COL=3:9] "../experiments/final-gpgnode-results/family-which-k-sequential-d2.data" u (column(COL)/$2):xticlabels(1) ti columnheader lt palette frac ((COL-3)/8.0)

@@ -212,8 +212,7 @@
 \end{wrapfigure}
 
 The \textbf{non-induced subgraph isomorphism problem} is to find an injective mapping from a given
-pattern graph to a given target graph which preserves adjacency---in essence, we are ``finding a
-copy of'' the pattern inside the target.
+pattern graph to a given target graph which preserves adjacency.
 
 \bigskip
 
@@ -226,7 +225,7 @@ example is induced, whereas the bottom example is not, due to the dashed edge.
 Despite these problems being \NP-complete, modern practical subgraph isomorphism algorithms can
 handle problem instances with many hundreds of vertices in the pattern graph, and up to \textbf{ten thousand
 vertices} in the target graph, leading to successful application in areas such as \textbf{computer
-vision}, \textbf{biochemistry}, and \textbf{pattern recognition}.
+vision}, \textbf{malware detection}, \textbf{compilers}, \textbf{model checking}, \textbf{biochemistry}, and \textbf{pattern recognition}.
 }
 
 \vspace*{3cm}
@@ -291,9 +290,7 @@ infeasible at only 35 vertices} when working with
 unlabelled graphs. This is largely because strong inference,
 based upon the degrees of vertices and the
 distances or paths between them, is possible with subgraph isomorphism,
-but not maximum common subgraph, and so the
-state space in the former is much more restricted, whilst filtering
-during search is vastly stronger.}
+but not maximum common subgraph.}
 
 \column{0.5}
 
@@ -304,7 +301,7 @@ where we seek a mapping from all but $k$ verticies of the pattern to the target.
 
 \bigskip
 
-If $k$ is reasonably small, weakened forms of invariants from subgraph isomorphism (based on vertex degrees and paths) are still effective at reducing the search space.  In the example it is clear that the pattern graph is not isomorphism to a subgraph of the target, but upon removal of the central vertex we have a $1$-less isomorphism from the pattern to the target.
+If $k$ is reasonably small, weakened forms of invariants from subgraph isomorphism (based on vertex degrees and paths) are still effective at reducing the search space.  In the example, upon removal of the central vertex from the pattern, we have a $1$-less isomorphism from the pattern to the target.
 
 \bigskip
 
@@ -351,8 +348,8 @@ If $k$ is reasonably small, weakened forms of invariants from subgraph isomorphi
 \end{center}
 \bigskip
 
-Are there instances for which k = 0 is unsatisfiable, but that
-are satisfiable for small k? For the problem families which
+Are there instances for which $k = 0$ is unsatisfiable, but that
+are satisfiable for small $k$? For the problem families which
 do not consist entirely of satisfiable instances, we plot this for both the induced and non-induced variants.
 
 \bigskip
@@ -366,10 +363,11 @@ do not consist entirely of satisfiable instances, we plot this for both the indu
 In the ``phase'' family, which consists of instances
 crafted to be extremely difficult to solve, we are not able
 to answer this question, and in the ``scalefree'' family we
-see no satisfiable instances with low but not zero k. 
-However, in several of the remaining families our algorithm manages to more than double
-the number of instances for which exact solutions are
-known, and we gain upper bounds on many more. This is particularly
+see no satisfiable instances with low but not zero $k$. 
+
+\bigskip
+
+However, in several of the remaining families our algorithm manages to provide exact solutions for many instances. This is particularly
 interesting for the ``images-CVIU11'', where the size of the solution has a
 direct \textbf{real-world interpretation} in terms of \textbf{closeness of image
 matching}.
@@ -387,7 +385,7 @@ matching}.
 \end{wrapfigure}
 What would happen if we used the $k$-less approach to solve the
 maximum common induced problem? We could simply start
-at k = 0, and increase k until a solution is found. This \textbf{tackles the problem in the opposite direction from existing
+at $k = 0$, and increase $k$ until a solution is found. This \textbf{tackles the problem in the opposite direction to existing
 approaches}, which work by attempting to construct
 larger and larger solutions. In the figure, ``$k\downarrow$'' is our algorithm, whilst ``FC'' and
 ``clique'' are state of the art maximum common subgraph algorithms. 
@@ -395,18 +393,16 @@ larger and larger solutions. In the figure, ``$k\downarrow$'' is our algorithm, 
 \bigskip
 
 We see that \textbf{our approach is able to close over twice
-as many of these instances as the previous state of the art} --- which struggles due to it's RAM requirements.
-(The same conclusion holds even if every instance which is
-satisfiable with k = 0 is removed from the dataset.)
-On instances designed for the maximum subgraph problem we are still the single strongest solver, and our performace is complementary to that of the clique encoding. 
+as many of these instances as the previous state of the art}---which struggles due to its RAM requirements.
+On instances designed for the maximum subgraph problem we are still the \newline single strongest solver.
 }
 \begin{columns}
 \column{0.5}
 
-\block{See the Paper For\ldots}{
+\block{See the Paper for\ldots}{
     \begin{itemize}
         \item ~ Description of our new invariants, and proofs that they hold. 
-        \item ~ Description of the algorithm the algorithm.
+        \item ~ Description of the algorithm.
     \end{itemize}
 }
 
@@ -425,7 +421,7 @@ On instances designed for the maximum subgraph problem we are still the single s
     \colorlet{blocktitlebgcolor}{uofgsandstone!80!white}
     \block[bodyverticalshift=-0.5cm]{}{
         This work was supported by the Engineering and Physical Sciences Research Council [grant
-        numbers EP/K503058/1 and EP/M506539/1]. \hfill \texttt{\textcolor{white}{c.mccreesh.1@research.gla.ac.uk}}
+        numbers EP/K503058/1 and EP/M506539/1]. \hfill \texttt{\textcolor{white}{c.reilly.2@research.gla.ac.uk}}
     }
 }
 

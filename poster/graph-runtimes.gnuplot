@@ -2,7 +2,7 @@
 
 #set terminal tikz standalone color size 17.6cm,5.5cm font '\scriptsize' preamble '\usepackage{times,microtype}'
 #set terminal tikz standalone color size 3.3in,5.6in font '\scriptsize' preamble '\usepackage{times,microtype}'
-set terminal tikz color solid size 45cm, 12.5cm
+set terminal tikz color solid size 50cm, 13.8cm font '\footnotesize'
 set output "gen-graph-runtimes.tex"
 
 set multiplot layout 1,3
@@ -18,7 +18,7 @@ set ylabel "Number of instances" offset -12, 0
 set logscale x
 set border 3
 set grid x y
-set xtics nomirror scale 0 offset 0, -0.85
+set xtics nomirror scale 0 offset 0, -0.95
 set ytics nomirror add ('$5725$' 5725) scale 0
 set key off
 

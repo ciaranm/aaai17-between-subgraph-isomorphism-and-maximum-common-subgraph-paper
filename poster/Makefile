@@ -3,7 +3,7 @@ all : tables graphs
 
 TABLES =
 
-GRAPHS = gen-graph-runtimes.tex gen-graph-which-k-by-family.tex gen-graph-versus-cp.tex
+GRAPHS = gen-graph-runtimes.tex gen-graph-which-k-by-family.tex #gen-graph-versus-cp.tex
 
 tables : $(TABLES)
 
