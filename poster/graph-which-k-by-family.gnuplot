@@ -1,7 +1,7 @@
 # vim: set et ft=gnuplot sw=4 :
 
 #set terminal tikz standalone color size 40cm,61cm font '\HUGE' preamble '\usepackage{times,microtype}'
-set terminal tikz color solid size 35cm, 14.5cm 
+set terminal tikz color solid size 35cm, 14.5cm font '\small' 
 set output "gen-graph-which-k-by-family.tex"
 
 load "ylgnbu.pal"
