@@ -5,6 +5,7 @@
 \usepackage{complexity}
 \usepackage{wrapfig}
 \usepackage{microtype}
+\usepackage{tikz}
 \usepackage{gnuplot-lua-tikz}
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -106,9 +107,9 @@
     \block[bodyverticalshift=0cm, bodyinnersep=3mm]{}{
         \centering\begin{minipage}{0.94\textwidth}
     When a small pattern graph does not occur inside a larger target graph, we can ask how to find
-    ``as much of the pattern as possible'' inside the target graph. In general, this is known as the maximum
-    common subgraph problem, which is much more computationally challenging in practice than
-    subgraph isomorphism. We introduce a restricted alternative, where we ask if all but $k$
+    \textbf{``as much of the pattern as possible''} inside the target graph. In general, this is known as the \textbf{maximum
+    common subgraph problem}, which is much more computationally challenging in practice than
+    \textbf{subgraph isomorphism}. We introduce a restricted alternative, where we ask if all but $k$
     vertices from the pattern can be found in the target graph. This allows for the development of
     slightly weakened forms of certain invariants from subgraph isomorphism which are based upon degree and
     number of paths.  We show that when $k$ is small, weakening the invariants still retains much of
@@ -126,7 +127,8 @@
 
 \block{Subgraph Isomorphism (Finding Patterns in Graphs)}{
 \begin{wrapfigure}[11]{r}{0.46\linewidth}
-    \begin{center}\begin{tikzpicture}[scale=1.1]%{{{
+
+\begin{center}\begin{tikzpicture}[scale=1.1]%{{{
         \node[draw, circle, fill=uofgrose, inner sep=5pt, font=\bfseries] (Na) at (1,  0)
         {\vphantom{0}};
         \node[draw, circle, fill=uofgrose, inner sep=5pt, font=\bfseries] (Nb) at (1, -2)
@@ -224,21 +226,187 @@ example is induced, whereas the bottom example is not, due to the dashed edge.
 Despite these problems being \NP-complete, modern practical subgraph isomorphism algorithms can
 handle problem instances with many hundreds of vertices in the pattern graph, and up to \textbf{ten thousand
 vertices} in the target graph, leading to successful application in areas such as \textbf{computer
-vision}, \textbf{biochemistry}, and \textbf{pattern recognition}. However, these algorithms cannot
-handle arbitrary instances of this size---here we generate instances with thirty and one hundred and
-fifty vertices respectively which cannot be solved within one hour.
+vision}, \textbf{biochemistry}, and \textbf{pattern recognition}.
 }
+
+\vspace*{3cm}
+
+\block{Maximum Common Subgraph (Comparing Graphs)}{
+\begin{wrapfigure}[11]{r}{0.46\linewidth}
+    \begin{center}\begin{tikzpicture}[scale=1.1]%{{{
+        \node[draw, circle, fill=uofgcobalt, inner sep=5pt, font=\bfseries] (Na) at (0,  0)
+        {\vphantom{0}};
+        \node[draw, circle, fill=uofgcobalt, inner sep=5pt, font=\bfseries] (Nb) at (0, -2)
+        {\vphantom{0}};
+        \node[draw, circle, fill=uofgcobalt, inner sep=5pt, font=\bfseries] (Nc) at (2, 0)
+        {\vphantom{0}};
+        \node[draw, circle, fill=uofgcobalt, inner sep=5pt, font=\bfseries] (Nd) at (2, -2)
+        {\vphantom{0}};
+        \node[draw, circle, fill=white, inner sep=5pt, font=\bfseries] (Ne) at (1, -4) 
+        {\vphantom{0}};
+
+        \draw [edge] (Na) -- (Nb);
+        \draw [edge] (Na) -- (Nc);
+        \draw [edge] (Nb) -- (Nd);
+        \draw [edge] (Nc) -- (Nd);
+        \draw [ledge] (Nb) -- (Ne);
+        \draw [ledge] (Nd) -- (Ne);
+
+   \end{tikzpicture}\end{center}
+
+    \vspace*{1.5cm}
+
+    \begin{center}\begin{tikzpicture}[scale=1.1]%{{{
+         \node[draw, circle, fill=uofgcobalt, inner sep=5pt, font=\bfseries] (N1) at (0,  0) {\vphantom{0}};
+        \node[draw, circle, fill=uofgcobalt, inner sep=5pt, font=\bfseries] (N2) at (0,  -4) {\vphantom{0}};
+        \node[draw, circle, fill=white, inner sep=5pt, font=\bfseries] (N3) at (2, -2) {\vphantom{0}};
+        \node[draw, circle, fill=uofgcobalt, inner sep=5pt, font=\bfseries] (N4) at (4, 0) {\vphantom{0}};
+        \node[draw, circle, fill=uofgcobalt, inner sep=5pt, font=\bfseries] (N5) at (4, -4) {\vphantom{0}};
+
+        \draw [edge] (N1) -- (N2);
+        \draw [ledge] (N1) -- (N3);
+        \draw [edge] (N1) -- (N4);
+        \draw [ledge] (N2) -- (N3);
+        \draw [edge] (N2) -- (N5);
+        \draw [edge] (N3) -- (N4);
+        \draw [edge] (N3) -- (N5);
+        \draw [edge] (N4) -- (N5);
+
+   \end{tikzpicture}\end{center}
+\end{wrapfigure}
+
+Given two graphs $G$ and $H$, the \textbf{maximum common subgraph problem} is to find the largest graph which is isomorphic to
+a subgraph of both $G$ and $H$ --- the size of the maximum common subgraph gives us a measure of how similar two graphs are.
+
+\bigskip
+
+In the induced variant of subgraph isormorphism when a pattern cannot be found in a target graph, we may seek a result which maps as many vertices of the pattern into the target as possible.  This is precisely the maximum common subgraph problem.
+
+\bigskip
+
+The maximum common subgraph problem is much more difficult in practice than subgraph isomorphism.
+The state of the art for the maximum common subgraph
+problem becomes \textbf{computationally
+infeasible at only 35 vertices} when working with
+unlabelled graphs. This is largely because strong inference,
+based upon the degrees of vertices and the
+distances or paths between them, is possible with subgraph isomorphism,
+but not maximum common subgraph, and so the
+state space in the former is much more restricted, whilst filtering
+during search is vastly stronger.}
 
 \column{0.5}
 
+\block{$k$-less Subgraph Isomorphism (Finding Most of a Pattern)}{
+
+A \textbf{$k$-less subgraph isomorphism} between a pattern and target graph, is a subgraph isomorphism
+where we seek a mapping from all but $k$ verticies of the pattern to the target.
+
+\bigskip
+
+If $k$ is reasonably small, weakened forms of invariants from subgraph isomorphism (based on vertex degrees and paths) are still effective at reducing the search space.  In the example it is clear that the pattern graph is not isomorphism to a subgraph of the target, but upon removal of the central vertex we have a $1$-less isomorphism from the pattern to the target.
+
+\bigskip
+
+\begin{center}
+    \begin{tikzpicture}[scale=1.1]%[every node/.style={circle, inner sep=0.5mm,node
+        %distance=10mm,fill=black}, scale=0.2]
+
+        \node[draw, circle, fill=uofgrose, inner sep=5pt, font=\bfseries] (d) at (0,0) {\vphantom{0}}; 
+        \node[draw, circle, fill=uofgrose, inner sep=5pt, font=\bfseries]  (a) at (-2,2){\vphantom{0}}; 
+        \node[draw, circle, fill=uofgpillarbox, inner sep=5pt, font=\bfseries]  (c) at (0,2) {\vphantom{0}}; 
+        \node[draw, circle, fill=uofgrose, inner sep=5pt, font=\bfseries]  (e) at (2,2) {\vphantom{0}}; 
+        \node[draw, circle, fill=uofgrose, inner sep=5pt, font=\bfseries]  (b) at (0,4) {\vphantom{0}}; 
+
+        \draw[edge] (a) -- (b);
+        \draw[edge] (a) -- (d);
+        \draw[edge] (b) -- (e);
+        \draw[ledge] (b) -- (c);
+        \draw[ledge] (c) -- (d);
+        \draw[edge] (d) -- (e);
+
+        \node[draw, circle, fill=uofgrose, inner sep=5pt, font=\bfseries] (f) at (8,0) {\vphantom{0}};
+        \node[draw, circle, fill=uofgrose, inner sep=5pt, font=\bfseries] (g) at (6,2) {\vphantom{0}};
+        \node[draw, circle, fill=white, inner sep=5pt, font=\bfseries] (h) at (10,4) {\vphantom{0}};
+        \node[draw, circle, fill=uofgrose, inner sep=5pt, font=\bfseries] (i) at (10,2) {\vphantom{0}};
+        \node[draw, circle, fill=uofgrose, inner sep=5pt, font=\bfseries] (j) at (8,4) {\vphantom{0}};
+        \node[draw, circle, fill=white, inner sep=5pt, font=\bfseries] (k) at (10,0) {\vphantom{0}};
+        \node[draw, circle, fill=white, inner sep=5pt, font=\bfseries] (l) at (12,0){\vphantom{0}};
+        \node[draw, circle, fill=white, inner sep=5pt, font=\bfseries] (m) at (12,4) {\vphantom{0}};
+
+        \draw[edge] (f) -- (i);
+        \draw[edge] (g) -- (f);
+        \draw[edge] (i) -- (j);
+        \draw[edge] (g) -- (j);
+        \draw[ledge] (h) -- (m);
+        \draw[ledge] (h) -- (i);
+        \draw[ledge] (i) -- (k);
+        \draw[ledge] (k) -- (l);   
+        %\path[solid] (a) edge (b) edge (d)
+        %    (e) edge (b) edge (d)
+        %    (d) edge (c) edge (f)
+        %    (c) edge (h)
+        %    (f) edge (g);
+    \end{tikzpicture}
+\end{center}
+\bigskip
+
+Are there instances for which k = 0 is unsatisfiable, but that
+are satisfiable for small k? For the problem families which
+do not consist entirely of satisfiable instances, we plot this for both the induced and non-induced variants.
+
+\bigskip
+
+\begin{center}
+\input{gen-graph-which-k-by-family}
+\end{center}
+
+\bigskip
+
+In the ``phase'' family, which consists of instances
+crafted to be extremely difficult to solve, we are not able
+to answer this question, and in the ``scalefree'' family we
+see no satisfiable instances with low but not zero k. 
+However, in several of the remaining families our algorithm manages to more than double
+the number of instances for which exact solutions are
+known, and we gain upper bounds on many more. This is particularly
+interesting for the ``images-CVIU11'', where the size of the solution has a
+direct \textbf{real-world interpretation} in terms of \textbf{closeness of image
+matching}.
+
+}
+
 \end{columns}
 
+\block{Maximum Common Subgraph: Solving from the Top Down}{
+
+\begin{wrapfigure}[11]{r}{0.66\linewidth}
+\begin{center}
+\input{gen-graph-runtimes}
+\end{center}
+\end{wrapfigure}
+What would happen if we used the $k$-less approach to solve the
+maximum common induced problem? We could simply start
+at k = 0, and increase k until a solution is found. This \textbf{tackles the problem in the opposite direction from existing
+approaches}, which work by attempting to construct
+larger and larger solutions. In the figure, ``$k\downarrow$'' is our algorithm, whilst ``FC'' and
+``clique'' are state of the art maximum common subgraph algorithms. 
+
+\bigskip
+
+We see that \textbf{our approach is able to close over twice
+as many of these instances as the previous state of the art} --- which struggles due to it's RAM requirements.
+(The same conclusion holds even if every instance which is
+satisfiable with k = 0 is removed from the dataset.)
+On instances designed for the maximum subgraph problem we are still the single strongest solver, and our performace is complementary to that of the clique encoding. 
+}
 \begin{columns}
 \column{0.5}
 
 \block{See the Paper For\ldots}{
     \begin{itemize}
-        \item ~ Delicious cake
+        \item ~ Description of our new invariants, and proofs that they hold. 
+        \item ~ Description of the algorithm the algorithm.
     \end{itemize}
 }
 
@@ -246,7 +414,7 @@ fifty vertices respectively which cannot be solved within one hour.
 
 \block{Future Work}{
     \begin{itemize}
-        \item ~ Replace Craig with James because James is better
+        \item ~ Develop an algorithm for maximum common subgraph which makes use of an upper bound from our approach and a lower bound from the clique approach, stopping when the bounds converge.
     \end{itemize}
 }
 
