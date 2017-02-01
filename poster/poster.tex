@@ -88,7 +88,7 @@
 
 \useblockstyle[bodyverticalshift=-1cm, roundedcorners=1]{Default}
 
-\renewcommand{\Huge}{\fontsize{77.2}{96}\selectfont}
+\renewcommand{\Huge}{\fontsize{96}{124}\selectfont}
 
 % Styles for drawings
 
@@ -121,6 +121,8 @@
         \end{minipage}
     }
 }
+
+\bigskip
 
 \begin{columns}
 \column{0.5}
@@ -271,8 +273,7 @@ vision}, \textbf{malware detection}, \textbf{compilers}, \textbf{model checking}
    \end{tikzpicture}\end{center}
 \end{wrapfigure}
 
-Given two graphs $G$ and $H$, the \textbf{maximum common subgraph problem} is to find the largest graph which is isomorphic to
-a subgraph of both $G$ and $H$ --- the size of the maximum common subgraph gives us a measure of how similar two graphs are.
+The \textbf{maximum common subgraph problem} is to find the largest graph which is isomorphic to  subgraph of two graphs simultaneously---the size of the maximum common subgraph gives us a measure of how similar two graphs are.
 
 \bigskip
 
@@ -348,15 +349,13 @@ If $k$ is reasonably small, weakened forms of invariants from subgraph isomorphi
 Are there instances for which $k = 0$ is unsatisfiable, but that
 are satisfiable for small $k$? For the problem families which
 do not consist entirely of satisfiable instances, we plot this for both the induced and non-induced variants.
-
+\vspace*{1.48cm}
 \bigskip
-
 \begin{center}
 \input{gen-graph-which-k-by-family}
 \end{center}
-
 \bigskip
-
+\vspace*{1.46cm}
 In the ``phase'' family, which consists of instances
 crafted to be extremely difficult to solve, we are not able
 to answer this question, and in the ``scalefree'' family we
@@ -375,7 +374,7 @@ matching}.
 
 \block{Maximum Common Subgraph: Solving from the Top Down}{
 
-\begin{wrapfigure}[11]{r}{0.66\linewidth}
+\begin{wrapfigure}[13]{r}{0.66\linewidth}
 \begin{center}
 \input{gen-graph-runtimes}
 \end{center}
@@ -391,7 +390,7 @@ larger and larger solutions. In the figure, ``$k\downarrow$'' is our algorithm, 
 
 We see that \textbf{our approach is able to close over twice
 as many of these instances as the previous state of the art}---which struggles due to its RAM requirements.
-On instances designed for the maximum subgraph problem we are still the \newline single strongest solver.
+On instances designed for the maximum subgraph problem we are still the single strongest solvers, and our performance tends to be complementary to that of the clique encoding.
 }
 \begin{columns}
 \column{0.5}
@@ -406,9 +405,7 @@ On instances designed for the maximum subgraph problem we are still the \newline
 \column{0.5}
 
 \block{Future Work}{
-    \begin{itemize}
-        \item ~ Develop an algorithm for maximum common subgraph which makes use of an upper bound from our approach and a lower bound from the clique approach, stopping when the bounds converge.
-    \end{itemize}
+Develop an algorithm for maximum common subgraph which makes use of an upper bound from our approach and a lower bound from the clique approach, stopping when the bounds converge.
 }
 
 \end{columns}
@@ -416,7 +413,7 @@ On instances designed for the maximum subgraph problem we are still the \newline
 {
     \colorlet{blockbodybgcolor}{uofgsandstone!80!white}
     \colorlet{blocktitlebgcolor}{uofgsandstone!80!white}
-    \block[bodyverticalshift=-0.5cm]{}{
+    \block[bodyverticalshift=1.2cm]{}{
         This work was supported by the Engineering and Physical Sciences Research Council [grant
         numbers EP/K503058/1 and EP/M506539/1]. \hfill \texttt{\textcolor{white}{c.reilly.2@research.gla.ac.uk}}
     }
